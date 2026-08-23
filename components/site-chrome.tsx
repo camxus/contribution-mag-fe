@@ -1,26 +1,84 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { Menu, ShoppingBag, X } from 'lucide-react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
-import { contributionTitle, footerLinks, navLinks } from '@/lib/content'
+import Link from "next/link";
+import { Menu, ShoppingBag, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import { contributionTitle, footerLinks, navLinks } from "@/lib/content";
 
 export function SiteHeader() {
-  const [open, setOpen] = useState(false)
-  return <>
-    <motion.header className="contribution-header" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .55, ease: [0.22, 1, 0.36, 1] }}>
-      <Link href="/" className="header-logo" aria-label={contributionTitle}>contribution magazine.</Link>
-      <nav className="desktop-nav" aria-label="Primary navigation">{navLinks.map((link) => <Link key={link.href} href={link.href}>{link.label}</Link>)}</nav>
-      <div className="header-tools"><Link href="/magazines" aria-label="Browse magazines"><ShoppingBag size={16} /></Link><button type="button" aria-label="Open navigation" onClick={() => setOpen(true)}><Menu size={18} strokeWidth={1.5} /></button></div>
-    </motion.header>
-    <AnimatePresence>{open && <motion.div className="mobile-menu" role="dialog" aria-label="Mobile navigation" initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: '100%' }} transition={{ duration: .45, ease: [0.22, 1, 0.36, 1] }}><button type="button" className="close-menu" aria-label="Close navigation" onClick={() => setOpen(false)}><X /></button><p>{contributionTitle}</p><nav>{navLinks.map((link) => <Link key={link.href} href={link.href} onClick={() => setOpen(false)}>{link.label}</Link>)}</nav></motion.div>}</AnimatePresence>
-  </>
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <motion.header
+        className="contribution-header"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <Link href="/" className="header-logo" aria-label={contributionTitle}>
+          contribution magazine.
+        </Link>
+        <nav className="desktop-nav" aria-label="Primary navigation">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href}>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="header-tools">
+          <Link href="/magazines" aria-label="Browse magazines">
+            <ShoppingBag size={16} />
+          </Link>
+          <button
+            type="button"
+            aria-label="Open navigation"
+            onClick={() => setOpen(true)}
+          >
+            <Menu size={18} strokeWidth={1.5} />
+          </button>
+        </div>
+      </motion.header>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="mobile-menu"
+            role="dialog"
+            aria-label="Mobile navigation"
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <button
+              type="button"
+              className="close-menu"
+              aria-label="Close navigation"
+              onClick={() => setOpen(false)}
+            >
+              <X />
+            </button>
+            <p>{contributionTitle}</p>
+            <nav>
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
 }
 
 export function SiteFooter() {
-  const showNewsletter =
-    process.env.NEXT_PUBLIC_SHOW_NEWSLETTER !== "false";
+  const showNewsletter = process.env.NEXT_PUBLIC_SHOW_NEWSLETTER !== "false";
 
   return (
     <footer className="contribution-footer">
@@ -63,10 +121,7 @@ export function SiteFooter() {
           </div>
         )}
 
-        <div
-          className="footer-lockup"
-          aria-label="Contribution Magazine"
-        >
+        <div className="footer-lockup" aria-label="Contribution Magazine">
           <strong>contribution</strong>
           <strong>magazine</strong>
         </div>
@@ -77,4 +132,10 @@ export function SiteFooter() {
   );
 }
 
-export function BackLink() { return <Link className="back-link" href="/">← contribution magazine</Link> }
+export function BackLink() {
+  return (
+    <Link className="back-link" href="/">
+      ← contribution magazine
+    </Link>
+  );
+}
