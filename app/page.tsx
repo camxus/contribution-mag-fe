@@ -48,7 +48,6 @@ const revealEase = [0.22, 1, 0.36, 1] as const;
 /* -------------------------------------------------------------------------- */
 /* Hero image                                                                 */
 /* -------------------------------------------------------------------------- */
-
 function HeroImage({
   desktopSrc,
   mobileSrc,
@@ -78,9 +77,7 @@ function HeroImage({
     reduced ? [1, 1] : [1.04, 1.12],
   );
 
-  const src = desktopSrc || mobileSrc;
-
-  if (!src) {
+  if (!desktopSrc && !mobileSrc) {
     return null;
   }
 
@@ -89,17 +86,10 @@ function HeroImage({
       ref={ref}
       className="absolute inset-0 -z-20 overflow-hidden"
     >
-      <picture>
-        {mobileSrc && (
-          <source
-            media="(max-width: 767px)"
-            srcSet={mobileSrc}
-          />
-        )}
-
+      {/* Desktop */}
+      {desktopSrc && (
         <motion.img
-          key={src}
-          src={src}
+          src={desktopSrc}
           alt={alt}
           style={{ y, scale }}
           initial={{
@@ -121,14 +111,52 @@ function HeroImage({
             },
           }}
           className="
+            hidden
             h-full
             w-full
             object-cover
             object-center
             saturate-[0.72]
+            md:block
           "
         />
-      </picture>
+      )}
+
+      {/* Mobile */}
+      {mobileSrc && (
+        <motion.img
+          src={mobileSrc}
+          alt={alt}
+          style={{ y, scale }}
+          initial={{
+            opacity: 0,
+            scale: reduced ? 1 : 1.04,
+          }}
+          animate={{
+            opacity: 1,
+            scale: reduced ? 1 : 1.04,
+          }}
+          transition={{
+            opacity: {
+              duration: reduced ? 0 : 0.9,
+              ease: revealEase,
+            },
+            scale: {
+              duration: reduced ? 0 : 1.5,
+              ease: [0.16, 1, 0.3, 1],
+            },
+          }}
+          className="
+            block
+            h-full
+            w-full
+            object-cover
+            object-center
+            saturate-[0.72]
+            md:hidden
+          "
+        />
+      )}
     </div>
   );
 }
