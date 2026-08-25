@@ -460,8 +460,10 @@ export default function Page() {
    * The hero has NO local fallback.
    * It only exists when the API returns hero_image_url.
    */
-  const pageHeroImage =
-    heroQuery.data?.hero_image_url || null;
+const pageHeroImageDesktop =
+  heroQuery.data?.hero_image_url_desktop || null;
+  const pageHeroImageMobile =
+  heroQuery.data?.hero_image_url_mobile || null;
 
   const showNewsletter =
     process.env.NEXT_PUBLIC_SHOW_NEWSLETTER !== "false";
@@ -476,15 +478,34 @@ export default function Page() {
 
       <section className="relative isolate min-h-[min(86vh,900px)] overflow-hidden border-b border-white/15">
         {/* API hero image only */}
-        {pageHeroImage && (
-          <HeroImage
-            src={pageHeroImage}
-            alt={imageAlt(pageFeaturedStory.title)}
-          />
+        {pageHeroImageMobile && (
+          <div className="absolute inset-0 -z-20 overflow-hidden md:hidden">
+            <motion.img
+              key={pageHeroImageMobile}
+              src={pageHeroImageMobile}
+              alt={imageAlt(pageFeaturedStory.title)}
+              initial={{ opacity: 0, scale: 1.04 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                opacity: { duration: 0.9, ease: revealEase },
+                scale: { duration: 1.5, ease: [0.16, 1, 0.3, 1] },
+              }}
+              className="h-full w-full object-cover object-center saturate-[0.72]"
+            />
+          </div>
+        )}
+
+        {pageHeroImageDesktop && (
+          <div className="absolute inset-0 -z-20 hidden overflow-hidden md:block">
+            <HeroImage
+              src={pageHeroImageDesktop}
+              alt={imageAlt(pageFeaturedStory.title)}
+            />
+          </div>
         )}
 
         {/* Contrast layers */}
-        {pageHeroImage && (
+        {(pageHeroImageDesktop || pageHeroImageMobile) && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
@@ -511,7 +532,7 @@ export default function Page() {
         {/* Hero content */}
         <div className="absolute inset-x-[5vw] bottom-[6vh] z-10 sm:bottom-[7vh] lg:bottom-[8vh]">
           <ContrastText
-            src={pageHeroImage || ""}
+            src={pageHeroImageDesktop || pageHeroImageMobile || ""}
           >
             <motion.div
               initial="hidden"

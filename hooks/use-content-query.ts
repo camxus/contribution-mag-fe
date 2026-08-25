@@ -85,7 +85,8 @@ export function useMagazines() {
   });
 }
 export type Hero = {
-  hero_image_url: string;
+  hero_image_url_desktop: string;
+  hero_image_url_mobile: string;
   featured_story: Story | null;
 };
 
@@ -94,7 +95,7 @@ export function useHero() {
     queryKey: ["hero"],
     queryFn: async () =>
       useMocks
-        ? { hero_image_url: heroImage, featured_story: featuredStory }
+        ? { hero_image_url_desktop: heroImage, hero_image_url_mobile: heroImage, featured_story: featuredStory }
         : getWp<Hero>("/contribution/v1/hero"),
   });
 }
