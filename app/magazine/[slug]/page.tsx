@@ -86,23 +86,22 @@ export default function MagazinePage() {
 
         <div
           className="
-            grid
-            grid-cols-1
-            items-start
-            gap-10
-            md:grid-cols-[minmax(300px,0.85fr)_1fr]
-            md:gap-[7vw]
-            lg:items-center
-          "
+    grid
+    grid-cols-1
+    items-stretch
+    gap-10
+    md:grid-cols-[minmax(300px,0.85fr)_1fr]
+    md:gap-[7vw]
+  "
         >
           <MotionImage
             className="
-              mx-auto
-              w-full
-              max-w-[560px]
-              overflow-hidden
-              md:mx-0
-            "
+      mx-auto
+      w-full
+      max-w-[560px]
+      overflow-hidden
+      md:mx-0
+    "
           >
             <img
               src={magazine.image}
@@ -111,64 +110,68 @@ export default function MagazinePage() {
             />
           </MotionImage>
 
-          <div className="max-w-[680px]">
-            <h1
-              className="
-                  text-[clamp(48px,8vw,110px)]
-                  font-normal
-                  leading-[0.82]
-                  tracking-[-0.09em]
-                "
-            >
-              {magazine.title}
-            </h1>
-
-            <p
-              className="
-                  mt-6
-                  max-w-[600px]
-                  text-[clamp(18px,2.4vw,30px)]
-                  leading-[1.12]
-                  tracking-[-0.025em]
-                "
-            >
-              {magazine.description}
-            </p>
-
-            <p className="mt-7 text-[18px]">
-              {magazine.price}
-            </p>
-
-            {magazine.soldOut ? (
-              <p className="mt-8 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                Sold Out
-              </p>
-            ) : (
-              <a
-                href={buyLink}
-                target="_blank"
-                rel="noopener noreferrer"
+          <div className="flex max-w-[680px] flex-col justify-between">
+            <div>
+              <h1
                 className="
-                  mt-8
-                  inline-flex
-                  items-center
-                  border
-                  border-foreground
-                  px-5
-                  py-3
-                  text-[12px]
-                  font-medium
-                  uppercase
-                  tracking-[0.12em]
-                  transition-colors
-                  duration-300
-                  hover:bg-foreground
-                  hover:text-background
-                "
+          text-[clamp(48px,8vw,110px)]
+          font-normal
+          leading-[0.82]
+          tracking-[-0.09em]
+        "
               >
-                Buy now
-              </a>
-            )}
+                {magazine.title}
+              </h1>
+
+              <p
+                className="
+          mt-6
+          max-w-[600px]
+          text-[clamp(18px,2.4vw,30px)]
+          leading-[1.12]
+          tracking-[-0.025em]
+        "
+              >
+                {magazine.description}
+              </p>
+            </div>
+
+            <div className="mt-10 md:mt-0">
+              <p className="text-[18px]">
+                {magazine.price}
+              </p>
+
+              {magazine.soldOut ? (
+                <p className="mt-8 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                  Sold Out
+                </p>
+              ) : (
+                <a
+                  href={buyLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="
+            mt-8
+            inline-flex
+            items-center
+            border
+            border-foreground
+            px-5
+            py-3
+            text-[12px]
+            font-medium
+            uppercase
+            tracking-[0.12em]
+            transition-colors
+            duration-300
+            hover:bg-foreground
+            hover:text-background
+          "
+                >
+                  Buy now
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </MotionArticle>
