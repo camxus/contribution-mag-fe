@@ -465,7 +465,7 @@ function MagazineCover({
         style={{
           transformPerspective: 1000,
         }}
-        className={`relative aspect-[0.72] overflow-hidden ${cover.tone} text-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]`}
+        className={`relative aspect-[0.72] overflow-hidden text-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]`}
       >
         <motion.img
           src={cover.image}
@@ -953,7 +953,6 @@ export default function Page() {
       {/* ------------------------------------------------------------------ */}
       {/* MAGAZINE                                                            */}
       {/* ------------------------------------------------------------------ */}
-
       <section
         id="magazine"
         className="px-[5vw] py-16 sm:py-20 lg:py-28"
@@ -979,133 +978,198 @@ export default function Page() {
             </p>
           </FadeUp>
         ) : (
-          <>
-            <div
-              className="
-                mx-auto
-                mb-20
-                grid
-                max-w-[1200px]
-                items-center
-                gap-12
-                lg:grid-cols-[0.75fr_1fr]
-                lg:gap-[9vw]
-              "
-            >
-              <FadeUp>
-                <Link
-                  href={magazinePath(pageMagazine.slug)}
-                  className="group relative block overflow-hidden"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.015 }}
-                    transition={{
-                      duration: 0.7,
-                      ease: revealEase,
-                    }}
-                    className="
-                      relative
-                      aspect-[0.72]
-                      overflow-hidden
-                      bg-muted
-                    "
-                  >
-                    <img
-                      src={pageMagazine.image}
-                      alt={imageAlt(pageMagazine.title)}
-                      className="
-                        h-full
-                        w-full
-                        object-cover
-                        transition-transform
-                        duration-700
-                        ease-out
-                        group-hover:scale-[1.025]
-                      "
-                    />
-
-                    <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
-                  </motion.div>
-                </Link>
-              </FadeUp>
-
-              <FadeUp delay={0.12}>
-                <div className="max-w-[560px]">
-                  <p className="eyebrow">
-                    {productBlurb}
-                  </p>
-
-                  <h2 className="mt-5 text-[clamp(52px,8vw,110px)] font-normal leading-[0.82] tracking-[-0.09em]">
-                    {pageMagazine.title}
-                  </h2>
-
-                  <p className="mt-7 max-w-[430px] text-[14px] leading-[1.55] text-muted-foreground">
-                    {pageMagazine.description}
-                  </p>
-
-                  <AnimatedArrowLink
-                    href={magazinePath(pageMagazine.slug)}
-                  >
-                    View {pageMagazine.price}
-                  </AnimatedArrowLink>
-                </div>
-              </FadeUp>
-            </div>
-
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{
+              once: true,
+              amount: 0.08,
+            }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+            className="
+        grid
+        grid-cols-2
+        gap-x-3
+        gap-y-12
+        sm:gap-x-4
+        lg:grid-cols-8
+        lg:gap-x-5
+        lg:gap-y-16
+      "
+          >
+            {/* NEWEST ISSUE */}
             <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{
-                once: true,
-                amount: 0.08,
-              }}
               variants={{
-                hidden: {},
+                hidden: {
+                  opacity: 0,
+                  y: 40,
+                },
                 visible: {
+                  opacity: 1,
+                  y: 0,
                   transition: {
-                    staggerChildren: 0.08,
+                    duration: 0.7,
+                    ease: revealEase,
                   },
                 },
               }}
               className="
-                grid
-                grid-cols-2
-                gap-x-3
-                gap-y-10
-                sm:grid-cols-4
-                sm:gap-x-4
-              "
+          col-span-2
+          lg:col-span-5
+          lg:row-span-2
+        "
             >
-              {coverProducts.map((cover, index) => (
+              <Link
+                href={magazinePath(pageMagazine.slug)}
+                className="group block"
+              >
                 <motion.div
-                  key={cover.name}
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 30,
-                    },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: {
-                        duration: 0.65,
-                        ease: revealEase,
-                      },
-                    },
+                  whileHover={{ scale: 1.01 }}
+                  transition={{
+                    duration: 0.7,
+                    ease: revealEase,
                   }}
+                  className="
+              relative
+              aspect-[0.72]
+              overflow-hidden
+              bg-muted
+            "
                 >
-                  <MagazineCover
-                    cover={cover}
-                    index={index}
-                    href={magazinePath(pageMagazines[index]?.slug ?? pageMagazine.slug)}
+                  <img
+                    src={pageMagazine.image}
+                    alt={imageAlt(pageMagazine.title)}
+                    className="
+                h-full
+                w-full
+                object-cover
+                transition-transform
+                duration-700
+                ease-out
+                group-hover:scale-[1.025]
+              "
+                  />
+
+                  <div
+                    className="
+                absolute
+                inset-0
+                bg-black/0
+                transition-colors
+                duration-500
+                group-hover:bg-black/10
+              "
                   />
                 </motion.div>
-              ))}
+              </Link>
             </motion.div>
-          </>
+
+            {/* ISSUE INFORMATION */}
+            <motion.div
+              variants={{
+                hidden: {
+                  opacity: 0,
+                  y: 40,
+                },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.7,
+                    ease: revealEase,
+                  },
+                },
+              }}
+              className="
+          col-span-2
+          flex
+          flex-col
+          justify-center
+          lg:col-span-3
+          lg:row-span-2
+        "
+            >
+              <div className="max-w-[500px]">
+                <p className="eyebrow">
+                  {productBlurb}
+                </p>
+
+                <h2
+                  className="
+              mt-5
+              text-[clamp(52px,8vw,110px)]
+              font-normal
+              leading-[0.82]
+              tracking-[-0.09em]
+            "
+                >
+                  {pageMagazine.title}
+                </h2>
+
+                <p
+                  className="
+              mt-7
+              line-clamp-3
+              max-w-[430px]
+              text-[14px]
+              leading-[1.55]
+              text-muted-foreground
+            "
+                >
+                  {pageMagazine.description}
+                </p>
+
+                <AnimatedArrowLink
+                  href={magazinePath(pageMagazine.slug)}
+                >
+                  View {pageMagazine.price}
+                </AnimatedArrowLink>
+              </div>
+            </motion.div>
+
+            {/* OTHER ISSUES */}
+            {pageMagazines.slice(1).map((magazine, index) => (
+              <motion.div
+                key={magazine.slug}
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    y: 30,
+                  },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.65,
+                      ease: revealEase,
+                    },
+                  },
+                }}
+                className="
+            col-span-1
+            lg:col-span-2
+          "
+              >
+                <MagazineCover
+                  cover={{
+                    name: magazine.title,
+                    image: magazine.image,
+                  }}
+                  index={index}
+                  href={magazinePath(magazine.slug)}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
         )}
       </section>
-
       <SiteFooter />
     </main>
   );

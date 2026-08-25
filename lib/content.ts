@@ -183,7 +183,6 @@ export const coverTones = [
 export const coverProducts = magazines.map((magazine, index) => ({
   name: magazine.title,
   image: magazine.image,
-  tone: coverTones[index],
 }));
 
 export function safeSlug(slug: string | string[] | undefined) {
