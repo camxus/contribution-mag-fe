@@ -49,17 +49,17 @@ export function SiteHeader() {
           reduced
             ? false
             : {
-                opacity: 0,
-                y: -10,
-              }
+              opacity: 0,
+              y: -10,
+            }
         }
         animate={
           reduced
             ? undefined
             : {
-                opacity: 1,
-                y: 0,
-              }
+              opacity: 1,
+              y: 0,
+            }
         }
         transition={{
           duration: 0.6,
@@ -112,17 +112,17 @@ export function SiteHeader() {
                 reduced
                   ? false
                   : {
-                      opacity: 0,
-                      y: -8,
-                    }
+                    opacity: 0,
+                    y: -8,
+                  }
               }
               animate={
                 reduced
                   ? undefined
                   : {
-                      opacity: 1,
-                      y: 0,
-                    }
+                    opacity: 1,
+                    y: 0,
+                  }
               }
               transition={{
                 duration: 0.45,
@@ -247,25 +247,25 @@ export function SiteHeader() {
               reduced
                 ? { opacity: 0 }
                 : {
-                    opacity: 0,
-                    x: "100%",
-                  }
+                  opacity: 0,
+                  x: "100%",
+                }
             }
             animate={
               reduced
                 ? { opacity: 1 }
                 : {
-                    opacity: 1,
-                    x: 0,
-                  }
+                  opacity: 1,
+                  x: 0,
+                }
             }
             exit={
               reduced
                 ? { opacity: 0 }
                 : {
-                    opacity: 0,
-                    x: "100%",
-                  }
+                  opacity: 0,
+                  x: "100%",
+                }
             }
             transition={{
               duration: reduced ? 0.2 : 0.55,
@@ -279,15 +279,15 @@ export function SiteHeader() {
                   reduced
                     ? false
                     : {
-                        opacity: 0,
-                      }
+                      opacity: 0,
+                    }
                 }
                 animate={
                   reduced
                     ? undefined
                     : {
-                        opacity: 1,
-                      }
+                      opacity: 1,
+                    }
                 }
                 transition={{
                   delay: 0.2,
@@ -318,17 +318,17 @@ export function SiteHeader() {
                   reduced
                     ? false
                     : {
-                        opacity: 0,
-                        rotate: -20,
-                      }
+                      opacity: 0,
+                      rotate: -20,
+                    }
                 }
                 animate={
                   reduced
                     ? undefined
                     : {
-                        opacity: 1,
-                        rotate: 0,
-                      }
+                      opacity: 1,
+                      rotate: 0,
+                    }
                 }
                 transition={{
                   delay: 0.12,
@@ -339,15 +339,15 @@ export function SiteHeader() {
                   reduced
                     ? undefined
                     : {
-                        rotate: 90,
-                      }
+                      rotate: 90,
+                    }
                 }
                 whileTap={
                   reduced
                     ? undefined
                     : {
-                        scale: 0.9,
-                      }
+                      scale: 0.9,
+                    }
                 }
                 className="
                   border-0
@@ -380,17 +380,17 @@ export function SiteHeader() {
                     reduced
                       ? false
                       : {
-                          opacity: 0,
-                          x: 45,
-                        }
+                        opacity: 0,
+                        x: 45,
+                      }
                   }
                   animate={
                     reduced
                       ? undefined
                       : {
-                          opacity: 1,
-                          x: 0,
-                        }
+                        opacity: 1,
+                        x: 0,
+                      }
                   }
                   transition={{
                     delay: 0.18 + index * 0.06,
@@ -446,17 +446,17 @@ export function SiteHeader() {
                 reduced
                   ? false
                   : {
-                      opacity: 0,
-                      y: 15,
-                    }
+                    opacity: 0,
+                    y: 15,
+                  }
               }
               animate={
                 reduced
                   ? undefined
                   : {
-                      opacity: 1,
-                      y: 0,
-                    }
+                    opacity: 1,
+                    y: 0,
+                  }
               }
               transition={{
                 delay: 0.5,
@@ -502,11 +502,11 @@ export function SiteFooter() {
     ),
     ...(contactQuery.data?.instagram
       ? [
-          [
-            "Instagram",
-            contactQuery.data.instagram,
-          ] as [string, string],
-        ]
+        [
+          "Instagram",
+          contactQuery.data.instagram,
+        ] as [string, string],
+      ]
       : []),
   ];
 
@@ -514,9 +514,9 @@ export function SiteFooter() {
     socialLinks.length > 0
       ? socialLinks
       : footerLinks.map(
-          (link) =>
-            [link.label, link.href] as [string, string],
-        );
+        (link) =>
+          [link.label, link.href] as [string, string],
+      );
 
   const aboutUsLink: [string, string] = ["About Us", "/about"];
   const footerLinksWithAbout = [...displayedSocialLinks, aboutUsLink];
@@ -541,17 +541,17 @@ export function SiteFooter() {
           reduced
             ? false
             : {
-                opacity: 0,
-                y: 25,
-              }
+              opacity: 0,
+              y: 25,
+            }
         }
         whileInView={
           reduced
             ? undefined
             : {
-                opacity: 1,
-                y: 0,
-              }
+              opacity: 1,
+              y: 0,
+            }
         }
         viewport={{
           once: true,
@@ -575,86 +575,87 @@ export function SiteFooter() {
                 className="flex flex-col gap-3 text-sm leading-tight"
                 aria-label="Social links"
               >
-                {footerLinksWithAbout.map(
-                  ([label, href], index) => {
-                    const isExternal = href.startsWith("http");
-                    const motionProps = {
-                      initial:
-                        reduced
-                          ? false
-                          : {
-                              opacity: 0,
-                              x: -8,
-                            },
-                      whileInView:
-                        reduced
-                          ? undefined
-                          : {
-                              opacity: 1,
-                              x: 0,
-                            },
-                      viewport: {
-                        once: true,
-                        amount: 0.2,
+                {footerLinksWithAbout.map(([label, href], index) => {
+                  const isExternal = href.startsWith("http");
+
+                  const motionProps = {
+                    initial: reduced
+                      ? false
+                      : {
+                        opacity: 0,
+                        x: -8,
                       },
-                      transition: {
-                        delay: index * 0.04,
-                        duration: 0.4,
-                        ease,
+                    whileInView: reduced
+                      ? undefined
+                      : {
+                        opacity: 1,
+                        x: 0,
                       },
-                      className: `
-                        group
-                        flex
-                        w-fit
-                        items-center
-                        gap-2
-                        transition-opacity
-                        duration-300
-                        hover:opacity-50
-                      `,
-                    } as const;
+                    viewport: {
+                      once: true,
+                      amount: 0.2,
+                    },
+                    transition: {
+                      delay: index * 0.04,
+                      duration: 0.4,
+                      ease,
+                    },
+                  };
 
-                    const content = (
-                      <>
-                        {label}
+                  const className = `
+    group
+    flex
+    w-fit
+    items-center
+    gap-2
+    leading-none
+    transition-opacity
+    duration-300
+    hover:opacity-50
+  `;
 
-                        <ArrowUpRight
-                          size={12}
-                          strokeWidth={1.4}
-                          className="
-                            opacity-0
-                            transition-all
-                            duration-300
-                            group-hover:-translate-y-0.5
-                            group-hover:translate-x-0.5
-                            group-hover:opacity-100
-                          "
-                        />
-                      </>
-                    );
+                  const content = (
+                    <>
+                      <span>{label}</span>
 
-                    return isExternal ? (
-                      <motion.a
-                        key={`${label}-${href}`}
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        {...motionProps}
-                      >
+                      <ArrowUpRight
+                        aria-hidden="true"
+                        size={12}
+                        strokeWidth={1.4}
+                        className="
+          shrink-0
+          translate-x-[-2px]
+          translate-y-[2px]
+          opacity-0
+          transition-all
+          duration-300
+          group-hover:translate-x-0
+          group-hover:translate-y-0
+          group-hover:opacity-100
+        "
+                      />
+                    </>
+                  );
+
+                  return isExternal ? (
+                    <motion.a
+                      key={`${label}-${href}`}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={className}
+                      {...motionProps}
+                    >
+                      {content}
+                    </motion.a>
+                  ) : (
+                    <motion.div key={`${label}-${href}`} {...motionProps}>
+                      <Link href={href} className={className}>
                         {content}
-                      </motion.a>
-                    ) : (
-                      <motion.div
-                        key={`${label}-${href}`}
-                        {...motionProps}
-                      >
-                        <Link href={href}>
-                          {content}
-                        </Link>
-                      </motion.div>
-                    );
-                  },
-                )}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
               </nav>
             </div>
 
@@ -769,15 +770,15 @@ export function SiteFooter() {
                         reduced
                           ? undefined
                           : {
-                              opacity: 0.8,
-                            }
+                            opacity: 0.8,
+                          }
                       }
                       whileTap={
                         reduced
                           ? undefined
                           : {
-                              scale: 0.98,
-                            }
+                            scale: 0.98,
+                          }
                       }
                       className="
                         shrink-0
@@ -813,17 +814,17 @@ export function SiteFooter() {
             reduced
               ? false
               : {
-                  opacity: 0,
-                  y: 70,
-                }
+                opacity: 0,
+                y: 70,
+              }
           }
           whileInView={
             reduced
               ? undefined
               : {
-                  opacity: 1,
-                  y: 0,
-                }
+                opacity: 1,
+                y: 0,
+              }
           }
           viewport={{
             once: true,
@@ -852,8 +853,8 @@ export function SiteFooter() {
               reduced
                 ? undefined
                 : {
-                    x: 8,
-                  }
+                  x: 8,
+                }
             }
             transition={{
               type: "spring",
@@ -870,8 +871,8 @@ export function SiteFooter() {
               reduced
                 ? undefined
                 : {
-                    x: -8,
-                  }
+                  x: -8,
+                }
             }
             transition={{
               type: "spring",
@@ -933,17 +934,17 @@ export function BackLink() {
         reduced
           ? false
           : {
-              opacity: 0,
-              x: -10,
-            }
+            opacity: 0,
+            x: -10,
+          }
       }
       animate={
         reduced
           ? undefined
           : {
-              opacity: 1,
-              x: 0,
-            }
+            opacity: 1,
+            x: 0,
+          }
       }
       transition={{
         duration: 0.5,
