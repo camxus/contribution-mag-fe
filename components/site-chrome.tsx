@@ -518,6 +518,9 @@ export function SiteFooter() {
             [link.label, link.href] as [string, string],
         );
 
+  const aboutUsLink: [string, string] = ["About Us", "/about"];
+  const footerLinksWithAbout = [...displayedSocialLinks, aboutUsLink];
+
   return (
     <footer
       className="
@@ -572,39 +575,34 @@ export function SiteFooter() {
                 className="flex flex-col gap-3 text-sm leading-tight"
                 aria-label="Social links"
               >
-                {displayedSocialLinks.map(
-                  ([label, href], index) => (
-                    <motion.a
-                      key={`${label}-${href}`}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      initial={
+                {footerLinksWithAbout.map(
+                  ([label, href], index) => {
+                    const isExternal = href.startsWith("http");
+                    const motionProps = {
+                      initial:
                         reduced
                           ? false
                           : {
                               opacity: 0,
                               x: -8,
-                            }
-                      }
-                      whileInView={
+                            },
+                      whileInView:
                         reduced
                           ? undefined
                           : {
                               opacity: 1,
                               x: 0,
-                            }
-                      }
-                      viewport={{
+                            },
+                      viewport: {
                         once: true,
                         amount: 0.2,
-                      }}
-                      transition={{
+                      },
+                      transition: {
                         delay: index * 0.04,
                         duration: 0.4,
                         ease,
-                      }}
-                      className="
+                      },
+                      className: `
                         group
                         flex
                         w-fit
@@ -613,24 +611,49 @@ export function SiteFooter() {
                         transition-opacity
                         duration-300
                         hover:opacity-50
-                      "
-                    >
-                      {label}
+                      `,
+                    } as const;
 
-                      <ArrowUpRight
-                        size={12}
-                        strokeWidth={1.4}
-                        className="
-                          opacity-0
-                          transition-all
-                          duration-300
-                          group-hover:-translate-y-0.5
-                          group-hover:translate-x-0.5
-                          group-hover:opacity-100
-                        "
-                      />
-                    </motion.a>
-                  ),
+                    const content = (
+                      <>
+                        {label}
+
+                        <ArrowUpRight
+                          size={12}
+                          strokeWidth={1.4}
+                          className="
+                            opacity-0
+                            transition-all
+                            duration-300
+                            group-hover:-translate-y-0.5
+                            group-hover:translate-x-0.5
+                            group-hover:opacity-100
+                          "
+                        />
+                      </>
+                    );
+
+                    return isExternal ? (
+                      <motion.a
+                        key={`${label}-${href}`}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        {...motionProps}
+                      >
+                        {content}
+                      </motion.a>
+                    ) : (
+                      <motion.div
+                        key={`${label}-${href}`}
+                        {...motionProps}
+                      >
+                        <Link href={href}>
+                          {content}
+                        </Link>
+                      </motion.div>
+                    );
+                  },
                 )}
               </nav>
             </div>

@@ -489,6 +489,12 @@ export const loadingLabel = "Loading";
 
 export const errorLabel = "Unable to load content";
 
+export const noStoriesLabel = "Currently no stories.";
+
+export const noInterviewsLabel = "Currently no interviews.";
+
+export const noIssuesLabel = "Currently no issues.";
+
 export const menuItems = navLinks;
 
 export const shareItems = footerLinks;

@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import { StoryList } from "@/components/collection-list";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
-import { stories } from "@/lib/content";
+import { stories, noStoriesLabel } from "@/lib/content";
 import { useStories } from "@/hooks/use-content-query";
 
 const revealEase = [0.22, 1, 0.36, 1] as const;
@@ -13,6 +13,8 @@ export default function StoriesPage() {
   const query = useStories();
   const items = query.data || stories;
   const reduced = useReducedMotion();
+
+  const showNoStories = query.data?.length === 0;
 
   return (
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
@@ -128,6 +130,15 @@ export default function StoriesPage() {
             className="py-10 text-sm text-muted-foreground"
           >
             Loading stories…
+          </motion.div>
+        ) : showNoStories ? (
+          <motion.div
+            initial={reduced ? false : { opacity: 0 }}
+            animate={reduced ? undefined : { opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="py-10 text-sm text-muted-foreground"
+          >
+            {noStoriesLabel}
           </motion.div>
         ) : (
           <motion.div

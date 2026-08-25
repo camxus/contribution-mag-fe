@@ -2,12 +2,14 @@
 
 import { MagazineList } from "@/components/collection-list";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
-import { magazines } from "@/lib/content";
+import { magazines, noIssuesLabel } from "@/lib/content";
 import { useMagazines } from "@/hooks/use-content-query";
 
 export default function MagazinesPage() {
   const query = useMagazines();
   const items = query.data || magazines;
+
+  const showNoIssues = query.data?.length === 0;
   return (
     <main className="min-h-screen bg-background text-foreground">
       <SiteHeader />
@@ -22,6 +24,10 @@ export default function MagazinesPage() {
         </p>
         {query.isLoading ? (
           <p>Loading issues…</p>
+        ) : showNoIssues ? (
+          <p className="py-10 text-sm text-muted-foreground">
+            {noIssuesLabel}
+          </p>
         ) : (
           <MagazineList items={items} />
         )}

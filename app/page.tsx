@@ -37,6 +37,12 @@ import {
   contributionTitle,
 } from "@/lib/content";
 
+import {
+  noStoriesLabel,
+  noInterviewsLabel,
+  noIssuesLabel,
+} from "@/lib/content";
+
 /* -------------------------------------------------------------------------- */
 /* Motion helpers                                                              */
 /* -------------------------------------------------------------------------- */
@@ -372,6 +378,10 @@ export default function Page() {
   const pageInterviews = interviewsQuery.data || interviews;
   const pageMagazines = magazinesQuery.data || magazines;
 
+  const showNoStories = storiesQuery.data?.length === 0;
+  const showNoInterviews = interviewsQuery.data?.length === 0;
+  const showNoMagazines = magazinesQuery.data?.length === 0;
+
   const pageFeaturedStory =
     pageStories[0] || featuredStory;
 
@@ -383,6 +393,9 @@ export default function Page() {
 
   const pageHeroImage =
     heroQuery.data?.hero_image_url || heroImage;
+
+  const showNewsletter =
+    process.env.NEXT_PUBLIC_SHOW_NEWSLETTER !== "false";
 
   return (
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
@@ -617,7 +630,7 @@ export default function Page() {
       {/* COMMUNITY                                                           */}
       {/* ------------------------------------------------------------------ */}
 
-      {process.env.NEXT_PUBLIC_SHOW_NEWSLETTER &&
+      {showNewsletter &&
         <section
           id="community"
           className="border-b border-border bg-background px-[5vw] py-12 sm:py-16 lg:py-20"
@@ -710,6 +723,12 @@ export default function Page() {
               Loading stories…
             </p>
           </FadeUp>
+        ) : showNoStories ? (
+          <FadeUp>
+            <p className="py-10 text-sm text-muted-foreground">
+              {noStoriesLabel}
+            </p>
+          </FadeUp>
         ) : (
           <FadeUp delay={0.08}>
             <StoryList items={pageStories} />
@@ -738,6 +757,12 @@ export default function Page() {
               Loading interviews…
             </p>
           </FadeUp>
+        ) : showNoInterviews ? (
+          <FadeUp>
+            <p className="py-10 text-sm text-muted-foreground">
+              {noInterviewsLabel}
+            </p>
+          </FadeUp>
         ) : (
           <FadeUp delay={0.08}>
             <InterviewList items={pageInterviews} />
@@ -757,102 +782,118 @@ export default function Page() {
           number="03"
           title="Magazine"
           description="The physical edition of Contribution Magazine."
-          href={magazinePath(pageMagazine.slug)}
+          href="/magazine"
           action="View issue"
         />
 
-        <div className="mx-auto mb-20 grid max-w-[1200px] items-center gap-12 lg:grid-cols-[0.75fr_1fr] lg:gap-[9vw]">
+        {magazinesQuery.isLoading ? (
           <FadeUp>
-            <Link
-              href={magazinePath(pageMagazine.slug)}
-              className="group relative block overflow-hidden"
-            >
-              <motion.div
-                whileHover={{ scale: 1.015 }}
-                transition={{
-                  duration: 0.7,
-                  ease: revealEase,
-                }}
-                className="relative aspect-[0.72] overflow-hidden bg-muted"
-              >
-                <img
-                  src={pageMagazine.image}
-                  alt={imageAlt(pageMagazine.title)}
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-                />
-
-                <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
-              </motion.div>
-            </Link>
+            <p className="py-10 text-sm text-muted-foreground">
+              Loading issues…
+            </p>
           </FadeUp>
+        ) : showNoMagazines ? (
+          <FadeUp>
+            <p className="py-10 text-sm text-muted-foreground">
+              {noIssuesLabel}
+            </p>
+          </FadeUp>
+        ) : (
+          <>
+            <div className="mx-auto mb-20 grid max-w-[1200px] items-center gap-12 lg:grid-cols-[0.75fr_1fr] lg:gap-[9vw]">
+              <FadeUp>
+                <Link
+                  href={magazinePath(pageMagazine.slug)}
+                  className="group relative block overflow-hidden"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.015 }}
+                    transition={{
+                      duration: 0.7,
+                      ease: revealEase,
+                    }}
+                    className="relative aspect-[0.72] overflow-hidden bg-muted"
+                  >
+                    <img
+                      src={pageMagazine.image}
+                      alt={imageAlt(pageMagazine.title)}
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                    />
 
-          <FadeUp delay={0.12}>
-            <div className="max-w-[560px]">
-              <p className="eyebrow">
-                {productBlurb}
-              </p>
+                    <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+                  </motion.div>
+                </Link>
+              </FadeUp>
 
-              <h2 className="mt-5 text-[clamp(52px,8vw,110px)] font-normal leading-[0.82] tracking-[-0.09em]">
-                {pageMagazine.title}
-              </h2>
+              <FadeUp delay={0.12}>
+                <div className="max-w-[560px]">
+                  <p className="eyebrow">
+                    {productBlurb}
+                  </p>
 
-              <p className="mt-7 max-w-[430px] text-[14px] leading-[1.55] text-muted-foreground">
-                {pageMagazine.description}
-              </p>
+                  <h2 className="mt-5 text-[clamp(52px,8vw,110px)] font-normal leading-[0.82] tracking-[-0.09em]">
+                    {pageMagazine.title}
+                  </h2>
 
-              <AnimatedArrowLink
-                href={magazinePath(pageMagazine.slug)}
-              >
-                View {pageMagazine.price}
-              </AnimatedArrowLink>
+                  <p className="mt-7 max-w-[430px] text-[14px] leading-[1.55] text-muted-foreground">
+                    {pageMagazine.description}
+                  </p>
+
+                  <AnimatedArrowLink
+                    href={magazinePath(pageMagazine.slug)}
+                  >
+                    View {pageMagazine.price}
+                  </AnimatedArrowLink>
+                </div>
+              </FadeUp>
             </div>
-          </FadeUp>
-        </div>
 
-        {/* Cover grid */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{
-            once: true,
-            amount: 0.08,
-          }}
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.08,
-              },
-            },
-          }}
-          className="grid grid-cols-2 gap-x-3 gap-y-10 sm:grid-cols-4 sm:gap-x-4"
-        >
-          {coverProducts.map((cover, index) => (
+            {/* Cover grid */}
             <motion.div
-              key={cover.name}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{
+                once: true,
+                amount: 0.08,
+              }}
               variants={{
-                hidden: {
-                  opacity: 0,
-                  y: 30,
-                },
+                hidden: {},
                 visible: {
-                  opacity: 1,
-                  y: 0,
                   transition: {
-                    duration: 0.65,
-                    ease: revealEase,
+                    staggerChildren: 0.08,
                   },
                 },
               }}
+              className="grid grid-cols-2 gap-x-3 gap-y-10 sm:grid-cols-4 sm:gap-x-4"
             >
-              <MagazineCover
-                cover={cover}
-                index={index}
-                href={magazinePath(pageMagazine.slug)}
-              />
+              {coverProducts.map((cover, index) => (
+                <motion.div
+                  key={cover.name}
+                  variants={{
+                    hidden: {
+                      opacity: 0,
+                      y: 30,
+                    },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: {
+                        duration: 0.65,
+                        ease: revealEase,
+                      },
+                    },
+                  }}
+                >
+                  <MagazineCover
+                    cover={cover}
+                    index={index}
+                    href={magazinePath(pageMagazine.slug)}
+                  />
+                </motion.div>
+              ))}
             </motion.div>
-          ))}
-        </motion.div>
+          </>
+        )}
       </section>
 
       <SiteFooter />

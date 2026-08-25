@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import { InterviewList } from "@/components/collection-list";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
-import { interviews } from "@/lib/content";
+import { interviews, noInterviewsLabel } from "@/lib/content";
 import { useInterviews } from "@/hooks/use-content-query";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -13,6 +13,8 @@ export default function InterviewsPage() {
   const query = useInterviews();
   const items = query.data || interviews;
   const reduced = useReducedMotion();
+
+  const showNoInterviews = query.data?.length === 0;
 
   return (
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
@@ -192,6 +194,29 @@ export default function InterviewsPage() {
             className="py-10 text-sm text-muted-foreground"
           >
             Loading interviews…
+          </motion.div>
+        ) : showNoInterviews ? (
+          <motion.div
+            initial={
+              reduced
+                ? false
+                : {
+                    opacity: 0,
+                  }
+            }
+            animate={
+              reduced
+                ? undefined
+                : {
+                    opacity: 1,
+                  }
+            }
+            transition={{
+              duration: 0.5,
+            }}
+            className="py-10 text-sm text-muted-foreground"
+          >
+            {noInterviewsLabel}
           </motion.div>
         ) : (
           <motion.div
