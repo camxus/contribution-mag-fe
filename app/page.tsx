@@ -34,19 +34,235 @@ import {
   interviews,
   featuredStory,
   contributionTitle,
-} from "@/lib/content";
-
-import {
   noStoriesLabel,
   noInterviewsLabel,
   noIssuesLabel,
 } from "@/lib/content";
 
 /* -------------------------------------------------------------------------- */
-/* Motion helpers                                                              */
+/* Motion helpers                                                             */
 /* -------------------------------------------------------------------------- */
 
 const revealEase = [0.22, 1, 0.36, 1] as const;
+
+/* -------------------------------------------------------------------------- */
+/* Hero image                                                                 */
+/* -------------------------------------------------------------------------- */
+
+function HeroImage({
+  desktopSrc,
+  mobileSrc,
+  alt,
+}: {
+  desktopSrc: string | null;
+  mobileSrc: string | null;
+  alt: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduced ? ["0%", "0%"] : ["0%", "16%"],
+  );
+
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduced ? [1, 1] : [1.04, 1.12],
+  );
+
+  const src = desktopSrc || mobileSrc;
+
+  if (!src) {
+    return null;
+  }
+
+  return (
+    <div
+      ref={ref}
+      className="absolute inset-0 -z-20 overflow-hidden"
+    >
+      <picture>
+        {mobileSrc && (
+          <source
+            media="(max-width: 767px)"
+            srcSet={mobileSrc}
+          />
+        )}
+
+        <motion.img
+          key={src}
+          src={src}
+          alt={alt}
+          style={{ y, scale }}
+          initial={{
+            opacity: 0,
+            scale: reduced ? 1 : 1.04,
+          }}
+          animate={{
+            opacity: 1,
+            scale: reduced ? 1 : 1.04,
+          }}
+          transition={{
+            opacity: {
+              duration: reduced ? 0 : 0.9,
+              ease: revealEase,
+            },
+            scale: {
+              duration: reduced ? 0 : 1.5,
+              ease: [0.16, 1, 0.3, 1],
+            },
+          }}
+          className="
+            h-full
+            w-full
+            object-cover
+            object-center
+            saturate-[0.72]
+          "
+        />
+      </picture>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Hero content                                                               */
+/* -------------------------------------------------------------------------- */
+
+function HeroContent() {
+  return (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            delayChildren: 0.25,
+            staggerChildren: 0.1,
+          },
+        },
+      }}
+      className="max-w-[1100px]"
+    >
+      <motion.div
+        variants={{
+          hidden: {
+            opacity: 0,
+            y: 18,
+          },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+              duration: 0.65,
+              ease: revealEase,
+            },
+          },
+        }}
+        className="
+          mb-4
+          flex
+          items-center
+          gap-3
+          text-[9px]
+          uppercase
+          tracking-[0.16em]
+          sm:mb-5
+          sm:text-[10px]
+        "
+      >
+        <span className="h-px w-7 bg-current opacity-70 sm:w-10" />
+        <span>Independent journal</span>
+        <span className="opacity-40">·</span>
+        <span>Vol. 01</span>
+      </motion.div>
+
+      <motion.h1
+        variants={{
+          hidden: {
+            opacity: 0,
+            y: 45,
+            filter: "blur(8px)",
+          },
+          visible: {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            transition: {
+              duration: 1,
+              ease: [0.16, 1, 0.3, 1],
+            },
+          },
+        }}
+        className="
+          max-w-[1050px]
+          text-[clamp(54px,10vw,148px)]
+          font-bold
+          uppercase
+          leading-[0.76]
+          tracking-[-0.105em]
+        "
+      >
+        {contributionTitle}
+      </motion.h1>
+
+      <motion.div
+        variants={{
+          hidden: {
+            opacity: 0,
+            y: 20,
+          },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+              duration: 0.7,
+              ease: revealEase,
+            },
+          },
+        }}
+        className="
+          mt-6
+          flex
+          flex-col
+          gap-5
+          sm:mt-7
+          sm:flex-row
+          sm:items-end
+          sm:justify-between
+          lg:mt-8
+        "
+      >
+        <p className="max-w-[360px] text-[15px] leading-[1.35] sm:text-[17px] lg:text-[18px]">
+          Culture, community, and creative practice.
+        </p>
+
+        <div className="flex gap-2">
+          <MagneticLink href="#stories">
+            Explore stories
+          </MagneticLink>
+
+          <MagneticLink href="#magazine" inverted>
+            Shop the issue
+          </MagneticLink>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Fade up                                                                    */
+/* -------------------------------------------------------------------------- */
 
 function FadeUp({
   children,
@@ -77,7 +293,7 @@ function FadeUp({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Arrow link                                                                  */
+/* Arrow link                                                                 */
 /* -------------------------------------------------------------------------- */
 
 function AnimatedArrowLink({
@@ -122,7 +338,7 @@ function AnimatedArrowLink({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Magnetic link                                                               */
+/* Magnetic link                                                              */
 /* -------------------------------------------------------------------------- */
 
 function MagneticLink({
@@ -173,7 +389,7 @@ function MagneticLink({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Section header                                                              */
+/* Section header                                                             */
 /* -------------------------------------------------------------------------- */
 
 function SectionHeader({
@@ -211,7 +427,7 @@ function SectionHeader({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Magazine cover                                                              */
+/* Magazine cover                                                             */
 /* -------------------------------------------------------------------------- */
 
 function MagazineCover({
@@ -358,7 +574,7 @@ function MagazineCover({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Page                                                                        */
+/* Page                                                                       */
 /* -------------------------------------------------------------------------- */
 
 export default function Page() {
@@ -386,13 +602,17 @@ export default function Page() {
 
   /*
    * IMPORTANT:
-   * The hero has NO local fallback.
-   * It only exists when the API returns hero_image_url.
+   * The hero has no local fallback.
+   * It only exists when the API returns a hero image.
    */
-const pageHeroImageDesktop =
-  heroQuery.data?.hero_image_url_desktop || null;
+  const pageHeroImageDesktop =
+    heroQuery.data?.hero_image_url_desktop || null;
+
   const pageHeroImageMobile =
-  heroQuery.data?.hero_image_url_mobile || null;
+    heroQuery.data?.hero_image_url_mobile || null;
+
+  const hasHeroImage =
+    Boolean(pageHeroImageDesktop || pageHeroImageMobile);
 
   const showNewsletter =
     process.env.NEXT_PUBLIC_SHOW_NEWSLETTER !== "false";
@@ -405,44 +625,25 @@ const pageHeroImageDesktop =
       {/* HERO                                                                */}
       {/* ------------------------------------------------------------------ */}
 
-      <section className="relative isolate min-h-[min(86vh,900px)] overflow-hidden border-b border-white/15">
-        {/* API hero image only */}
-        {pageHeroImageMobile && (
-          <div className="absolute inset-0 -z-20 overflow-hidden md:hidden">
-            <motion.img
-              key={pageHeroImageMobile}
-              src={pageHeroImageMobile}
-              alt={imageAlt(pageFeaturedStory.title)}
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                opacity: { duration: 0.9, ease: revealEase },
-                scale: { duration: 1.5, ease: [0.16, 1, 0.3, 1] },
-              }}
-              className="h-full w-full object-cover object-center saturate-[0.72]"
-            />
-          </div>
-        )}
-
-        {pageHeroImageDesktop && (
-          <div className="absolute inset-0 -z-20 hidden overflow-hidden md:block">
-            <motion.img
-              key={pageHeroImageDesktop}
-              src={pageHeroImageDesktop}
-              alt={imageAlt(pageFeaturedStory.title)}
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                opacity: { duration: 0.9, ease: revealEase },
-                scale: { duration: 1.5, ease: [0.16, 1, 0.3, 1] },
-              }}
-              className="h-full w-full object-cover object-center saturate-[0.72]"
-            />
-          </div>
-        )}
+      <section
+        className="
+          relative
+          isolate
+          min-h-[min(86vh,900px)]
+          overflow-hidden
+          border-b
+          border-white/15
+        "
+      >
+        {/* API hero image with restored parallax */}
+        <HeroImage
+          desktopSrc={pageHeroImageDesktop}
+          mobileSrc={pageHeroImageMobile}
+          alt={imageAlt(pageFeaturedStory.title)}
+        />
 
         {/* Contrast layers */}
-        {(pageHeroImageDesktop || pageHeroImageMobile) && (
+        {hasHeroImage && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
@@ -466,237 +667,61 @@ const pageHeroImageDesktop =
           </>
         )}
 
-        {/* Hero content - Mobile */}
-        <div className="absolute inset-x-[5vw] bottom-[6vh] z-10 md:hidden">
-          {pageHeroImageMobile && (
+        {/* ---------------------------------------------------------------- */}
+        {/* Hero content — mobile                                             */}
+        {/* ---------------------------------------------------------------- */}
+
+        <div
+          className="
+            absolute
+            inset-x-[5vw]
+            bottom-[6vh]
+            z-10
+            md:hidden
+          "
+        >
+          {pageHeroImageMobile ? (
             <ContrastText src={pageHeroImageMobile}>
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: {},
-                  visible: {
-                    transition: {
-                      delayChildren: 0.25,
-                      staggerChildren: 0.1,
-                    },
-                  },
-                }}
-                className="max-w-[1100px]"
-              >
-                <motion.div
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 18,
-                    },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: {
-                        duration: 0.65,
-                        ease: revealEase,
-                      },
-                    },
-                  }}
-                  className="
-                    mb-4
-                    flex
-                    items-center
-                    gap-3
-                    text-[9px]
-                    uppercase
-                    tracking-[0.16em]
-                    sm:mb-5
-                    sm:text-[10px]
-                  "
-                >
-                  <span className="h-px w-7 bg-current opacity-70 sm:w-10" />
-                  <span>Independent journal</span>
-                  <span className="opacity-40">·</span>
-                  <span>Vol. 01</span>
-                </motion.div>
-
-                <motion.h1
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 45,
-                      filter: "blur(8px)",
-                    },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      filter: "blur(0px)",
-                      transition: {
-                        duration: 1,
-                        ease: [0.16, 1, 0.3, 1],
-                      },
-                    },
-                  }}
-                  className="
-                    max-w-[1050px]
-                    text-[clamp(54px,10vw,148px)]
-                    font-bold
-                    uppercase
-                    leading-[0.76]
-                    tracking-[-0.105em]
-                  "
-                >
-                  {contributionTitle}
-                </motion.h1>
-
-                <motion.div
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 20,
-                    },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: {
-                        duration: 0.7,
-                        ease: revealEase,
-                      },
-                    },
-                  }}
-                  className="mt-6 flex flex-col gap-5 sm:mt-7 sm:flex-row sm:items-end sm:justify-between lg:mt-8"
-                >
-                  <p className="max-w-[360px] text-[15px] leading-[1.35] sm:text-[17px] lg:text-[18px]">
-                    Culture, community, and creative practice.
-                  </p>
-                  <div className="flex gap-2">
-                    <MagneticLink href="#stories">Explore stories</MagneticLink>
-                    <MagneticLink href="#magazine" inverted>Shop the issue</MagneticLink>
-                  </div>
-                </motion.div>
-              </motion.div>
+              <HeroContent />
             </ContrastText>
-          )}
-        </div>
-
-        {/* Hero content - Desktop */}
-        <div className="absolute inset-x-[5vw] bottom-[6vh] z-10 hidden md:block sm:bottom-[7vh] lg:bottom-[8vh]">
-          {pageHeroImageDesktop && (
+          ) : pageHeroImageDesktop ? (
             <ContrastText src={pageHeroImageDesktop}>
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: {},
-                  visible: {
-                    transition: {
-                      delayChildren: 0.25,
-                      staggerChildren: 0.1,
-                    },
-                  },
-                }}
-                className="max-w-[1100px]"
-              >
-                <motion.div
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 18,
-                    },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: {
-                        duration: 0.65,
-                        ease: revealEase,
-                      },
-                    },
-                  }}
-                  className="
-                    mb-4
-                    flex
-                    items-center
-                    gap-3
-                    text-[9px]
-                    uppercase
-                    tracking-[0.16em]
-                    sm:mb-5
-                    sm:text-[10px]
-                  "
-                >
-                  <span className="h-px w-7 bg-current opacity-70 sm:w-10" />
-                  <span>Independent journal</span>
-                  <span className="opacity-40">·</span>
-                  <span>Vol. 01</span>
-                </motion.div>
-
-                <motion.h1
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 45,
-                      filter: "blur(8px)",
-                    },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      filter: "blur(0px)",
-                      transition: {
-                        duration: 1,
-                        ease: [0.16, 1, 0.3, 1],
-                      },
-                    },
-                  }}
-                  className="
-                    max-w-[1050px]
-                    text-[clamp(54px,10vw,148px)]
-                    font-bold
-                    uppercase
-                    leading-[0.76]
-                    tracking-[-0.105em]
-                  "
-                >
-                  {contributionTitle}
-                </motion.h1>
-
-                <motion.div
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 20,
-                    },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: {
-                        duration: 0.7,
-                        ease: revealEase,
-                      },
-                    },
-                  }}
-                  className="
-                    mt-6
-                    flex
-                    flex-col
-                    gap-5
-                    sm:mt-7
-                    sm:flex-row
-                    sm:items-end
-                    sm:justify-between
-                    lg:mt-8
-                  "
-                >
-                  <p className="max-w-[360px] text-[15px] leading-[1.35] sm:text-[17px] lg:text-[18px]">
-                    Culture, community, and creative practice.
-                  </p>
-                  <div className="flex gap-2">
-                    <MagneticLink href="#stories">Explore stories</MagneticLink>
-                    <MagneticLink href="#magazine" inverted>Shop the issue</MagneticLink>
-                  </div>
-                </motion.div>
-              </motion.div>
+              <HeroContent />
             </ContrastText>
-          )}
+          ) : null}
         </div>
 
-        {/* Scroll indicator */}
+        {/* ---------------------------------------------------------------- */}
+        {/* Hero content — desktop                                            */}
+        {/* ---------------------------------------------------------------- */}
+
+        <div
+          className="
+            absolute
+            inset-x-[5vw]
+            bottom-[6vh]
+            z-10
+            hidden
+            md:block
+            sm:bottom-[7vh]
+            lg:bottom-[8vh]
+          "
+        >
+          {pageHeroImageDesktop ? (
+            <ContrastText src={pageHeroImageDesktop}>
+              <HeroContent />
+            </ContrastText>
+          ) : pageHeroImageMobile ? (
+            <ContrastText src={pageHeroImageMobile}>
+              <HeroContent />
+            </ContrastText>
+          ) : null}
+        </div>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Scroll indicator                                                   */}
+        {/* ---------------------------------------------------------------- */}
+
         <motion.div
           initial={{
             opacity: 0,
@@ -736,7 +761,15 @@ const pageHeroImageDesktop =
       {showNewsletter && (
         <section
           id="community"
-          className="border-b border-border bg-background px-[5vw] py-12 sm:py-16 lg:py-20"
+          className="
+            border-b
+            border-border
+            bg-background
+            px-[5vw]
+            py-12
+            sm:py-16
+            lg:py-20
+          "
         >
           <FadeUp>
             <div className="mb-10 flex items-center justify-between border-b border-border pb-4">
@@ -768,7 +801,14 @@ const pageHeroImageDesktop =
               >
                 <label
                   htmlFor="home-email"
-                  className="mb-3 block text-[10px] uppercase tracking-[0.12em] text-muted-foreground"
+                  className="
+                    mb-3
+                    block
+                    text-[10px]
+                    uppercase
+                    tracking-[0.12em]
+                    text-muted-foreground
+                  "
                 >
                   Stay connected
                 </label>
@@ -834,7 +874,14 @@ const pageHeroImageDesktop =
 
       <section
         id="stories"
-        className="border-b border-border px-[5vw] py-16 sm:py-20 lg:py-24"
+        className="
+          border-b
+          border-border
+          px-[5vw]
+          py-16
+          sm:py-20
+          lg:py-24
+        "
       >
         <SectionHeader
           number="01"
@@ -868,7 +915,14 @@ const pageHeroImageDesktop =
 
       <section
         id="interviews"
-        className="border-b border-border px-[5vw] py-16 sm:py-20 lg:py-24"
+        className="
+          border-b
+          border-border
+          px-[5vw]
+          py-16
+          sm:py-20
+          lg:py-24
+        "
       >
         <SectionHeader
           number="02"
@@ -926,7 +980,18 @@ const pageHeroImageDesktop =
           </FadeUp>
         ) : (
           <>
-            <div className="mx-auto mb-20 grid max-w-[1200px] items-center gap-12 lg:grid-cols-[0.75fr_1fr] lg:gap-[9vw]">
+            <div
+              className="
+                mx-auto
+                mb-20
+                grid
+                max-w-[1200px]
+                items-center
+                gap-12
+                lg:grid-cols-[0.75fr_1fr]
+                lg:gap-[9vw]
+              "
+            >
               <FadeUp>
                 <Link
                   href={magazinePath(pageMagazine.slug)}
@@ -938,7 +1003,12 @@ const pageHeroImageDesktop =
                       duration: 0.7,
                       ease: revealEase,
                     }}
-                    className="relative aspect-[0.72] overflow-hidden bg-muted"
+                    className="
+                      relative
+                      aspect-[0.72]
+                      overflow-hidden
+                      bg-muted
+                    "
                   >
                     <img
                       src={pageMagazine.image}
