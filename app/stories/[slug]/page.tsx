@@ -153,35 +153,6 @@ export default function StoryPage() {
       <SiteHeader />
 
       <article className="mx-auto w-full max-w-[1380px] px-[5vw] pb-24 pt-[90px] sm:pb-28 sm:pt-[120px] lg:pb-36 lg:pt-[145px]">
-        {/* ---------------------------------------------------------------- */}
-        {/* Back                                                               */}
-        {/* ---------------------------------------------------------------- */}
-
-        <motion.div
-          initial={
-            reduced
-              ? false
-              : {
-                  opacity: 0,
-                  x: -15,
-                }
-          }
-          animate={
-            reduced
-              ? undefined
-              : {
-                  opacity: 1,
-                  x: 0,
-                }
-          }
-          transition={{
-            duration: 0.6,
-            ease,
-          }}
-          className="mb-14 sm:mb-20"
-        >
-          <BackLink />
-        </motion.div>
 
         {/* ---------------------------------------------------------------- */}
         {/* Header                                                             */}
