@@ -132,7 +132,7 @@ function MagneticLink({
           "text-[10px] uppercase tracking-[0.12em]",
           "transition-colors duration-300",
           inverted
-            ? "border-white bg-white text-black hover:border-primary hover:bg-primary hover:text-white"
+            ? "border-white bg-white/70 text-black hover:border-primary hover:bg-primary hover:text-white"
             : "border-white/80 bg-black/20 text-white backdrop-blur-sm hover:border-primary hover:bg-primary",
         ].join(" ")}
       >

@@ -24,7 +24,7 @@ export function ContrastText({
       aria-live="polite"
     >
       <motion.span
-        className="pointer-events-none absolute inset-0 block"
+        className="absolute inset-0 block"
         style={{
           color: "#ffffff",
           textShadow: "0 1px 12px rgba(0, 0, 0, 0.42)",
@@ -42,7 +42,7 @@ export function ContrastText({
       </motion.span>
 
       <motion.span
-        className="pointer-events-none absolute inset-0 block"
+        className="absolute inset-0 block"
         style={{
           color: "#0b0b0d",
           textShadow: "0 1px 12px rgba(255, 255, 255, 0.42)",
