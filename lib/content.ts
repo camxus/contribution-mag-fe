@@ -193,7 +193,7 @@ export function safeSlug(slug: string | string[] | undefined) {
 export const navLinks = [
   { label: "HOME", href: "/" },
   { label: "STORIES", href: "/stories" },
-  { label: "INTERVIEWS", href: "/interveiws" },
+  { label: "INTERVIEWS", href: "/interviews" },
   { label: "MAGAZINE", href: "/magazine" },
   { label: "ABOUT US", href: "/about" },
 ];
@@ -212,7 +212,7 @@ export const shopHref = "/magazine/issue-001-culture-unwrapped";
 export const allDetailLinks = [
   ...stories.map((item) => `/stories/${item.slug}`),
   ...magazines.map((item) => `/magazine/${item.slug}`),
-  ...interviews.map((item) => `/interveiws/${item.slug}`),
+  ...interviews.map((item) => `/interviews/${item.slug}`),
 ];
 
 export const contributionTitle = "Contribution Magazine";
@@ -231,7 +231,7 @@ export const imageAlt = (title: string) => `${title} — Contribution Magazine`;
 export const routeNames = {
   stories: "/stories/",
   magazines: "/magazine/",
-  interviews: "/interveiws/",
+  interviews: "/interviews/",
 };
 
 export const isExternal = (href: string) => href.startsWith("http");
@@ -376,18 +376,18 @@ export const editorialColor = "red";
 
 export const mockData = { stories, magazines, interviews, coverProducts };
 
-export const routeLabel = (type: "stories" | "magazines" | "interveiws") =>
+export const routeLabel = (type: "stories" | "magazines" | "interviews") =>
   type === "stories"
     ? storyLabel
     : type === "magazines"
       ? magazineLabel
       : interviewLabel;
 
-export const routeBase = (type: "stories" | "magazines" | "interveiws") =>
+export const routeBase = (type: "stories" | "magazines" | "interviews") =>
   `/${type}/`;
 
 export const pageFor = (
-  type: "stories" | "magazines" | "interveiws",
+  type: "stories" | "magazines" | "interviews",
   slug: string,
 ) => `${routeBase(type)}${slug}`;
 
@@ -398,17 +398,17 @@ export const slugify = (value: string) =>
     .replace(/(^-|-$)/g, "");
 
 export const cardLink = (
-  type: "stories" | "magazines" | "interveiws",
+  type: "stories" | "magazines" | "interviews",
   slug: string,
 ) => pageFor(type, slug);
 
-export const getCollection = (type: "stories" | "magazines" | "interveiws") =>
+export const getCollection = (type: "stories" | "magazines" | "interviews") =>
   type === "stories" ? stories : type === "magazines" ? magazines : interviews;
 
 export const allSlugs = {
   stories: stories.map((item) => item.slug),
   magazines: magazines.map((item) => item.slug),
-  interveiws: interviews.map((item) => item.slug),
+  interviews: interviews.map((item) => item.slug),
 };
 
 export const descriptionFor = (value: {
@@ -456,7 +456,7 @@ export const collectionPath = (kind: PageKind) =>
     ? "/stories/"
     : kind === "magazine"
       ? "/magazine/"
-      : "/interveiws/";
+      : "/interviews/";
 
 export const getImagePosition = () => "center";
 
