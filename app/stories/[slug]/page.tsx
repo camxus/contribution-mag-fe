@@ -13,9 +13,9 @@ export default function StoryPage() {
     query.data || stories.find((item) => item.slug === safeSlug(slug));
   if (query.isLoading && !story)
     return (
-      <main className="contribution-site min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground">
         <SiteHeader />
-        <p className="detail-page mx-auto flex max-w-5xl flex-col gap-8 px-5 py-16 text-foreground md:px-10">
+        <p className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-16 text-foreground md:px-10">
           Loading story…
         </p>
         <SiteFooter />
@@ -23,10 +23,10 @@ export default function StoryPage() {
     );
   if (!story) return null;
   return (
-    <main className="contribution-site min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-background text-foreground">
       <SiteHeader />
       <MotionArticle
-        className="detail-page mx-auto flex max-w-5xl flex-col gap-8 px-5 py-16 text-foreground md:px-10"
+        className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-16 text-foreground md:px-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}

@@ -17,22 +17,29 @@ export function SiteHeader() {
   return (
     <>
       <motion.header
-        className="contribution-header"
+        className="sticky top-0 z-30 flex items-center justify-between min-h-[66px] px-[18px] py-[12px] border-b border-border bg-white/94 backdrop-blur-[12px]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
-        <Link href="/" className="header-logo" aria-label={contributionTitle}>
+        <Link
+          href="/"
+          className="text-[24px] font-bold tracking-[-0.09em]"
+          aria-label={contributionTitle}
+        >
           CONTRIBUTION MAGAZINE.
         </Link>
-        <nav className="desktop-nav" aria-label="Primary navigation">
+        <nav
+          className="absolute left-1/2 flex gap-[24px] -translate-x-1/2 text-[10px] tracking-[0.08em]"
+          aria-label="Primary navigation"
+        >
           {navLinks.map((link) => (
             <Link key={link.href} href={link.href}>
               {link.label}
             </Link>
           ))}
         </nav>
-        <div className="header-tools">
+        <div className="flex items-center gap-[17px]">
           <Link href="/magazine" aria-label="Browse magazine">
             <ShoppingBag size={16} />
           </Link>
@@ -40,6 +47,7 @@ export function SiteHeader() {
             type="button"
             aria-label="Open navigation"
             onClick={() => setOpen(true)}
+            className="border-0 bg-transparent text-inherit p-0"
           >
             <Menu size={18} strokeWidth={1.5} />
           </button>
@@ -48,7 +56,7 @@ export function SiteHeader() {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="mobile-menu"
+            className="fixed inset-0 z-60 flex flex-col gap-[70px] p-[25px] bg-primary text-primary-foreground"
             role="dialog"
             aria-label="Mobile navigation"
             initial={{ opacity: 0, x: "100%" }}
@@ -58,14 +66,14 @@ export function SiteHeader() {
           >
             <button
               type="button"
-              className="close-menu"
+              className="self-end border-0 bg-transparent text-inherit"
               aria-label="Close navigation"
               onClick={() => setOpen(false)}
             >
               <X />
             </button>
-            <p>{contributionTitle}</p>
-            <nav>
+            <p className="mt-[10vh] text-[13px]">{contributionTitle}</p>
+            <nav className="mt-[22px] flex flex-col gap-[12px] text-[clamp(42px,12vw,90px)] font-bold tracking-[-0.1em]">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -247,7 +255,7 @@ export function SiteFooter() {
 
 export function BackLink() {
   return (
-    <Link className="back-link" href="/">
+    <Link className="inline-block mb-[70px] text-muted-foreground text-[11px]" href="/">
       ← contribution magazine
     </Link>
   );

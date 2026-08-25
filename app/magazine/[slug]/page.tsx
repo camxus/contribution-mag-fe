@@ -14,24 +14,26 @@ export default function MagazinePage() {
     query.data || magazines.find((item) => item.slug === safeSlug(slug));
   if (query.isLoading && !magazine)
     return (
-      <main className="contribution-site min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground">
         <SiteHeader />
-        <p className="detail-page">Loading issue…</p>
+        <p className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-16 text-foreground md:px-10">
+          Loading issue…
+        </p>
         <SiteFooter />
       </main>
     );
   if (!magazine) return null;
   return (
-    <main className="contribution-site min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-background text-foreground">
       <SiteHeader />
       <MotionArticle
-        className="detail-page magazine-detail mx-auto flex max-w-5xl flex-col gap-8 px-5 py-16 text-foreground md:px-10"
+        className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-16 text-foreground md:px-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.85 }}
       >
         <p className="eyebrow">{magazine.issue} · Print edition</p>
-        <div className="magazine-detail-grid">
+        <div className="grid grid-cols-[minmax(260px,1fr)_1fr] gap-[7vw] items-center">
           <MotionImage className="detail-image">
             <img src={magazine.image} alt={imageAlt(magazine.title)} />
           </MotionImage>
@@ -39,13 +41,13 @@ export default function MagazinePage() {
             <ContrastText src={magazine.image}>
               <h1>{magazine.title}</h1>
               <p className="detail-dek">{magazine.description}</p>
-              <p className="price">{magazine.price}</p>
+              <p className="mt-[28px] text-[18px]">{magazine.price}</p>
             </ContrastText>
             {magazine.soldOut ? (
-              <p className="sold-out">Sold Out</p>
+              <p className="mt-[30px] text-[12px] text-muted-foreground">Sold Out</p>
             ) : (
               <a
-                className="button-link"
+                className="mt-[28px] inline-block text-[18px]"
                 href={
                   magazine.stripeBuyLinkPrint ||
                   magazine.stripeBuyLinkDigital ||
@@ -58,7 +60,7 @@ export default function MagazinePage() {
                 Buy now
               </a>
             )}
-            <p className="detail-note">
+            <p className="mt-[30px] text-[12px] text-muted-foreground">
               Mock product page powered by editorial data.
             </p>
           </div>

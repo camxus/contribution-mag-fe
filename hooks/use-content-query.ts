@@ -10,6 +10,8 @@ import {
   type Interview,
   type Magazine,
   type Story,
+  heroImage,
+  featuredStory,
 } from "@/lib/content";
 import type { AboutContent, LegalPageContent, SiteContact } from "@/lib/types";
 
@@ -82,6 +84,21 @@ export function useMagazines() {
           })),
   });
 }
+export type Hero = {
+  hero_image_url: string;
+  featured_story: Story | null;
+};
+
+export function useHero() {
+  return useQuery<Hero>({
+    queryKey: ["hero"],
+    queryFn: async () =>
+      useMocks
+        ? { hero_image_url: heroImage, featured_story: featuredStory }
+        : getWp<Hero>("/contribution/v1/hero"),
+  });
+}
+
 export function useFeatured() {
   return useQuery({
     queryKey: ["featured"],

@@ -115,7 +115,9 @@ function ListRow({
               line-clamp-2
               text-sm
               leading-[1.35]
-              opacity-65
+              opacity-40
+              transition-opacity duration-300
+              group-hover:opacity-60
               sm:text-base
             "
           >
@@ -128,15 +130,14 @@ function ListRow({
           size={20}
           strokeWidth={1.5}
           className="
-            ml-auto
-            shrink-0
-            opacity-50
-            transition-all duration-300
-            group-hover:-translate-y-0.5
-            group-hover:translate-x-0.5
-            group-hover:opacity-100
-            sm:size-[22px]
-          "
+              ml-auto
+              shrink-0
+              opacity-50
+              transition-all duration-300
+              group-hover:rotate-45
+              group-hover:opacity-100
+              sm:size-[22px]
+            "
         />
       </Link>
     </motion.li>
@@ -147,9 +148,9 @@ function AnimatedList({ children }: { children: ReactNode }) {
   const reduced = useReducedMotion();
   return (
     <motion.ul
-      className="collection-list"
-      initial="hidden"
-      whileInView="visible"
+      className="flex flex-col gap-0 p-0 list-none border-t border-border"
+      initial={reduced ? false : { opacity: 0 }}
+      whileInView={reduced ? undefined : "visible"}
       viewport={{ once: true, amount: 0.18, margin: "0px 0px -8% 0px" }}
       variants={{
         hidden: {},
