@@ -2,27 +2,34 @@
 
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import { useRef } from "react";
+
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
-import { MotionImage, Reveal } from "@/components/motion";
-import { InterviewList, StoryList } from "@/components/collection-list";
+import { StoryList, InterviewList } from "@/components/collection-list";
 import { ContrastText } from "@/components/contrast-text";
+
 import {
   useInterviews,
   useMagazines,
   useStories,
   useHero,
 } from "@/hooks/use-content-query";
+
 import {
   coverProducts,
   featuredInterview,
   imageAlt,
-  interviewPath,
   magazinePath,
   magazines,
   newsletterLabel,
   priceBlurb,
   productBlurb,
-  storyPath,
   stories,
   interviews,
   heroImage,
@@ -30,187 +37,730 @@ import {
   contributionTitle,
 } from "@/lib/content";
 
+/* -------------------------------------------------------------------------- */
+/* Motion helpers                                                              */
+/* -------------------------------------------------------------------------- */
+
+const revealEase = [0.22, 1, 0.36, 1] as const;
+
+function FadeUp({
+  children,
+  delay = 0,
+  className,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const reduced = useReducedMotion();
+
+  return (
+    <motion.div
+      className={className}
+      initial={reduced ? false : { opacity: 0, y: 28 }}
+      whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{
+        duration: 0.7,
+        delay,
+        ease: revealEase,
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function AnimatedArrowLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.1em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
+    >
+      {children}
+
+      <motion.span
+        initial={{ x: 0, y: 0 }}
+        whileHover={{ x: 3, y: -3 }}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 20,
+        }}
+      >
+        <ArrowUpRight aria-hidden="true" size={15} />
+      </motion.span>
+    </Link>
+  );
+}
+
+function MagneticLink({
+  href,
+  children,
+  inverted = false,
+}: {
+  href: string;
+  children: React.ReactNode;
+  inverted?: boolean;
+}) {
+  return (
+    <motion.div
+      whileHover={{ y: -3 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 22,
+      }}
+    >
+      <Link
+        href={href}
+        className={[
+          "group inline-flex items-center gap-3 border px-4 py-3",
+          "text-[10px] uppercase tracking-[0.12em]",
+          "transition-colors duration-300",
+          inverted
+            ? "border-white bg-white text-black hover:border-primary hover:bg-primary hover:text-white"
+            : "border-white/80 bg-black/20 text-white backdrop-blur-sm hover:border-primary hover:bg-primary",
+        ].join(" ")}
+      >
+        {children}
+
+        <motion.span
+          whileHover={{ x: 3, y: -3 }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 20,
+          }}
+        >
+          <ArrowUpRight aria-hidden="true" size={14} />
+        </motion.span>
+      </Link>
+    </motion.div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Hero image                                                                  */
+/* -------------------------------------------------------------------------- */
+
+function HeroImage({
+  src,
+  alt,
+}: {
+  src: string;
+  alt: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduced ? ["0%", "0%"] : ["0%", "16%"],
+  );
+
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduced ? [1, 1] : [1.04, 1.12],
+  );
+
+  return (
+    <div
+      ref={ref}
+      className="absolute inset-0 -z-20 overflow-hidden"
+    >
+      <motion.img
+        src={src}
+        alt={alt}
+        style={{ y, scale }}
+        initial={reduced ? false : { scale: 1.1, opacity: 0 }}
+        animate={
+          reduced
+            ? undefined
+            : {
+              scale: 1.04,
+              opacity: 1,
+            }
+        }
+        transition={{
+          duration: 1.5,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        className="h-full w-full object-cover object-center saturate-[0.72]"
+      />
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Section header                                                              */
+/* -------------------------------------------------------------------------- */
+
+function SectionHeader({
+  number,
+  title,
+  description,
+  href,
+  action = "View all",
+}: {
+  number: string;
+  title: string;
+  description: string;
+  href: string;
+  action?: string;
+}) {
+  return (
+    <FadeUp>
+      <div className="mb-8 flex items-end justify-between gap-6 border-b border-border pb-4">
+        <div>
+          <p className="eyebrow">
+            {number} · {title}
+          </p>
+
+          <p className="mt-2 hidden max-w-[380px] text-[12px] leading-[1.45] text-muted-foreground sm:block">
+            {description}
+          </p>
+        </div>
+
+        <AnimatedArrowLink href={href}>
+          {action}
+        </AnimatedArrowLink>
+      </div>
+    </FadeUp>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Magazine cover                                                              */
+/* -------------------------------------------------------------------------- */
+
+function MagazineCover({
+  cover,
+  index,
+  href,
+}: {
+  cover: (typeof coverProducts)[number];
+  index: number;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group block min-w-0"
+    >
+      <motion.div
+        initial="rest"
+        whileHover="hover"
+        animate="rest"
+        variants={{
+          rest: {
+            y: 0,
+            rotateX: 0,
+            rotateY: 0,
+          },
+          hover: {
+            y: -8,
+            rotateX: 2,
+            rotateY: -2,
+          },
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 22,
+        }}
+        style={{
+          transformPerspective: 1000,
+        }}
+        className={`relative aspect-[0.72] overflow-hidden ${cover.tone} text-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]`}
+      >
+        <motion.img
+          src={cover.image}
+          alt={`${cover.name} mock cover`}
+          variants={{
+            rest: {
+              scale: 1,
+            },
+            hover: {
+              scale: 1.045,
+            },
+          }}
+          transition={{
+            duration: 0.7,
+            ease: revealEase,
+          }}
+          className="absolute inset-0 h-full w-full object-cover mix-blend-multiply saturate-90 contrast-105"
+        />
+
+        <motion.div
+          variants={{
+            rest: {
+              opacity: 0,
+            },
+            hover: {
+              opacity: 1,
+            },
+          }}
+          transition={{ duration: 0.35 }}
+          className="absolute inset-0 bg-black/10"
+        />
+
+        <strong className="absolute left-3 top-3 max-w-[90%] text-[clamp(18px,2.5vw,42px)] font-bold uppercase leading-[0.8] tracking-[-0.09em]">
+          contribution magazine
+        </strong>
+
+        <b className="absolute bottom-3 left-3 text-[clamp(13px,1.5vw,24px)] leading-none">
+          {cover.name}
+        </b>
+
+        <motion.span
+          variants={{
+            rest: {
+              opacity: 0,
+              x: 8,
+            },
+            hover: {
+              opacity: 1,
+              x: 0,
+            },
+          }}
+          transition={{
+            duration: 0.3,
+          }}
+          className="absolute right-3 top-3 text-[9px] uppercase tracking-[0.1em]"
+        >
+          0{index + 1}
+        </motion.span>
+      </motion.div>
+
+      <p className="mt-3 text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+        {productBlurb}
+      </p>
+
+      <span className="mt-1 block text-[10px]">
+        {priceBlurb}
+      </span>
+    </Link>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Page                                                                        */
+/* -------------------------------------------------------------------------- */
+
 export default function Page() {
   const storiesQuery = useStories();
   const interviewsQuery = useInterviews();
   const magazinesQuery = useMagazines();
   const heroQuery = useHero();
+
   const pageStories = storiesQuery.data || stories;
   const pageInterviews = interviewsQuery.data || interviews;
   const pageMagazines = magazinesQuery.data || magazines;
-  const pageFeaturedStory = pageStories[0] || featuredStory;
-  const pageFeaturedInterview = pageInterviews[0] || featuredInterview;
-  const pageMagazine = pageMagazines[0] || magazines[0];
-  const pageHeroImage = heroQuery.data?.hero_image_url || heroImage;
+
+  const pageFeaturedStory =
+    pageStories[0] || featuredStory;
+
+  const pageFeaturedInterview =
+    pageInterviews[0] || featuredInterview;
+
+  const pageMagazine =
+    pageMagazines[0] || magazines[0];
+
+  const pageHeroImage =
+    heroQuery.data?.hero_image_url || heroImage;
+
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen overflow-hidden bg-background text-foreground">
       <SiteHeader />
-      <section className="relative min-h-[min(82vh,820px)] overflow-hidden">
-        <MotionImage className="absolute inset-0 w-full h-full">
-          <img
-            src={pageHeroImage}
-            alt={imageAlt(pageFeaturedStory.title)}
-            className="block h-full w-full min-h-[min(82vh,820px)] object-cover object-center filter saturate-75"
-          />
-        </MotionImage>
-        <Reveal className="absolute z-20 inset-auto 5vw 8vw max-w-[760px] text-shadow-[0_1px_18px_rgba(0,0,0,0.45)]">
-          <div>
-            <ContrastText src={pageHeroImage}>
-              <p className="mb-[8px] text-[18px]">Independent journal · Vol. 01</p>
-              <h1 className="mb-[8px] text-[clamp(52px,10vw,140px)] font-bold tracking-[-0.12em] leading-[0.8]">
+
+      {/* ------------------------------------------------------------------ */}
+      {/* HERO                                                                */}
+      {/* ------------------------------------------------------------------ */}
+
+      <section className="relative isolate min-h-[min(86vh,900px)] overflow-hidden border-b border-white/15">
+        <HeroImage
+          src={pageHeroImage}
+          alt={imageAlt(pageFeaturedStory.title)}
+        />
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2 }}
+          className="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 via-black/25 to-black/10"
+        />
+
+        <div className="absolute inset-0 -z-10 bg-black/5" />
+
+        {/* Hero content */}
+        <div className="absolute inset-x-[5vw] bottom-[8vh] z-10 max-w-[900px]">
+          <ContrastText src={pageHeroImage}>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: {
+                    delayChildren: 0.3,
+                    staggerChildren: 0.12,
+                  },
+                },
+              }}
+            >
+              <motion.div
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    y: 20,
+                  },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.7,
+                      ease: revealEase,
+                    },
+                  },
+                }}
+                className="mb-5 flex items-center gap-3 text-[10px] uppercase tracking-[0.14em] sm:text-[11px]"
+              >
+                <span className="h-px w-8 bg-current opacity-70" />
+                <span>Independent journal</span>
+                <span className="opacity-50">·</span>
+                <span>Vol. 01</span>
+              </motion.div>
+
+              <motion.h1
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    y: 50,
+                    filter: "blur(8px)",
+                  },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    transition: {
+                      duration: 1,
+                      ease: [0.16, 1, 0.3, 1],
+                    },
+                  },
+                }}
+                className="max-w-[900px] text-[clamp(64px,12vw,170px)] font-bold uppercase leading-[0.76] tracking-[-0.105em]"
+              >
                 {contributionTitle}
-              </h1>
-              <p className="hero-kicker max-w-[340px] text-[18px]">
-                Culture, community, and creative practice.
-              </p>
-              <div className="mt-[26px] flex gap-[8px]">
-                <Link
-                  href="#stories"
-                  className="inline-block border border-foreground px-[12px] py-[16px] bg-black/35 text-[11px] uppercase transition-colors hover:border-primary hover:bg-primary"
-                >
-                  Explore stories
-                </Link>
-                <Link
-                  href="#magazine"
-                  className="inline-block border border-foreground px-[12px] py-[16px] bg-black/35 text-[11px] uppercase transition-colors hover:border-primary hover:bg-primary"
-                >
-                  Shop the issue
-                </Link>
-              </div>
-            </ContrastText>
-          </div>
-        </Reveal>
-      </section>
-      <section
-        className="relative grid grid-cols-[1fr_1fr] gap-[10px] min-h-[310px] px-[48px] py-[48px] bg-background"
-        id="community"
-      >
-        <div className="col-span-2 text-[18px]">Social Mark</div>
-        <div className="col-span-1">
-          <p className="eyebrow">London · Lagos · New York</p>
-          <h2 className="mt-[12px] mb-0 text-[clamp(38px,6vw,78px)] font-normal tracking-[-0.08em]">
-            {newsletterLabel}
-          </h2>
+              </motion.h1>
+
+              <motion.div
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    y: 20,
+                  },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.7,
+                      ease: revealEase,
+                    },
+                  },
+                }}
+                className="mt-7 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
+              >
+                <p className="max-w-[380px] text-[17px] leading-[1.35] sm:text-[19px]">
+                  Culture, community, and creative practice.
+                </p>
+
+                <div className="flex shrink-0 gap-2">
+                  <MagneticLink href="#stories">
+                    Explore stories
+                  </MagneticLink>
+
+                  <MagneticLink
+                    href="#magazine"
+                    inverted
+                  >
+                    Shop the issue
+                  </MagneticLink>
+                </div>
+              </motion.div>
+            </motion.div>
+          </ContrastText>
         </div>
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className="col-span-1 grid grid-cols-[1fr_auto] gap-[10px]"
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 0.6, y: 0 }}
+          transition={{
+            delay: 1.5,
+            duration: 0.6,
+          }}
+          className="absolute bottom-5 right-[5vw] hidden text-[9px] uppercase tracking-[0.15em] md:block"
         >
-          <label htmlFor="home-email" className="sr-only">
-            Email address
-          </label>
-          <input
-            id="home-email"
-            type="email"
-            required
-            placeholder="your@email.address"
-            className="col-span-2 min-w-0 flex-1 border-0 bg-[var(--chrome)] px-[14px] py-[14px] text-[12px] text-foreground outline-none"
-          />
-          <button
-            type="submit"
-            className="col-span-2 border-0 bg-[#1a1a1a] px-[13px] py-[13px] text-[14px] text-foreground"
-          >
-            Join
-          </button>
-          <p className="col-span-2 text-[14px] text-[var(--olive)]">
-            Join the community edition.
-          </p>
-        </form>
+          Scroll to explore
+        </motion.div>
       </section>
-      <section className="px-[5vw] py-[84px] border-b border-border" id="stories">
-        <div className="flex items-center justify-between mb-[28px]">
-          <p className="eyebrow">01 · Stories</p>
-          <Link
-            className="inline-flex items-center gap-[6px] text-[11px] text-muted-foreground"
-            href="/stories"
-          >
-            View all <ArrowUpRight aria-hidden="true" size={16} />
-          </Link>
-        </div>
-        {storiesQuery.isLoading ? (
-          <p>Loading stories…</p>
-        ) : (
-          <StoryList items={pageStories} />
-        )}
-      </section>
-      <section className="px-[5vw] py-[84px] border-b border-border" id="interviews">
-        <div className="flex items-center justify-between mb-[28px]">
-          <p className="eyebrow">02 · Interviews</p>
-          <Link
-            className="inline-flex items-center gap-[6px] text-[11px] text-muted-foreground"
-            href="/interveiws"
-          >
-            View all <ArrowUpRight aria-hidden="true" size={16} />
-          </Link>
-        </div>
-        {interviewsQuery.isLoading ? (
-          <p>Loading interviews…</p>
-        ) : (
-          <InterviewList items={pageInterviews} />
-        )}
-      </section>
-      <section className="px-[5vw] py-[84px] border-b border-border" id="magazine">
-        <div className="flex items-center justify-between mb-[28px]">
-          <p className="eyebrow">03 · Magazine</p>
-          <Link
-            className="inline-flex items-center gap-[6px] text-[11px] text-muted-foreground"
-            href={magazinePath(pageMagazine.slug)}
-          >
-            View issue <ArrowUpRight aria-hidden="true" size={16} />
-          </Link>
-        </div>
-        <div className="grid grid-cols-[minmax(220px,0.7fr)_1fr] gap-[7vw] items-center max-w-[900px] mb-[70px]">
-          <img
-            src={pageMagazine.image}
-            alt={imageAlt(pageMagazine.title)}
-            className="w-full max-h-[560px] object-cover"
-          />
-          <div>
-            <p className="eyebrow">{productBlurb}</p>
-            <h2 className="mt-[8px] mb-0 text-[clamp(42px,7vw,90px)] font-normal tracking-[-0.09em] leading-[0.84]">
-              {pageMagazine.title}
-            </h2>
-            <p className="mt-[8px] max-w-[380px] text-[15px] leading-[1.5] text-[#c1c1c1]">
-              {pageMagazine.description}
-            </p>
-            <Link
-              className="mt-[28px] inline-block text-[18px]"
-              href={magazinePath(pageMagazine.slug)}
-            >
-              View {pageMagazine.price}
-            </Link>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* COMMUNITY                                                           */}
+      {/* ------------------------------------------------------------------ */}
+
+      {process.env.NEXT_PUBLIC_SHOW_NEWSLETTER &&
+        <section
+          id="community"
+          className="border-b border-border bg-background px-[5vw] py-12 sm:py-16 lg:py-20"
+        >
+          <FadeUp>
+            <div className="mb-10 flex items-center justify-between border-b border-border pb-4">
+              <p className="eyebrow">00 · Community</p>
+
+              <span className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                Social Mark
+              </span>
+            </div>
+          </FadeUp>
+
+          <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-[10vw]">
+            <FadeUp delay={0.05}>
+              <div>
+                <p className="eyebrow mb-5">
+                  London · Lagos · New York
+                </p>
+
+                <h2 className="max-w-[850px] text-[clamp(48px,7vw,100px)] font-normal leading-[0.86] tracking-[-0.085em]">
+                  {newsletterLabel}
+                </h2>
+              </div>
+            </FadeUp>
+
+            <FadeUp delay={0.15}>
+              <form
+                onSubmit={(e) => e.preventDefault()}
+                className="self-end"
+              >
+                <label
+                  htmlFor="home-email"
+                  className="mb-3 block text-[10px] uppercase tracking-[0.12em] text-muted-foreground"
+                >
+                  Stay connected
+                </label>
+
+                <div className="flex border-b border-foreground/60">
+                  <input
+                    id="home-email"
+                    type="email"
+                    required
+                    placeholder="your@email.address"
+                    className="min-w-0 flex-1 bg-transparent py-4 text-[14px] outline-none placeholder:text-muted-foreground"
+                  />
+
+                  <motion.button
+                    type="submit"
+                    whileHover={{ x: 3 }}
+                    whileTap={{ scale: 0.96 }}
+                    className="group inline-flex items-center gap-2 px-2 py-4 text-[11px] uppercase tracking-[0.1em]"
+                  >
+                    Join
+
+                    <ArrowUpRight
+                      size={15}
+                      className="transition-transform duration-300 group-hover:-translate-y-0.5"
+                    />
+                  </motion.button>
+                </div>
+
+                <p className="mt-3 text-[11px] leading-[1.4] text-muted-foreground">
+                  Join the community edition.
+                </p>
+              </form>
+            </FadeUp>
           </div>
-        </div>
-        <div className="grid grid-cols-[repeat(4,1fr)] gap-[18px_5px]">
-          {coverProducts.map((cover) => (
+        </section>}
+
+      {/* ------------------------------------------------------------------ */}
+      {/* STORIES                                                             */}
+      {/* ------------------------------------------------------------------ */}
+
+      <section
+        id="stories"
+        className="border-b border-border px-[5vw] py-16 sm:py-20 lg:py-24"
+      >
+        <SectionHeader
+          number="01"
+          title="Stories"
+          description="Essays, visual culture, ideas and perspectives from the wider contribution community."
+          href="/stories"
+        />
+
+        {storiesQuery.isLoading ? (
+          <FadeUp>
+            <p className="py-10 text-sm text-muted-foreground">
+              Loading stories…
+            </p>
+          </FadeUp>
+        ) : (
+          <FadeUp delay={0.08}>
+            <StoryList items={pageStories} />
+          </FadeUp>
+        )}
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* INTERVIEWS                                                          */}
+      {/* ------------------------------------------------------------------ */}
+
+      <section
+        id="interviews"
+        className="border-b border-border px-[5vw] py-16 sm:py-20 lg:py-24"
+      >
+        <SectionHeader
+          number="02"
+          title="Interviews"
+          description="Conversations with people shaping culture, community and creative practice."
+          href="/interviews"
+        />
+
+        {interviewsQuery.isLoading ? (
+          <FadeUp>
+            <p className="py-10 text-sm text-muted-foreground">
+              Loading interviews…
+            </p>
+          </FadeUp>
+        ) : (
+          <FadeUp delay={0.08}>
+            <InterviewList items={pageInterviews} />
+          </FadeUp>
+        )}
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* MAGAZINE                                                            */}
+      {/* ------------------------------------------------------------------ */}
+
+      <section
+        id="magazine"
+        className="px-[5vw] py-16 sm:py-20 lg:py-28"
+      >
+        <SectionHeader
+          number="03"
+          title="Magazine"
+          description="The physical edition of Contribution Magazine."
+          href={magazinePath(pageMagazine.slug)}
+          action="View issue"
+        />
+
+        <div className="mx-auto mb-20 grid max-w-[1200px] items-center gap-12 lg:grid-cols-[0.75fr_1fr] lg:gap-[9vw]">
+          <FadeUp>
             <Link
               href={magazinePath(pageMagazine.slug)}
-              className="block min-w-0"
-              key={cover.name}
+              className="group relative block overflow-hidden"
             >
-              <div
-                className={`relative aspect-[0.72] overflow-hidden ${cover.tone} text-white`}
+              <motion.div
+                whileHover={{ scale: 1.015 }}
+                transition={{
+                  duration: 0.7,
+                  ease: revealEase,
+                }}
+                className="relative aspect-[0.72] overflow-hidden bg-muted"
               >
                 <img
-                  src={cover.image}
-                  alt={`${cover.name} mock cover`}
-                  className="absolute inset-0 h-full w-full object-cover mix-blend-multiply filter saturate-90 contrast-105"
+                  src={pageMagazine.image}
+                  alt={imageAlt(pageMagazine.title)}
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                 />
-                <strong className="absolute top-[10px] left-[12px] text-[clamp(22px,3vw,55px)] tracking-[-0.1em]">
-                  contribution magazine
-                </strong>
-                <b className="absolute bottom-[10px] left-[12px] text-[clamp(14px,1.8vw,28px)]">
-                  {cover.name}
-                </b>
-              </div>
-              <p className="mt-[7px] mb-[2px] text-[8px] text-[#d0d0d0]">
+
+                <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+              </motion.div>
+            </Link>
+          </FadeUp>
+
+          <FadeUp delay={0.12}>
+            <div className="max-w-[560px]">
+              <p className="eyebrow">
                 {productBlurb}
               </p>
-              <span className="text-[10px] text-foreground">{priceBlurb}</span>
-            </Link>
-          ))}
+
+              <h2 className="mt-5 text-[clamp(52px,8vw,110px)] font-normal leading-[0.82] tracking-[-0.09em]">
+                {pageMagazine.title}
+              </h2>
+
+              <p className="mt-7 max-w-[430px] text-[14px] leading-[1.55] text-muted-foreground">
+                {pageMagazine.description}
+              </p>
+
+              <AnimatedArrowLink
+                href={magazinePath(pageMagazine.slug)}
+              >
+                View {pageMagazine.price}
+              </AnimatedArrowLink>
+            </div>
+          </FadeUp>
         </div>
+
+        {/* Cover grid */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.08,
+          }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.08,
+              },
+            },
+          }}
+          className="grid grid-cols-2 gap-x-3 gap-y-10 sm:grid-cols-4 sm:gap-x-4"
+        >
+          {coverProducts.map((cover, index) => (
+            <motion.div
+              key={cover.name}
+              variants={{
+                hidden: {
+                  opacity: 0,
+                  y: 30,
+                },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.65,
+                    ease: revealEase,
+                  },
+                },
+              }}
+            >
+              <MagazineCover
+                cover={cover}
+                index={index}
+                href={magazinePath(pageMagazine.slug)}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
+
       <SiteFooter />
     </main>
   );

@@ -1,9 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, ShoppingBag, X } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Menu,
+  ShoppingBag,
+  X,
+} from "lucide-react";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+} from "framer-motion";
 import { useState } from "react";
+
 import {
   contributionTitle,
   footerLinks,
@@ -12,78 +23,461 @@ import {
 } from "@/lib/content";
 import { useSiteContact } from "@/hooks/use-content-query";
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
+/* -------------------------------------------------------------------------- */
+/* Header                                                                      */
+/* -------------------------------------------------------------------------- */
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const reduced = useReducedMotion();
+
   return (
     <>
       <motion.header
-        className="sticky top-0 z-30 flex items-center justify-between min-h-[66px] px-[18px] py-[12px] border-b border-border bg-white/94 backdrop-blur-[12px]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        className="
+          sticky top-0 z-50
+          flex min-h-[66px] items-center justify-between
+          border-b border-border
+          bg-white/90
+          px-[18px] py-[12px]
+          backdrop-blur-[14px]
+          supports-[backdrop-filter]:bg-white/75
+        "
+        initial={
+          reduced
+            ? false
+            : {
+                opacity: 0,
+                y: -10,
+              }
+        }
+        animate={
+          reduced
+            ? undefined
+            : {
+                opacity: 1,
+                y: 0,
+              }
+        }
+        transition={{
+          duration: 0.6,
+          ease,
+        }}
       >
+        {/* ---------------------------------------------------------------- */}
+        {/* Logo                                                              */}
+        {/* ---------------------------------------------------------------- */}
+
         <Link
           href="/"
-          className="text-[24px] font-bold tracking-[-0.09em]"
           aria-label={contributionTitle}
+          className="
+            relative z-10
+            text-[21px]
+            font-bold
+            uppercase
+            leading-none
+            tracking-[-0.09em]
+            transition-opacity
+            duration-300
+            hover:opacity-50
+            sm:text-[24px]
+          "
         >
           CONTRIBUTION MAGAZINE.
         </Link>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Desktop navigation                                                */}
+        {/* ---------------------------------------------------------------- */}
+
         <nav
-          className="absolute left-1/2 flex gap-[24px] -translate-x-1/2 text-[10px] tracking-[0.08em]"
+          className="
+            absolute
+            left-1/2
+            hidden
+            -translate-x-1/2
+            items-center
+            gap-6
+            lg:flex
+          "
           aria-label="Primary navigation"
         >
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href}>
-              {link.label}
-            </Link>
+          {navLinks.map((link, index) => (
+            <motion.div
+              key={link.href}
+              initial={
+                reduced
+                  ? false
+                  : {
+                      opacity: 0,
+                      y: -8,
+                    }
+              }
+              animate={
+                reduced
+                  ? undefined
+                  : {
+                      opacity: 1,
+                      y: 0,
+                    }
+              }
+              transition={{
+                duration: 0.45,
+                delay: 0.12 + index * 0.045,
+                ease,
+              }}
+            >
+              <Link
+                href={link.href}
+                className="
+                  group
+                  relative
+                  block
+                  py-2
+                  text-[10px]
+                  uppercase
+                  tracking-[0.08em]
+                  transition-opacity
+                  duration-300
+                  hover:opacity-50
+                "
+              >
+                {link.label}
+
+                <span
+                  className="
+                    absolute
+                    bottom-0
+                    left-0
+                    h-px
+                    w-0
+                    bg-current
+                    transition-[width]
+                    duration-300
+                    ease-out
+                    group-hover:w-full
+                  "
+                />
+              </Link>
+            </motion.div>
           ))}
         </nav>
-        <div className="flex items-center gap-[17px]">
-          <Link href="/magazine" aria-label="Browse magazine">
-            <ShoppingBag size={16} />
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Actions                                                           */}
+        {/* ---------------------------------------------------------------- */}
+
+        <div className="relative z-10 flex items-center gap-4">
+          <Link
+            href="/magazine"
+            aria-label="Browse magazine"
+            className="
+              group
+              flex
+              items-center
+              gap-2
+              transition-opacity
+              duration-300
+              hover:opacity-50
+            "
+          >
+            <span className="hidden text-[9px] uppercase tracking-[0.08em] sm:block">
+              Shop
+            </span>
+
+            <ShoppingBag
+              size={16}
+              strokeWidth={1.5}
+              className="transition-transform duration-300 group-hover:-translate-y-0.5"
+            />
           </Link>
+
           <button
             type="button"
             aria-label="Open navigation"
+            aria-expanded={open}
             onClick={() => setOpen(true)}
-            className="border-0 bg-transparent text-inherit p-0"
+            className="
+              border-0
+              bg-transparent
+              p-0
+              text-inherit
+              transition-opacity
+              duration-300
+              hover:opacity-50
+            "
           >
-            <Menu size={18} strokeWidth={1.5} />
+            <Menu
+              size={19}
+              strokeWidth={1.5}
+            />
           </button>
         </div>
       </motion.header>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Navigation overlay                                                  */}
+      {/* ------------------------------------------------------------------ */}
+
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-60 flex flex-col gap-[70px] p-[25px] bg-primary text-primary-foreground"
+            className="
+              fixed
+              inset-0
+              z-[60]
+              flex
+              min-h-screen
+              flex-col
+              overflow-hidden
+              bg-primary
+              px-[20px]
+              py-[18px]
+              text-primary-foreground
+              sm:px-[30px]
+              sm:py-[24px]
+            "
             role="dialog"
-            aria-label="Mobile navigation"
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            aria-modal="true"
+            aria-label="Navigation"
+            initial={
+              reduced
+                ? { opacity: 0 }
+                : {
+                    opacity: 0,
+                    x: "100%",
+                  }
+            }
+            animate={
+              reduced
+                ? { opacity: 1 }
+                : {
+                    opacity: 1,
+                    x: 0,
+                  }
+            }
+            exit={
+              reduced
+                ? { opacity: 0 }
+                : {
+                    opacity: 0,
+                    x: "100%",
+                  }
+            }
+            transition={{
+              duration: reduced ? 0.2 : 0.55,
+              ease,
+            }}
           >
-            <button
-              type="button"
-              className="self-end border-0 bg-transparent text-inherit"
-              aria-label="Close navigation"
-              onClick={() => setOpen(false)}
-            >
-              <X />
-            </button>
-            <p className="mt-[10vh] text-[13px]">{contributionTitle}</p>
-            <nav className="mt-[22px] flex flex-col gap-[12px] text-[clamp(42px,12vw,90px)] font-bold tracking-[-0.1em]">
-              {navLinks.map((link) => (
+            {/* Top bar */}
+            <div className="flex items-center justify-between">
+              <motion.div
+                initial={
+                  reduced
+                    ? false
+                    : {
+                        opacity: 0,
+                      }
+                }
+                animate={
+                  reduced
+                    ? undefined
+                    : {
+                        opacity: 1,
+                      }
+                }
+                transition={{
+                  delay: 0.2,
+                  duration: 0.5,
+                  ease,
+                }}
+              >
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  href="/"
                   onClick={() => setOpen(false)}
+                  className="
+                    text-[11px]
+                    uppercase
+                    tracking-[0.1em]
+                    transition-opacity
+                    hover:opacity-50
+                  "
                 >
-                  {link.label}
+                  {contributionTitle}
                 </Link>
+              </motion.div>
+
+              <motion.button
+                type="button"
+                aria-label="Close navigation"
+                onClick={() => setOpen(false)}
+                initial={
+                  reduced
+                    ? false
+                    : {
+                        opacity: 0,
+                        rotate: -20,
+                      }
+                }
+                animate={
+                  reduced
+                    ? undefined
+                    : {
+                        opacity: 1,
+                        rotate: 0,
+                      }
+                }
+                transition={{
+                  delay: 0.12,
+                  duration: 0.5,
+                  ease,
+                }}
+                whileHover={
+                  reduced
+                    ? undefined
+                    : {
+                        rotate: 90,
+                      }
+                }
+                whileTap={
+                  reduced
+                    ? undefined
+                    : {
+                        scale: 0.9,
+                      }
+                }
+                className="
+                  border-0
+                  bg-transparent
+                  p-1
+                  text-inherit
+                "
+              >
+                <X
+                  size={24}
+                  strokeWidth={1.4}
+                />
+              </motion.button>
+            </div>
+
+            {/* Main navigation */}
+            <nav
+              className="
+                mt-[11vh]
+                flex
+                flex-col
+                gap-0
+              "
+              aria-label="Mobile navigation"
+            >
+              {navLinks.map((link, index) => (
+                <motion.div
+                  key={link.href}
+                  initial={
+                    reduced
+                      ? false
+                      : {
+                          opacity: 0,
+                          x: 45,
+                        }
+                  }
+                  animate={
+                    reduced
+                      ? undefined
+                      : {
+                          opacity: 1,
+                          x: 0,
+                        }
+                  }
+                  transition={{
+                    delay: 0.18 + index * 0.06,
+                    duration: 0.6,
+                    ease,
+                  }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="
+                      group
+                      flex
+                      items-center
+                      justify-between
+                      border-b
+                      border-primary-foreground/20
+                      py-[11px]
+                      text-[clamp(42px,11vw,88px)]
+                      font-bold
+                      uppercase
+                      leading-[0.9]
+                      tracking-[-0.1em]
+                      transition-opacity
+                      duration-300
+                      hover:opacity-50
+                    "
+                  >
+                    <span>{link.label}</span>
+
+                    <ArrowUpRight
+                      size={24}
+                      strokeWidth={1.2}
+                      className="
+                        mr-1
+                        opacity-0
+                        transition-all
+                        duration-300
+                        group-hover:-translate-y-1
+                        group-hover:translate-x-1
+                        group-hover:opacity-100
+                        sm:size-8
+                      "
+                    />
+                  </Link>
+                </motion.div>
               ))}
             </nav>
+
+            {/* Bottom information */}
+            <motion.div
+              initial={
+                reduced
+                  ? false
+                  : {
+                      opacity: 0,
+                      y: 15,
+                    }
+              }
+              animate={
+                reduced
+                  ? undefined
+                  : {
+                      opacity: 1,
+                      y: 0,
+                    }
+              }
+              transition={{
+                delay: 0.5,
+                duration: 0.6,
+                ease,
+              }}
+              className="
+                mt-auto
+                flex
+                items-end
+                justify-between
+                gap-6
+                pb-1
+                text-[9px]
+                uppercase
+                tracking-[0.12em]
+              "
+            >
+              <span>London · Lagos · New York</span>
+              <span>Vol. 01</span>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -91,56 +485,172 @@ export function SiteHeader() {
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/* Footer                                                                      */
+/* -------------------------------------------------------------------------- */
+
 export function SiteFooter() {
   const contactQuery = useSiteContact();
-  const showNewsletter = process.env.NEXT_PUBLIC_SHOW_NEWSLETTER !== "false";
+  const reduced = useReducedMotion();
+
+  const showNewsletter =
+    process.env.NEXT_PUBLIC_SHOW_NEWSLETTER !== "false";
 
   const socialLinks = [
-    ...Object.entries(contactQuery.data?.social_links || {}),
+    ...Object.entries(
+      contactQuery.data?.social_links || {},
+    ),
     ...(contactQuery.data?.instagram
-      ? [["Instagram", contactQuery.data.instagram] as [string, string]]
+      ? [
+          [
+            "Instagram",
+            contactQuery.data.instagram,
+          ] as [string, string],
+        ]
       : []),
   ];
 
   const displayedSocialLinks =
     socialLinks.length > 0
       ? socialLinks
-      : footerLinks.map((link) => [link.label, link.href] as [string, string]);
+      : footerLinks.map(
+          (link) =>
+            [link.label, link.href] as [string, string],
+        );
 
   return (
-    <footer className="!m-0 !w-full !max-w-none !border-t !border-border px-[4vw] pt-12 text-foreground">
-      {/* Top footer */}
-      <div className="w-full">
+    <footer
+      className="
+        m-0
+        w-full
+        max-w-none
+        border-t
+        border-border
+        px-[5vw]
+        pt-12
+        text-foreground
+        sm:pt-16
+      "
+    >
+      {/* Top */}
+      <motion.div
+        initial={
+          reduced
+            ? false
+            : {
+                opacity: 0,
+                y: 25,
+              }
+        }
+        whileInView={
+          reduced
+            ? undefined
+            : {
+                opacity: 1,
+                y: 0,
+              }
+        }
+        viewport={{
+          once: true,
+          amount: 0.1,
+        }}
+        transition={{
+          duration: 0.8,
+          ease,
+        }}
+      >
         <div className="grid w-full grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* LEFT */}
+          {/* Left */}
           <div className="grid grid-cols-2 gap-8">
             {/* Social */}
             <div>
+              <p className="eyebrow mb-6">
+                Connect
+              </p>
+
               <nav
                 className="flex flex-col gap-3 text-sm leading-tight"
                 aria-label="Social links"
               >
-                {displayedSocialLinks.map(([label, href]) => (
-                  <a
-                    key={`${label}-${href}`}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-fit transition-opacity hover:opacity-50"
-                  >
-                    {label}
-                  </a>
-                ))}
+                {displayedSocialLinks.map(
+                  ([label, href], index) => (
+                    <motion.a
+                      key={`${label}-${href}`}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      initial={
+                        reduced
+                          ? false
+                          : {
+                              opacity: 0,
+                              x: -8,
+                            }
+                      }
+                      whileInView={
+                        reduced
+                          ? undefined
+                          : {
+                              opacity: 1,
+                              x: 0,
+                            }
+                      }
+                      viewport={{
+                        once: true,
+                        amount: 0.2,
+                      }}
+                      transition={{
+                        delay: index * 0.04,
+                        duration: 0.4,
+                        ease,
+                      }}
+                      className="
+                        group
+                        flex
+                        w-fit
+                        items-center
+                        gap-2
+                        transition-opacity
+                        duration-300
+                        hover:opacity-50
+                      "
+                    >
+                      {label}
+
+                      <ArrowUpRight
+                        size={12}
+                        strokeWidth={1.4}
+                        className="
+                          opacity-0
+                          transition-all
+                          duration-300
+                          group-hover:-translate-y-0.5
+                          group-hover:translate-x-0.5
+                          group-hover:opacity-100
+                        "
+                      />
+                    </motion.a>
+                  ),
+                )}
               </nav>
             </div>
 
-            {/* Legal / Contact */}
+            {/* Information */}
             <div>
+              <p className="eyebrow mb-6">
+                Information
+              </p>
+
               <div className="flex flex-col gap-3 text-sm leading-tight">
                 {contactQuery.data?.email && (
                   <a
                     href={`mailto:${contactQuery.data.email}`}
-                    className="w-fit transition-opacity hover:opacity-50"
+                    className="
+                      w-fit
+                      transition-opacity
+                      duration-300
+                      hover:opacity-50
+                    "
                   >
                     {contactQuery.data.email}
                   </a>
@@ -150,7 +660,12 @@ export function SiteFooter() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="w-fit transition-opacity hover:opacity-50"
+                    className="
+                      w-fit
+                      transition-opacity
+                      duration-300
+                      hover:opacity-50
+                    "
                   >
                     {link.label}
                   </Link>
@@ -159,16 +674,42 @@ export function SiteFooter() {
             </div>
           </div>
 
-          {/* RIGHT — Newsletter */}
+          {/* Newsletter */}
           {showNewsletter && (
-            <div className="border-t border-border pt-10 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+            <div
+              className="
+                border-t
+                border-border
+                pt-10
+                lg:border-l
+                lg:border-t-0
+                lg:pl-10
+                lg:pt-0
+              "
+            >
+              <p className="eyebrow mb-7">
+                Newsletter
+              </p>
+
               <div className="flex flex-col gap-8">
-                <p className="m-0 text-sm leading-none">
+                <p className="
+                  m-0
+                  max-w-[500px]
+                  text-[clamp(26px,3vw,42px)]
+                  leading-[0.95]
+                  tracking-[-0.045em]
+                ">
                   SIGN UP TO THE NEWSLETTER.
                 </p>
 
-                <form onSubmit={(e) => e.preventDefault()} className="w-full">
-                  <label className="sr-only" htmlFor="footer-email">
+                <form
+                  onSubmit={(e) => e.preventDefault()}
+                  className="w-full"
+                >
+                  <label
+                    className="sr-only"
+                    htmlFor="footer-email"
+                  >
                     Email address
                   </label>
 
@@ -181,82 +722,240 @@ export function SiteFooter() {
                       placeholder="your@email.address"
                       autoComplete="email"
                       className="
-              min-w-0 flex-1
-              border border-border
-              bg-transparent
-              px-6 py-5
-              text-sm
-              outline-none
-              placeholder:text-muted-foreground
-              focus:border-foreground
-            "
+                        min-w-0
+                        flex-1
+                        border
+                        border-border
+                        bg-transparent
+                        px-4
+                        py-4
+                        text-sm
+                        outline-none
+                        placeholder:text-muted-foreground
+                        transition-colors
+                        duration-300
+                        focus:border-foreground
+                        sm:px-6
+                        sm:py-5
+                      "
                     />
 
-                    <button
+                    <motion.button
                       type="submit"
+                      whileHover={
+                        reduced
+                          ? undefined
+                          : {
+                              opacity: 0.8,
+                            }
+                      }
+                      whileTap={
+                        reduced
+                          ? undefined
+                          : {
+                              scale: 0.98,
+                            }
+                      }
                       className="
-              shrink-0
-              border border-l-0 border-border
-              bg-primary
-              px-8 py-5
-              text-sm
-              text-primary-foreground
-              transition-opacity
-              hover:opacity-80
-            "
+                        shrink-0
+                        border
+                        border-l-0
+                        border-border
+                        bg-primary
+                        px-5
+                        py-4
+                        text-[10px]
+                        uppercase
+                        tracking-[0.08em]
+                        text-primary-foreground
+                        sm:px-8
+                        sm:py-5
+                        sm:text-sm
+                      "
                     >
-                      SUBSCRIBE
-                    </button>
+                      Subscribe
+                    </motion.button>
                   </div>
                 </form>
               </div>
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Wordmark */}
-      <div className="!m-0 !mt-16 !w-full !max-w-none overflow-hidden">
-        <div
+      <div className="mt-20 w-full overflow-hidden sm:mt-24 lg:mt-28">
+        <motion.div
+          initial={
+            reduced
+              ? false
+              : {
+                  opacity: 0,
+                  y: 70,
+                }
+          }
+          whileInView={
+            reduced
+              ? undefined
+              : {
+                  opacity: 1,
+                  y: 0,
+                }
+          }
+          viewport={{
+            once: true,
+            amount: 0.15,
+          }}
+          transition={{
+            duration: 1,
+            ease: [0.16, 1, 0.3, 1],
+          }}
           className="
-            !m-0
-            !flex
-            !w-full
-            !max-w-none
-            !flex-col
-            !overflow-hidden
-            !text-left
-            !text-[clamp(4rem,10.5vw,11rem)]
-            !font-bold
-            !leading-[0.78]
-            !tracking-[-0.065em]
+            flex
+            w-full
+            flex-col
+            overflow-hidden
+            text-left
+            text-[clamp(4rem,10.5vw,11rem)]
+            font-bold
+            leading-[0.76]
+            tracking-[-0.065em]
           "
           aria-label="Contribution Magazine"
         >
-          <strong className="!m-0 !block !whitespace-nowrap !font-bold">
+          <motion.strong
+            className="block whitespace-nowrap font-bold"
+            whileHover={
+              reduced
+                ? undefined
+                : {
+                    x: 8,
+                  }
+            }
+            transition={{
+              type: "spring",
+              stiffness: 250,
+              damping: 25,
+            }}
+          >
             Contribution
-          </strong>
+          </motion.strong>
 
-          <strong className="!m-0 !block !whitespace-nowrap !font-bold">
+          <motion.strong
+            className="block whitespace-nowrap font-bold"
+            whileHover={
+              reduced
+                ? undefined
+                : {
+                    x: -8,
+                  }
+            }
+            transition={{
+              type: "spring",
+              stiffness: 250,
+              damping: 25,
+            }}
+          >
             Magazine
-          </strong>
-        </div>
+          </motion.strong>
+        </motion.div>
       </div>
 
       {/* Copyright */}
-      <div className="flex w-full justify-between border-t border-border py-5">
-        <small className="text-xs text-muted-foreground">
+      <div className="
+        mt-6
+        flex
+        w-full
+        flex-col
+        justify-between
+        gap-2
+        border-t
+        border-border
+        py-5
+        sm:flex-row
+        sm:items-center
+      ">
+        <small className="
+          text-[10px]
+          uppercase
+          tracking-[0.08em]
+          text-muted-foreground
+        ">
           © 2026, Contribution Magazine
         </small>
+
+        {/* <small className="
+          text-[10px]
+          uppercase
+          tracking-[0.08em]
+          text-muted-foreground
+        ">
+          London · Lagos · New York
+        </small> */}
       </div>
     </footer>
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/* Back link                                                                   */
+/* -------------------------------------------------------------------------- */
+
 export function BackLink() {
+  const reduced = useReducedMotion();
+
   return (
-    <Link className="inline-block mb-[70px] text-muted-foreground text-[11px]" href="/">
-      ← contribution magazine
-    </Link>
+    <motion.div
+      initial={
+        reduced
+          ? false
+          : {
+              opacity: 0,
+              x: -10,
+            }
+      }
+      animate={
+        reduced
+          ? undefined
+          : {
+              opacity: 1,
+              x: 0,
+            }
+      }
+      transition={{
+        duration: 0.5,
+        ease,
+      }}
+    >
+      <Link
+        href="/"
+        className="
+          group
+          mb-[70px]
+          inline-flex
+          items-center
+          gap-2
+          text-[11px]
+          uppercase
+          tracking-[0.04em]
+          text-muted-foreground
+          transition-colors
+          duration-300
+          hover:text-foreground
+        "
+      >
+        <ArrowLeft
+          size={13}
+          strokeWidth={1.4}
+          className="
+            transition-transform
+            duration-300
+            group-hover:-translate-x-1
+          "
+        />
+
+        Contribution Magazine
+      </Link>
+    </motion.div>
   );
 }
