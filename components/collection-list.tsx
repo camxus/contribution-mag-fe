@@ -45,7 +45,7 @@ function ListRow({
           opacity: 1,
           y: 0,
           transition: {
-            duration: 0.7,
+            duration: reduced ? 0 : 0.7,
             ease,
           },
         },
@@ -97,7 +97,6 @@ function ListRow({
             "
           />
 
-          {/* Subtle image overlay */}
           <span
             className="
               pointer-events-none
@@ -122,7 +121,6 @@ function ListRow({
             gap-1
           "
         >
-          {/* Eyebrow */}
           <span
             className="
               block
@@ -138,7 +136,6 @@ function ListRow({
             {eyebrow}
           </span>
 
-          {/* Title */}
           <strong
             className="
               block
@@ -155,7 +152,6 @@ function ListRow({
             {title}
           </strong>
 
-          {/* Description */}
           <span
             className="
               line-clamp-2
@@ -226,7 +222,7 @@ function AnimatedList({ children }: { children: ReactNode }) {
         border-black/15
         p-0
       "
-      initial={reduced ? false : { opacity: 0 }}
+      initial={reduced ? "visible" : "hidden"}
       whileInView={reduced ? undefined : "visible"}
       viewport={{
         once: true,
@@ -234,8 +230,11 @@ function AnimatedList({ children }: { children: ReactNode }) {
         margin: "0px 0px -8% 0px",
       }}
       variants={{
-        hidden: {},
+        hidden: {
+          opacity: 0,
+        },
         visible: {
+          opacity: 1,
           transition: {
             staggerChildren: reduced ? 0 : 0.1,
           },
