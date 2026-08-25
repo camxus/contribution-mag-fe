@@ -983,7 +983,7 @@ export default function Page() {
             whileInView="visible"
             viewport={{
               once: true,
-              amount: 0.08,
+              amount: 0.05,
             }}
             variants={{
               hidden: {},
@@ -999,6 +999,7 @@ export default function Page() {
         gap-x-3
         gap-y-12
         sm:gap-x-4
+        sm:gap-y-16
         lg:grid-cols-8
         lg:gap-x-5
         lg:gap-y-16
@@ -1009,7 +1010,7 @@ export default function Page() {
               variants={{
                 hidden: {
                   opacity: 0,
-                  y: 40,
+                  y: 30,
                 },
                 visible: {
                   opacity: 1,
@@ -1022,7 +1023,7 @@ export default function Page() {
               }}
               className="
           col-span-2
-          lg:col-span-5
+          lg:col-span-4
           lg:row-span-2
         "
             >
@@ -1076,7 +1077,7 @@ export default function Page() {
               variants={{
                 hidden: {
                   opacity: 0,
-                  y: 40,
+                  y: 30,
                 },
                 visible: {
                   opacity: 1,
@@ -1090,24 +1091,29 @@ export default function Page() {
               className="
           col-span-2
           flex
-          flex-col
+          items-start
           justify-center
-          lg:col-span-3
+          py-2
+          sm:py-4
+          lg:col-span-4
           lg:row-span-2
+          lg:items-center
+          lg:py-0
         "
             >
-              <div className="max-w-[500px]">
+              <div className="w-full max-w-[500px] lg:max-w-[460px]">
                 <p className="eyebrow">
                   {productBlurb}
                 </p>
 
                 <h2
                   className="
-              mt-5
-              text-[clamp(52px,8vw,110px)]
+              mt-4
+              text-[clamp(48px,14vw,110px)]
               font-normal
               leading-[0.82]
               tracking-[-0.09em]
+              sm:mt-5
             "
                 >
                   {pageMagazine.title}
@@ -1115,12 +1121,13 @@ export default function Page() {
 
                 <p
                   className="
-              mt-7
+              mt-6
               line-clamp-3
               max-w-[430px]
               text-[14px]
               leading-[1.55]
               text-muted-foreground
+              sm:mt-7
             "
                 >
                   {pageMagazine.description}
@@ -1152,10 +1159,7 @@ export default function Page() {
                     },
                   },
                 }}
-                className="
-            col-span-1
-            lg:col-span-2
-          "
+                className="col-span-1 lg:col-span-2"
               >
                 <MagazineCover
                   cover={{
