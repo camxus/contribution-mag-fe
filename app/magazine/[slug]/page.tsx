@@ -3,7 +3,6 @@
 import { useParams } from "next/navigation";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { MotionArticle, MotionImage } from "@/components/motion";
-import { ContrastText } from "@/components/contrast-text";
 import { imageAlt, magazines, safeSlug } from "@/lib/content";
 import { useMagazine } from "@/hooks/use-content-query";
 
@@ -113,37 +112,32 @@ export default function MagazinePage() {
           </MotionImage>
 
           <div className="max-w-[680px]">
-            <ContrastText
-              src={magazine.image}
-              className="block"
-            >
-              <h1
-                className="
+            <h1
+              className="
                   text-[clamp(48px,8vw,110px)]
                   font-normal
                   leading-[0.82]
                   tracking-[-0.09em]
                 "
-              >
-                {magazine.title}
-              </h1>
+            >
+              {magazine.title}
+            </h1>
 
-              <p
-                className="
+            <p
+              className="
                   mt-6
                   max-w-[600px]
                   text-[clamp(18px,2.4vw,30px)]
                   leading-[1.12]
                   tracking-[-0.025em]
                 "
-              >
-                {magazine.description}
-              </p>
+            >
+              {magazine.description}
+            </p>
 
-              <p className="mt-7 text-[18px]">
-                {magazine.price}
-              </p>
-            </ContrastText>
+            <p className="mt-7 text-[18px]">
+              {magazine.price}
+            </p>
 
             {magazine.soldOut ? (
               <p className="mt-8 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
