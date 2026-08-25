@@ -393,22 +393,51 @@ export default function Page() {
       {/* ------------------------------------------------------------------ */}
 
       <section className="relative isolate min-h-[min(86vh,900px)] overflow-hidden border-b border-white/15">
-        <HeroImage
-          src={pageHeroImage}
-          alt={imageAlt(pageFeaturedStory.title)}
-        />
+        {/* ------------------------------------------------------------------ */}
+        {/* Image                                                               */}
+        {/* ------------------------------------------------------------------ */}
+
+        <motion.div
+          className="absolute inset-0 -z-20 overflow-hidden"
+          initial={{ scale: 1.04 }}
+          animate={{ scale: 1 }}
+          transition={{
+            duration: 1.8,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+        >
+          <HeroImage
+            src={pageHeroImage}
+            alt={imageAlt(pageFeaturedStory.title)}
+          />
+        </motion.div>
+
+        {/* ------------------------------------------------------------------ */}
+        {/* Contrast layers                                                     */}
+        {/* ------------------------------------------------------------------ */}
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2 }}
-          className="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 via-black/25 to-black/10"
+          className="
+      absolute
+      inset-0
+      -z-10
+      bg-gradient-to-t
+      from-black/90
+      via-black/25
+      to-black/5
+    "
         />
 
-        <div className="absolute inset-0 -z-10 bg-black/5" />
+        <div className="absolute inset-0 -z-10 bg-black/10" />
 
-        {/* Hero content */}
-        <div className="absolute inset-x-[5vw] bottom-[8vh] z-10 max-w-[900px]">
+        {/* ------------------------------------------------------------------ */}
+        {/* Content                                                             */}
+        {/* ------------------------------------------------------------------ */}
+
+        <div className="absolute inset-x-[5vw] bottom-[6vh] z-10 sm:bottom-[7vh] lg:bottom-[8vh]">
           <ContrastText src={pageHeroImage}>
             <motion.div
               initial="hidden"
@@ -417,40 +446,56 @@ export default function Page() {
                 hidden: {},
                 visible: {
                   transition: {
-                    delayChildren: 0.3,
-                    staggerChildren: 0.12,
+                    delayChildren: 0.25,
+                    staggerChildren: 0.1,
                   },
                 },
               }}
+              className="max-w-[1100px]"
             >
+              {/* Metadata */}
               <motion.div
                 variants={{
                   hidden: {
                     opacity: 0,
-                    y: 20,
+                    y: 18,
                   },
                   visible: {
                     opacity: 1,
                     y: 0,
                     transition: {
-                      duration: 0.7,
+                      duration: 0.65,
                       ease: revealEase,
                     },
                   },
                 }}
-                className="mb-5 flex items-center gap-3 text-[10px] uppercase tracking-[0.14em] sm:text-[11px]"
+                className="
+            mb-4
+            flex
+            items-center
+            gap-3
+            text-[9px]
+            uppercase
+            tracking-[0.16em]
+            sm:mb-5
+            sm:text-[10px]
+          "
               >
-                <span className="h-px w-8 bg-current opacity-70" />
+                <span className="h-px w-7 bg-current opacity-70 sm:w-10" />
+
                 <span>Independent journal</span>
-                <span className="opacity-50">·</span>
+
+                <span className="opacity-40">·</span>
+
                 <span>Vol. 01</span>
               </motion.div>
 
+              {/* Wordmark */}
               <motion.h1
                 variants={{
                   hidden: {
                     opacity: 0,
-                    y: 50,
+                    y: 45,
                     filter: "blur(8px)",
                   },
                   visible: {
@@ -463,11 +508,19 @@ export default function Page() {
                     },
                   },
                 }}
-                className="max-w-[900px] text-[clamp(64px,12vw,170px)] font-bold uppercase leading-[0.76] tracking-[-0.105em]"
+                className="
+            max-w-[1050px]
+            text-[clamp(54px,10vw,148px)]
+            font-bold
+            uppercase
+            leading-[0.76]
+            tracking-[-0.105em]
+          "
               >
                 {contributionTitle}
               </motion.h1>
 
+              {/* Lower content */}
               <motion.div
                 variants={{
                   hidden: {
@@ -483,13 +536,31 @@ export default function Page() {
                     },
                   },
                 }}
-                className="mt-7 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
+                className="
+            mt-6
+            flex
+            flex-col
+            gap-5
+            sm:mt-7
+            sm:flex-row
+            sm:items-end
+            sm:justify-between
+            lg:mt-8
+          "
               >
-                <p className="max-w-[380px] text-[17px] leading-[1.35] sm:text-[19px]">
+                <p
+                  className="
+              max-w-[360px]
+              text-[15px]
+              leading-[1.35]
+              sm:text-[17px]
+              lg:text-[18px]
+            "
+                >
                   Culture, community, and creative practice.
                 </p>
 
-                <div className="flex shrink-0 gap-2">
+                <div className="flex gap-2">
                   <MagneticLink href="#stories">
                     Explore stories
                   </MagneticLink>
@@ -506,16 +577,39 @@ export default function Page() {
           </ContrastText>
         </div>
 
+        {/* ------------------------------------------------------------------ */}
+        {/* Scroll indicator                                                     */}
+        {/* ------------------------------------------------------------------ */}
+
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 0.6, y: 0 }}
-          transition={{
-            delay: 1.5,
-            duration: 0.6,
+          initial={{
+            opacity: 0,
+            y: 8,
           }}
-          className="absolute bottom-5 right-[5vw] hidden text-[9px] uppercase tracking-[0.15em] md:block"
+          animate={{
+            opacity: 0.65,
+            y: 0,
+          }}
+          transition={{
+            delay: 1.6,
+            duration: 0.6,
+            ease: revealEase,
+          }}
+          className="
+      absolute
+      bottom-5
+      right-[5vw]
+      hidden
+      items-center
+      gap-3
+      text-[8px]
+      uppercase
+      tracking-[0.16em]
+      md:flex
+    "
         >
-          Scroll to explore
+          <span className="h-px w-8 bg-current opacity-50" />
+          <span>Scroll to explore</span>
         </motion.div>
       </section>
 
