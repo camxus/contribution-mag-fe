@@ -989,7 +989,7 @@ export default function Page() {
               hidden: {},
               visible: {
                 transition: {
-                  staggerChildren: 0.1,
+                  staggerChildren: 0.08,
                 },
               },
             }}
@@ -999,9 +999,10 @@ export default function Page() {
         gap-3
         sm:gap-4
         lg:grid-cols-4
+        xl:grid-cols-6
       "
           >
-            {/* NEWEST ISSUE — IMAGE */}
+            {/* NEWEST ISSUE — COVER */}
             <motion.div
               variants={{
                 hidden: {
@@ -1017,11 +1018,11 @@ export default function Page() {
                   },
                 },
               }}
-              className="col-span-1"
+              className="aspect-square"
             >
               <Link
                 href={magazinePath(pageMagazine.slug)}
-                className="group block"
+                className="group block h-full"
               >
                 <motion.div
                   whileHover={{ scale: 1.015 }}
@@ -1031,7 +1032,8 @@ export default function Page() {
                   }}
                   className="
               relative
-              aspect-square
+              h-full
+              w-full
               overflow-hidden
               bg-muted
             "
@@ -1081,13 +1083,12 @@ export default function Page() {
                 },
               }}
               className="
-          col-span-2
           aspect-square
           flex
           items-center
         "
             >
-              <div className="max-w-[560px]">
+              <div className="w-full">
                 <p className="eyebrow">
                   {productBlurb}
                 </p>
@@ -1095,7 +1096,7 @@ export default function Page() {
                 <h2
                   className="
               mt-4
-              text-[clamp(48px,8vw,110px)]
+              text-[clamp(42px,6vw,82px)]
               font-normal
               leading-[0.82]
               tracking-[-0.09em]
@@ -1106,11 +1107,11 @@ export default function Page() {
 
                 <p
                   className="
-              mt-6
+              mt-5
               line-clamp-3
-              max-w-[430px]
-              text-[14px]
-              leading-[1.55]
+              max-w-[360px]
+              text-[13px]
+              leading-[1.5]
               text-muted-foreground
             "
                 >
@@ -1143,7 +1144,7 @@ export default function Page() {
                     },
                   },
                 }}
-                className="col-span-1"
+                className="aspect-square"
               >
                 <MagazineCover
                   cover={{
