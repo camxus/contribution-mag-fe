@@ -7,6 +7,8 @@ import { ContrastText } from "@/components/contrast-text";
 import { imageAlt, magazines, safeSlug } from "@/lib/content";
 import { useMagazine } from "@/hooks/use-content-query";
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
 export default function MagazinePage() {
   const { slug } = useParams<{ slug: string }>();
   const safe = safeSlug(slug);
@@ -21,7 +23,9 @@ export default function MagazinePage() {
         <SiteHeader />
 
         <div className="mx-auto max-w-[1380px] px-[5vw] py-16">
-          <p className="text-sm text-muted-foreground">Loading issue…</p>
+          <p className="text-sm text-muted-foreground">
+            Loading issue…
+          </p>
         </div>
 
         <SiteFooter />
@@ -72,17 +76,15 @@ export default function MagazinePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{
           duration: 0.8,
-          ease: [0.22, 1, 0.36, 1],
+          ease,
         }}
       >
-        {/* Header */}
         <div className="mb-8 border-b border-border pb-4 sm:mb-12">
           <p className="eyebrow">
             {magazine.issue} · Print edition
           </p>
         </div>
 
-        {/* Product */}
         <div
           className="
             grid
@@ -94,7 +96,6 @@ export default function MagazinePage() {
             lg:items-center
           "
         >
-          {/* Cover */}
           <MotionImage
             className="
               mx-auto
@@ -107,16 +108,10 @@ export default function MagazinePage() {
             <img
               src={magazine.image}
               alt={imageAlt(magazine.title)}
-              className="
-                block
-                h-auto
-                w-full
-                object-cover
-              "
+              className="block h-auto w-full object-cover"
             />
           </MotionImage>
 
-          {/* Details */}
           <div className="max-w-[680px]">
             <ContrastText
               src={magazine.image}
@@ -180,10 +175,6 @@ export default function MagazinePage() {
                 Buy now
               </a>
             )}
-
-            <p className="mt-8 max-w-[420px] text-[11px] leading-[1.5] text-muted-foreground">
-              Mock product page powered by editorial data.
-            </p>
           </div>
         </div>
       </MotionArticle>
