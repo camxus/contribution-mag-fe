@@ -9,63 +9,185 @@ import { useMagazine } from "@/hooks/use-content-query";
 
 export default function MagazinePage() {
   const { slug } = useParams<{ slug: string }>();
-  const query = useMagazine(safeSlug(slug));
+  const safe = safeSlug(slug);
+
+  const query = useMagazine(safe);
   const magazine =
-    query.data || magazines.find((item) => item.slug === safeSlug(slug));
-  if (query.isLoading && !magazine)
+    query.data || magazines.find((item) => item.slug === safe);
+
+  if (query.isLoading && !magazine) {
     return (
       <main className="min-h-screen bg-background text-foreground">
         <SiteHeader />
-        <p className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-16 text-foreground md:px-10">
-          Loading issue…
-        </p>
+
+        <div className="mx-auto max-w-[1380px] px-[5vw] py-16">
+          <p className="text-sm text-muted-foreground">Loading issue…</p>
+        </div>
+
         <SiteFooter />
       </main>
     );
-  if (!magazine) return null;
+  }
+
+  if (!magazine) {
+    return (
+      <main className="min-h-screen bg-background text-foreground">
+        <SiteHeader />
+
+        <div className="mx-auto max-w-[1380px] px-[5vw] py-16">
+          <p className="text-sm text-muted-foreground">
+            Issue not found.
+          </p>
+        </div>
+
+        <SiteFooter />
+      </main>
+    );
+  }
+
+  const buyLink =
+    magazine.stripeBuyLinkPrint ||
+    magazine.stripeBuyLinkDigital ||
+    process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ||
+    "#";
+
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen overflow-hidden bg-background text-foreground">
       <SiteHeader />
+
       <MotionArticle
-        className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-16 text-foreground md:px-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.85 }}
+        className="
+          mx-auto
+          w-full
+          max-w-[1380px]
+          px-[5vw]
+          pb-20
+          pt-[100px]
+          sm:pb-24
+          sm:pt-[130px]
+          lg:pb-32
+          lg:pt-[160px]
+        "
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.8,
+          ease: [0.22, 1, 0.36, 1],
+        }}
       >
-        <p className="eyebrow">{magazine.issue} · Print edition</p>
-        <div className="grid grid-cols-[minmax(260px,1fr)_1fr] gap-[7vw] items-center">
-          <MotionImage className="detail-image">
-            <img src={magazine.image} alt={imageAlt(magazine.title)} />
+        {/* Header */}
+        <div className="mb-8 border-b border-border pb-4 sm:mb-12">
+          <p className="eyebrow">
+            {magazine.issue} · Print edition
+          </p>
+        </div>
+
+        {/* Product */}
+        <div
+          className="
+            grid
+            grid-cols-1
+            items-start
+            gap-10
+            md:grid-cols-[minmax(300px,0.85fr)_1fr]
+            md:gap-[7vw]
+            lg:items-center
+          "
+        >
+          {/* Cover */}
+          <MotionImage
+            className="
+              mx-auto
+              w-full
+              max-w-[560px]
+              overflow-hidden
+              md:mx-0
+            "
+          >
+            <img
+              src={magazine.image}
+              alt={imageAlt(magazine.title)}
+              className="
+                block
+                h-auto
+                w-full
+                object-cover
+              "
+            />
           </MotionImage>
-          <div>
-            <ContrastText src={magazine.image}>
-              <h1>{magazine.title}</h1>
-              <p className="detail-dek">{magazine.description}</p>
-              <p className="mt-[28px] text-[18px]">{magazine.price}</p>
+
+          {/* Details */}
+          <div className="max-w-[680px]">
+            <ContrastText
+              src={magazine.image}
+              className="block"
+            >
+              <h1
+                className="
+                  text-[clamp(48px,8vw,110px)]
+                  font-normal
+                  leading-[0.82]
+                  tracking-[-0.09em]
+                "
+              >
+                {magazine.title}
+              </h1>
+
+              <p
+                className="
+                  mt-6
+                  max-w-[600px]
+                  text-[clamp(18px,2.4vw,30px)]
+                  leading-[1.12]
+                  tracking-[-0.025em]
+                "
+              >
+                {magazine.description}
+              </p>
+
+              <p className="mt-7 text-[18px]">
+                {magazine.price}
+              </p>
             </ContrastText>
+
             {magazine.soldOut ? (
-              <p className="mt-[30px] text-[12px] text-muted-foreground">Sold Out</p>
+              <p className="mt-8 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                Sold Out
+              </p>
             ) : (
               <a
-                className="mt-[28px] inline-block text-[18px]"
-                href={
-                  magazine.stripeBuyLinkPrint ||
-                  magazine.stripeBuyLinkDigital ||
-                  process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ||
-                  "#"
-                }
+                href={buyLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="
+                  mt-8
+                  inline-flex
+                  items-center
+                  border
+                  border-foreground
+                  px-5
+                  py-3
+                  text-[12px]
+                  font-medium
+                  uppercase
+                  tracking-[0.12em]
+                  transition-colors
+                  duration-300
+                  hover:bg-foreground
+                  hover:text-background
+                "
               >
                 Buy now
               </a>
             )}
-            <p className="mt-[30px] text-[12px] text-muted-foreground">
+
+            <p className="mt-8 max-w-[420px] text-[11px] leading-[1.5] text-muted-foreground">
               Mock product page powered by editorial data.
             </p>
           </div>
         </div>
       </MotionArticle>
+
       <SiteFooter />
     </main>
   );
