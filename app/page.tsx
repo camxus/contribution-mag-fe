@@ -32,7 +32,6 @@ import {
   productBlurb,
   stories,
   interviews,
-  heroImage,
   featuredStory,
   contributionTitle,
 } from "@/lib/content";
@@ -77,6 +76,10 @@ function FadeUp({
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/* Arrow link                                                                  */
+/* -------------------------------------------------------------------------- */
+
 function AnimatedArrowLink({
   href,
   children,
@@ -87,7 +90,19 @@ function AnimatedArrowLink({
   return (
     <Link
       href={href}
-      className="group inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.1em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
+      className="
+        group
+        inline-flex
+        items-center
+        gap-2
+        text-[10px]
+        uppercase
+        tracking-[0.1em]
+        text-muted-foreground
+        transition-colors
+        duration-300
+        hover:text-foreground
+      "
     >
       {children}
 
@@ -105,6 +120,10 @@ function AnimatedArrowLink({
     </Link>
   );
 }
+
+/* -------------------------------------------------------------------------- */
+/* Magnetic link                                                               */
+/* -------------------------------------------------------------------------- */
 
 function MagneticLink({
   href,
@@ -190,23 +209,35 @@ function HeroImage({
       className="absolute inset-0 -z-20 overflow-hidden"
     >
       <motion.img
+        key={src}
         src={src}
         alt={alt}
         style={{ y, scale }}
-        initial={reduced ? false : { scale: 1.1, opacity: 0 }}
-        animate={
-          reduced
-            ? undefined
-            : {
-              scale: 1.04,
-              opacity: 1,
-            }
-        }
-        transition={{
-          duration: 1.5,
-          ease: [0.16, 1, 0.3, 1],
+        initial={{
+          opacity: 0,
+          scale: reduced ? 1 : 1.04,
         }}
-        className="h-full w-full object-cover object-center saturate-[0.72]"
+        animate={{
+          opacity: 1,
+          scale: reduced ? 1 : 1.04,
+        }}
+        transition={{
+          opacity: {
+            duration: reduced ? 0 : 0.9,
+            ease: revealEase,
+          },
+          scale: {
+            duration: reduced ? 0 : 1.5,
+            ease: [0.16, 1, 0.3, 1],
+          },
+        }}
+        className="
+          h-full
+          w-full
+          object-cover
+          object-center
+          saturate-[0.72]
+        "
       />
     </div>
   );
@@ -264,10 +295,7 @@ function MagazineCover({
   href: string;
 }) {
   return (
-    <Link
-      href={href}
-      className="group block min-w-0"
-    >
+    <Link href={href} className="group block min-w-0">
       <motion.div
         initial="rest"
         whileHover="hover"
@@ -296,7 +324,7 @@ function MagazineCover({
       >
         <motion.img
           src={cover.image}
-          alt={`${cover.name} mock cover`}
+          alt={`${cover.name} cover`}
           variants={{
             rest: {
               scale: 1,
@@ -309,7 +337,16 @@ function MagazineCover({
             duration: 0.7,
             ease: revealEase,
           }}
-          className="absolute inset-0 h-full w-full object-cover mix-blend-multiply saturate-90 contrast-105"
+          className="
+            absolute
+            inset-0
+            h-full
+            w-full
+            object-cover
+            mix-blend-multiply
+            saturate-90
+            contrast-105
+          "
         />
 
         <motion.div
@@ -325,11 +362,31 @@ function MagazineCover({
           className="absolute inset-0 bg-black/10"
         />
 
-        <strong className="absolute left-3 top-3 max-w-[90%] text-[clamp(18px,2.5vw,42px)] font-bold uppercase leading-[0.8] tracking-[-0.09em]">
+        <strong
+          className="
+            absolute
+            left-3
+            top-3
+            max-w-[90%]
+            text-[clamp(18px,2.5vw,42px)]
+            font-bold
+            uppercase
+            leading-[0.8]
+            tracking-[-0.09em]
+          "
+        >
           contribution magazine
         </strong>
 
-        <b className="absolute bottom-3 left-3 text-[clamp(13px,1.5vw,24px)] leading-none">
+        <b
+          className="
+            absolute
+            bottom-3
+            left-3
+            text-[clamp(13px,1.5vw,24px)]
+            leading-none
+          "
+        >
           {cover.name}
         </b>
 
@@ -347,7 +404,14 @@ function MagazineCover({
           transition={{
             duration: 0.3,
           }}
-          className="absolute right-3 top-3 text-[9px] uppercase tracking-[0.1em]"
+          className="
+            absolute
+            right-3
+            top-3
+            text-[9px]
+            uppercase
+            tracking-[0.1em]
+          "
         >
           0{index + 1}
         </motion.span>
@@ -391,8 +455,13 @@ export default function Page() {
   const pageMagazine =
     pageMagazines[0] || magazines[0];
 
+  /*
+   * IMPORTANT:
+   * The hero has NO local fallback.
+   * It only exists when the API returns hero_image_url.
+   */
   const pageHeroImage =
-    heroQuery.data?.hero_image_url || heroImage;
+    heroQuery.data?.hero_image_url || null;
 
   const showNewsletter =
     process.env.NEXT_PUBLIC_SHOW_NEWSLETTER !== "false";
@@ -406,52 +475,44 @@ export default function Page() {
       {/* ------------------------------------------------------------------ */}
 
       <section className="relative isolate min-h-[min(86vh,900px)] overflow-hidden border-b border-white/15">
-        {/* ------------------------------------------------------------------ */}
-        {/* Image                                                               */}
-        {/* ------------------------------------------------------------------ */}
-
-        <motion.div
-          className="absolute inset-0 -z-20 overflow-hidden"
-          initial={{ scale: 1.04 }}
-          animate={{ scale: 1 }}
-          transition={{
-            duration: 1.8,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        >
+        {/* API hero image only */}
+        {pageHeroImage && (
           <HeroImage
             src={pageHeroImage}
             alt={imageAlt(pageFeaturedStory.title)}
           />
-        </motion.div>
+        )}
 
-        {/* ------------------------------------------------------------------ */}
-        {/* Contrast layers                                                     */}
-        {/* ------------------------------------------------------------------ */}
+        {/* Contrast layers */}
+        {pageHeroImage && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{
+                duration: 1.2,
+                ease: revealEase,
+              }}
+              className="
+                absolute
+                inset-0
+                -z-10
+                bg-gradient-to-t
+                from-black/90
+                via-black/25
+                to-black/5
+              "
+            />
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2 }}
-          className="
-      absolute
-      inset-0
-      -z-10
-      bg-gradient-to-t
-      from-black/90
-      via-black/25
-      to-black/5
-    "
-        />
+            <div className="absolute inset-0 -z-10 bg-black/10" />
+          </>
+        )}
 
-        <div className="absolute inset-0 -z-10 bg-black/10" />
-
-        {/* ------------------------------------------------------------------ */}
-        {/* Content                                                             */}
-        {/* ------------------------------------------------------------------ */}
-
+        {/* Hero content */}
         <div className="absolute inset-x-[5vw] bottom-[6vh] z-10 sm:bottom-[7vh] lg:bottom-[8vh]">
-          <ContrastText src={pageHeroImage}>
+          <ContrastText
+            src={pageHeroImage || ""}
+          >
             <motion.div
               initial="hidden"
               animate="visible"
@@ -483,16 +544,16 @@ export default function Page() {
                   },
                 }}
                 className="
-            mb-4
-            flex
-            items-center
-            gap-3
-            text-[9px]
-            uppercase
-            tracking-[0.16em]
-            sm:mb-5
-            sm:text-[10px]
-          "
+                  mb-4
+                  flex
+                  items-center
+                  gap-3
+                  text-[9px]
+                  uppercase
+                  tracking-[0.16em]
+                  sm:mb-5
+                  sm:text-[10px]
+                "
               >
                 <span className="h-px w-7 bg-current opacity-70 sm:w-10" />
 
@@ -522,13 +583,13 @@ export default function Page() {
                   },
                 }}
                 className="
-            max-w-[1050px]
-            text-[clamp(54px,10vw,148px)]
-            font-bold
-            uppercase
-            leading-[0.76]
-            tracking-[-0.105em]
-          "
+                  max-w-[1050px]
+                  text-[clamp(54px,10vw,148px)]
+                  font-bold
+                  uppercase
+                  leading-[0.76]
+                  tracking-[-0.105em]
+                "
               >
                 {contributionTitle}
               </motion.h1>
@@ -550,25 +611,25 @@ export default function Page() {
                   },
                 }}
                 className="
-            mt-6
-            flex
-            flex-col
-            gap-5
-            sm:mt-7
-            sm:flex-row
-            sm:items-end
-            sm:justify-between
-            lg:mt-8
-          "
+                  mt-6
+                  flex
+                  flex-col
+                  gap-5
+                  sm:mt-7
+                  sm:flex-row
+                  sm:items-end
+                  sm:justify-between
+                  lg:mt-8
+                "
               >
                 <p
                   className="
-              max-w-[360px]
-              text-[15px]
-              leading-[1.35]
-              sm:text-[17px]
-              lg:text-[18px]
-            "
+                    max-w-[360px]
+                    text-[15px]
+                    leading-[1.35]
+                    sm:text-[17px]
+                    lg:text-[18px]
+                  "
                 >
                   Culture, community, and creative practice.
                 </p>
@@ -590,10 +651,7 @@ export default function Page() {
           </ContrastText>
         </div>
 
-        {/* ------------------------------------------------------------------ */}
-        {/* Scroll indicator                                                     */}
-        {/* ------------------------------------------------------------------ */}
-
+        {/* Scroll indicator */}
         <motion.div
           initial={{
             opacity: 0,
@@ -609,17 +667,17 @@ export default function Page() {
             ease: revealEase,
           }}
           className="
-      absolute
-      bottom-5
-      right-[5vw]
-      hidden
-      items-center
-      gap-3
-      text-[8px]
-      uppercase
-      tracking-[0.16em]
-      md:flex
-    "
+            absolute
+            bottom-5
+            right-[5vw]
+            hidden
+            items-center
+            gap-3
+            text-[8px]
+            uppercase
+            tracking-[0.16em]
+            md:flex
+          "
         >
           <span className="h-px w-8 bg-current opacity-50" />
           <span>Scroll to explore</span>
@@ -630,7 +688,7 @@ export default function Page() {
       {/* COMMUNITY                                                           */}
       {/* ------------------------------------------------------------------ */}
 
-      {showNewsletter &&
+      {showNewsletter && (
         <section
           id="community"
           className="border-b border-border bg-background px-[5vw] py-12 sm:py-16 lg:py-20"
@@ -676,20 +734,42 @@ export default function Page() {
                     type="email"
                     required
                     placeholder="your@email.address"
-                    className="min-w-0 flex-1 bg-transparent py-4 text-[14px] outline-none placeholder:text-muted-foreground"
+                    className="
+                      min-w-0
+                      flex-1
+                      bg-transparent
+                      py-4
+                      text-[14px]
+                      outline-none
+                      placeholder:text-muted-foreground
+                    "
                   />
 
                   <motion.button
                     type="submit"
                     whileHover={{ x: 3 }}
                     whileTap={{ scale: 0.96 }}
-                    className="group inline-flex items-center gap-2 px-2 py-4 text-[11px] uppercase tracking-[0.1em]"
+                    className="
+                      group
+                      inline-flex
+                      items-center
+                      gap-2
+                      px-2
+                      py-4
+                      text-[11px]
+                      uppercase
+                      tracking-[0.1em]
+                    "
                   >
                     Join
 
                     <ArrowUpRight
                       size={15}
-                      className="transition-transform duration-300 group-hover:-translate-y-0.5"
+                      className="
+                        transition-transform
+                        duration-300
+                        group-hover:-translate-y-0.5
+                      "
                     />
                   </motion.button>
                 </div>
@@ -700,7 +780,8 @@ export default function Page() {
               </form>
             </FadeUp>
           </div>
-        </section>}
+        </section>
+      )}
 
       {/* ------------------------------------------------------------------ */}
       {/* STORIES                                                             */}
@@ -817,7 +898,15 @@ export default function Page() {
                     <img
                       src={pageMagazine.image}
                       alt={imageAlt(pageMagazine.title)}
-                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                      className="
+                        h-full
+                        w-full
+                        object-cover
+                        transition-transform
+                        duration-700
+                        ease-out
+                        group-hover:scale-[1.025]
+                      "
                     />
 
                     <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
@@ -848,7 +937,6 @@ export default function Page() {
               </FadeUp>
             </div>
 
-            {/* Cover grid */}
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -864,7 +952,14 @@ export default function Page() {
                   },
                 },
               }}
-              className="grid grid-cols-2 gap-x-3 gap-y-10 sm:grid-cols-4 sm:gap-x-4"
+              className="
+                grid
+                grid-cols-2
+                gap-x-3
+                gap-y-10
+                sm:grid-cols-4
+                sm:gap-x-4
+              "
             >
               {coverProducts.map((cover, index) => (
                 <motion.div
