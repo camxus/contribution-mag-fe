@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
+
 import {
   imageAlt,
   interviewPath,
@@ -13,7 +14,10 @@ import {
   type Magazine,
   type Story,
 } from "@/lib/content";
+
 const ease = [0.22, 1, 0.36, 1] as const;
+
+const ink = "text-[#0b0b0b]";
 
 function ListRow({
   href,
@@ -27,42 +31,54 @@ function ListRow({
   title: string;
   description: string;
   image: string;
-  contrastAware?: boolean;
 }) {
   const reduced = useReducedMotion();
 
   return (
     <motion.li
       variants={{
-        hidden: { opacity: 0 },
+        hidden: {
+          opacity: 0,
+          y: 18,
+        },
         visible: {
           opacity: 1,
+          y: 0,
           transition: {
             duration: 0.7,
             ease,
           },
         },
       }}
-      whileHover={reduced ? undefined : { opacity: 0.78 }}
+      whileHover={
+        reduced
+          ? undefined
+          : {
+              opacity: 0.78,
+            }
+      }
     >
       <Link
         href={href}
-        className="
+        className={`
           group
           flex w-full items-center
           gap-4
-          border-t border-border
+          border-t border-black/15
           py-5
           sm:gap-6 sm:py-6
-        "
+          ${ink}
+        `}
       >
+        {/* Image */}
         <span
           className="
             relative
             aspect-square
-            w-20 shrink-0
+            w-20
+            shrink-0
             overflow-hidden
-            bg-muted
+            bg-black/5
             sm:w-24
           "
         >
@@ -70,75 +86,126 @@ function ListRow({
             src={image}
             alt={imageAlt(title)}
             className="
-              block h-full w-full
+              block
+              h-full
+              w-full
               object-cover
-              transition-transform duration-500
-              group-hover:scale-[1.03]
+              transition-transform
+              duration-700
+              ease-out
+              group-hover:scale-[1.04]
+            "
+          />
+
+          {/* Subtle image overlay */}
+          <span
+            className="
+              pointer-events-none
+              absolute
+              inset-0
+              bg-black/0
+              transition-colors
+              duration-500
+              group-hover:bg-black/5
             "
           />
         </span>
 
+        {/* Content */}
         <span
           className="
-            flex min-w-0 flex-1
-            flex-col justify-center
+            flex
+            min-w-0
+            flex-1
+            flex-col
+            justify-center
             gap-1
-            text-foreground
           "
         >
+          {/* Eyebrow */}
           <span
             className="
+              block
               truncate
-              text-[10px] font-medium
-              uppercase tracking-[0.14em]
-              opacity-60
-              sm:text-xs
+              text-[9px]
+              font-medium
+              uppercase
+              tracking-[0.14em]
+              text-black/55
+              sm:text-[10px]
             "
           >
             {eyebrow}
           </span>
 
+          {/* Title */}
           <strong
             className="
               block
-              text-2xl font-medium
+              text-[clamp(24px,3vw,42px)]
+              font-medium
               leading-[0.92]
-              tracking-[-0.08em]
-              sm:text-4xl
+              tracking-[-0.075em]
+              text-[#0b0b0b]
+              transition-opacity
+              duration-300
+              group-hover:opacity-70
             "
           >
             {title}
           </strong>
 
+          {/* Description */}
           <span
             className="
               line-clamp-2
-              text-sm
-              leading-[1.35]
-              opacity-40
-              transition-opacity duration-300
-              group-hover:opacity-60
-              sm:text-base
+              max-w-[700px]
+              text-[13px]
+              leading-[1.4]
+              text-black/55
+              transition-colors
+              duration-300
+              group-hover:text-black/70
+              sm:text-[15px]
             "
           >
             {description}
           </span>
         </span>
 
-        <ArrowUpRight
-          aria-hidden="true"
-          size={20}
-          strokeWidth={1.5}
+        {/* Arrow */}
+        <span
           className="
-              ml-auto
-              shrink-0
-              opacity-50
-              transition-all duration-300
+            ml-auto
+            flex
+            h-9
+            w-9
+            shrink-0
+            items-center
+            justify-center
+            border
+            border-black/15
+            text-black
+            transition-all
+            duration-300
+            group-hover:border-black
+            group-hover:bg-black
+            group-hover:text-white
+            sm:h-10
+            sm:w-10
+          "
+        >
+          <ArrowUpRight
+            aria-hidden="true"
+            size={18}
+            strokeWidth={1.5}
+            className="
+              transition-transform
+              duration-300
               group-hover:rotate-45
-              group-hover:opacity-100
-              sm:size-[22px]
             "
-        />
+          />
+        </span>
       </Link>
     </motion.li>
   );
@@ -146,15 +213,33 @@ function ListRow({
 
 function AnimatedList({ children }: { children: ReactNode }) {
   const reduced = useReducedMotion();
+
   return (
     <motion.ul
-      className="flex flex-col gap-0 p-0 list-none border-t border-border"
+      className="
+        m-0
+        flex
+        list-none
+        flex-col
+        gap-0
+        border-t
+        border-black/15
+        p-0
+      "
       initial={reduced ? false : { opacity: 0 }}
       whileInView={reduced ? undefined : "visible"}
-      viewport={{ once: true, amount: 0.18, margin: "0px 0px -8% 0px" }}
+      viewport={{
+        once: true,
+        amount: 0.18,
+        margin: "0px 0px -8% 0px",
+      }}
       variants={{
         hidden: {},
-        visible: { transition: { staggerChildren: reduced ? 0 : 0.12 } },
+        visible: {
+          transition: {
+            staggerChildren: reduced ? 0 : 0.1,
+          },
+        },
       }}
     >
       {children}
