@@ -1097,7 +1097,7 @@ export default function Page() {
                   <MagazineCover
                     cover={cover}
                     index={index}
-                    href={magazinePath(pageMagazine.slug)}
+                    href={magazinePath(pageMagazines[index]?.slug ?? pageMagazine.slug)}
                   />
                 </motion.div>
               ))}

@@ -180,9 +180,9 @@ export const coverTones = [
   "cover-olive",
   "cover-amber",
 ];
-export const coverProducts = coverNames.map((name, index) => ({
-  name,
-  image: coverImages[index],
+export const coverProducts = magazines.map((magazine, index) => ({
+  name: magazine.title,
+  image: magazine.image,
   tone: coverTones[index],
 }));
 
