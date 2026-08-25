@@ -1107,17 +1107,17 @@ export default function Page() {
 
                 <p
                   className="
-              mt-5
-              line-clamp-3
-              max-w-[360px]
-              text-[13px]
-              leading-[1.5]
-              text-muted-foreground
-            "
+                    mt-5
+                    line-clamp-2
+                    sm:line-clamp-3
+                    max-w-[360px]
+                    text-[13px]
+                    leading-[1.5]
+                    text-muted-foreground
+                  "
                 >
                   {pageMagazine.description}
                 </p>
-
                 <AnimatedArrowLink
                   href={magazinePath(pageMagazine.slug)}
                 >
