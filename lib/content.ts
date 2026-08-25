@@ -195,7 +195,7 @@ export const navLinks = [
   { label: "STORIES", href: "/stories" },
   { label: "INTERVIEWS", href: "/interveiws" },
   { label: "MAGAZINE", href: "/magazine" },
-  { label: "ABOUT US", href: "/#about" },
+  { label: "ABOUT US", href: "/about" },
 ];
 
 export const mockImageNote = "Editorial mock image";
