@@ -996,16 +996,12 @@ export default function Page() {
             className="
         grid
         grid-cols-2
-        gap-x-3
-        gap-y-12
-        sm:gap-x-4
-        sm:gap-y-16
-        lg:grid-cols-8
-        lg:gap-x-5
-        lg:gap-y-16
+        gap-3
+        sm:gap-4
+        lg:grid-cols-4
       "
           >
-            {/* NEWEST ISSUE */}
+            {/* NEWEST ISSUE — IMAGE */}
             <motion.div
               variants={{
                 hidden: {
@@ -1016,30 +1012,26 @@ export default function Page() {
                   opacity: 1,
                   y: 0,
                   transition: {
-                    duration: 0.7,
+                    duration: 0.65,
                     ease: revealEase,
                   },
                 },
               }}
-              className="
-          col-span-2
-          lg:col-span-4
-          lg:row-span-2
-        "
+              className="col-span-1"
             >
               <Link
                 href={magazinePath(pageMagazine.slug)}
                 className="group block"
               >
                 <motion.div
-                  whileHover={{ scale: 1.01 }}
+                  whileHover={{ scale: 1.015 }}
                   transition={{
                     duration: 0.7,
                     ease: revealEase,
                   }}
                   className="
               relative
-              aspect-[0.72]
+              aspect-square
               overflow-hidden
               bg-muted
             "
@@ -1072,7 +1064,7 @@ export default function Page() {
               </Link>
             </motion.div>
 
-            {/* ISSUE INFORMATION */}
+            {/* NEWEST ISSUE — INFO */}
             <motion.div
               variants={{
                 hidden: {
@@ -1083,25 +1075,19 @@ export default function Page() {
                   opacity: 1,
                   y: 0,
                   transition: {
-                    duration: 0.7,
+                    duration: 0.65,
                     ease: revealEase,
                   },
                 },
               }}
               className="
           col-span-2
+          aspect-square
           flex
-          items-start
-          justify-center
-          py-2
-          sm:py-4
-          lg:col-span-4
-          lg:row-span-2
-          lg:items-center
-          lg:py-0
+          items-center
         "
             >
-              <div className="w-full max-w-[500px] lg:max-w-[460px]">
+              <div className="max-w-[560px]">
                 <p className="eyebrow">
                   {productBlurb}
                 </p>
@@ -1109,11 +1095,10 @@ export default function Page() {
                 <h2
                   className="
               mt-4
-              text-[clamp(48px,14vw,110px)]
+              text-[clamp(48px,8vw,110px)]
               font-normal
               leading-[0.82]
               tracking-[-0.09em]
-              sm:mt-5
             "
                 >
                   {pageMagazine.title}
@@ -1127,7 +1112,6 @@ export default function Page() {
               text-[14px]
               leading-[1.55]
               text-muted-foreground
-              sm:mt-7
             "
                 >
                   {pageMagazine.description}
@@ -1141,7 +1125,7 @@ export default function Page() {
               </div>
             </motion.div>
 
-            {/* OTHER ISSUES */}
+            {/* ALL OTHER ISSUES — ONE SQUARE EACH */}
             {pageMagazines.slice(1).map((magazine, index) => (
               <motion.div
                 key={magazine.slug}
@@ -1159,7 +1143,7 @@ export default function Page() {
                     },
                   },
                 }}
-                className="col-span-1 lg:col-span-2"
+                className="col-span-1"
               >
                 <MagazineCover
                   cover={{
