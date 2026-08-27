@@ -8,23 +8,6 @@ export const metadata: Metadata = {
   description:
     "Contribution Magazine is an independent journal for stories, interviews, and creative work shaping what comes next.",
   generator: "v0.app",
-  icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
-  },
 };
 
 export const viewport: Viewport = {
