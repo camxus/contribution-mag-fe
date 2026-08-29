@@ -7,6 +7,7 @@ export type Story = {
   date: string;
   image: string;
   body: string[];
+  content_html: string;
 };
 export type Magazine = {
   slug: string;
@@ -26,6 +27,7 @@ export type Interview = {
   image: string;
   quote: string;
   body: string[];
+  content_html: string;
 };
 
 export const stories: Story[] = [
@@ -56,20 +58,24 @@ export const stories: Story[] = [
       "The best gathering places do more than hold people. They create the conditions for exchange, rehearsal, and a little productive friction.",
       "For the organizers behind these spaces, belonging is not a feeling to manufacture. It is a practice, repeated until a room starts to feel like yours.",
     ],
+    content_html:
+      '<p>The best gathering places do more than hold people. They create the conditions for exchange, rehearsal, and a little productive friction.</p>\n<p>For the organizers behind these spaces, belonging is not a feeling to manufacture. It is a practice, repeated until a room starts to feel like yours.</p>',
   },
   {
-    slug: "made-by-hand",
-    title: "Made by hand",
-    dek: "The makers choosing slowness in a world optimized for speed.",
-    category: "Practice",
-    author: "Ada Mensah",
-    date: "August 04, 2026",
+    slug: "the-art-of-starting-over",
+    title: "The art of starting over",
+    dek: "What we learn when the old map no longer gets us where we need to go.",
+    category: "Culture",
+    author: "Maya Okafor",
+    date: "August 18, 2026",
     image:
-      "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1200&q=85",
     body: [
-      "A hand leaves evidence. It changes the edge of an object, the rhythm of a room, the way an idea travels from one person to another.",
-      "This is not nostalgia. It is a contemporary decision to stay close to the material and let the material talk back.",
+      "Every new beginning asks us to become both archivist and architect. We carry the useful pieces forward, then make room for something we could not have named before.",
+      "Across studios, streets, and shared tables, a new generation is building with patience. Their work is less about reinvention than attention: to materials, to neighbors, and to the small decisions that add up.",
     ],
+    content_html:
+      '<p>Every new beginning asks us to become both archivist and architect. We carry the useful pieces forward, then make room for something we could not have named before.</p>\n<p>Across studios, streets, and shared tables, a new generation is building with patience. Their work is less about reinvention than attention: to materials, to neighbors, and to the small decisions that add up.</p>',
   },
 ];
 
@@ -118,6 +124,8 @@ export const interviews: Interview[] = [
       "London makes images that feel like open doors. Their practice moves between fashion, music, and community without treating any of those worlds as separate.",
       "We spoke about collaboration, finding a visual language, and making room for surprise.",
     ],
+    content_html:
+      '<p>London makes images that feel like open doors. Their practice moves between fashion, music, and community without treating any of those worlds as separate.</p>\n<p>We spoke about collaboration, finding a visual language, and making room for surprise.</p>',
   },
   {
     slug: "libianca-singer",
@@ -130,6 +138,8 @@ export const interviews: Interview[] = [
       "Libianca writes from the space between private feeling and public release. Her songs make the interior audible.",
       "In conversation, she talks about care, clarity, and the courage to keep the rough edges in.",
     ],
+    content_html:
+      '<p>Libianca writes from the space between private feeling and public release. Her songs make the interior audible.</p>\n<p>In conversation, she talks about care, clarity, and the courage to keep the rough edges in.</p>',
   },
 ];
 

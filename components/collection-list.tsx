@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -54,8 +55,8 @@ function ListRow({
         reduced
           ? undefined
           : {
-              opacity: 0.78,
-            }
+            opacity: 0.78,
+          }
       }
     >
       <Link
@@ -82,19 +83,20 @@ function ListRow({
             sm:w-24
           "
         >
-          <img
+          <Image
             src={image}
             alt={imageAlt(title)}
+            placeholder="blur"
+            blurDataURL="/placeholder.svg"
+            fill
+            sizes="(max-width: 640px) 80px, 96px"
             className="
-              block
-              h-full
-              w-full
-              object-cover
-              transition-transform
-              duration-700
-              ease-out
-              group-hover:scale-[1.04]
-            "
+                object-cover
+                transition-transform
+                duration-700
+                ease-out
+                group-hover:scale-[1.04]
+              "
           />
 
           <span

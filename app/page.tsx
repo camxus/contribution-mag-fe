@@ -3,33 +3,31 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import {
+  AnimatePresence,
   motion,
   useReducedMotion,
   useScroll,
   useTransform,
 } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { StoryList, InterviewList } from "@/components/collection-list";
 import { ContrastText } from "@/components/contrast-text";
 
 import {
+  useHero,
   useInterviews,
   useMagazines,
   useStories,
-  useHero,
 } from "@/hooks/use-content-query";
 
 import {
-  coverProducts,
   featuredInterview,
   imageAlt,
   magazinePath,
   magazines,
   newsletterLabel,
-  priceBlurb,
-  productBlurb,
   stories,
   interviews,
   featuredStory,
@@ -46,22 +44,28 @@ import {
 const revealEase = [0.22, 1, 0.36, 1] as const;
 
 /* -------------------------------------------------------------------------- */
-/* Hero image                                                                 */
+/* Hero slideshow                                                             */
 /* -------------------------------------------------------------------------- */
-function HeroImage({
-  desktopSrc,
-  mobileSrc,
+
+function HeroSlideshow({
+  images,
   alt,
 }: {
-  desktopSrc: string | null;
-  mobileSrc: string | null;
+  images: { desktop: string | null; mobile: string | null }[];
   alt: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+
   const reduced = useReducedMotion();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const progressRef = useRef<number | null>(null);
+
+  const AUTOPLAY_DURATION = 5000;
 
   const { scrollYProgress } = useScroll({
-    target: ref,
+    target: containerRef,
     offset: ["start start", "end start"],
   });
 
@@ -77,85 +81,224 @@ function HeroImage({
     reduced ? [1, 1] : [1.04, 1.12],
   );
 
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index);
+    setProgress(0);
+  };
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+    setProgress(0);
+  };
+
+  // Auto progress
+  useEffect(() => {
+    if (reduced || images.length <= 1) return;
+
+    const start = performance.now();
+
+    const updateProgress = (now: number) => {
+      const elapsed = now - start;
+      const nextProgress = Math.min(elapsed / AUTOPLAY_DURATION, 1);
+
+      setProgress(nextProgress);
+
+      if (nextProgress < 1) {
+        progressRef.current = requestAnimationFrame(updateProgress);
+      }
+    };
+
+    progressRef.current = requestAnimationFrame(updateProgress);
+
+    intervalRef.current = setTimeout(() => {
+      nextSlide();
+    }, AUTOPLAY_DURATION);
+
+    return () => {
+      if (progressRef.current !== null) {
+        cancelAnimationFrame(progressRef.current);
+      }
+
+      if (intervalRef.current) {
+        clearTimeout(intervalRef.current);
+      }
+    };
+  }, [currentIndex, images.length, reduced]);
+
+  const currentImage = images[currentIndex];
+
+  const desktopSrc = currentImage?.desktop ?? null;
+  const mobileSrc = currentImage?.mobile ?? null;
+
   if (!desktopSrc && !mobileSrc) {
     return null;
   }
 
   return (
     <div
-      ref={ref}
+      ref={containerRef}
       className="absolute inset-0 -z-20 overflow-hidden"
     >
       {/* Desktop */}
       {desktopSrc && (
-        <motion.img
-          src={desktopSrc}
-          alt={alt}
-          style={{ y, scale }}
-          initial={{
-            opacity: 0,
-            scale: reduced ? 1 : 1.04,
-          }}
-          animate={{
-            opacity: 1,
-            scale: reduced ? 1 : 1.04,
-          }}
-          transition={{
-            opacity: {
-              duration: reduced ? 0 : 0.9,
-              ease: revealEase,
-            },
-            scale: {
-              duration: reduced ? 0 : 1.5,
-              ease: [0.16, 1, 0.3, 1],
-            },
-          }}
-          className="
-            hidden
-            h-full
-            w-full
-            object-cover
-            object-center
-            saturate-[0.72]
-            md:block
-          "
-        />
+        <AnimatePresence mode="sync" initial={false}>
+          <motion.img
+            key={`desktop-${currentIndex}`}
+            src={desktopSrc}
+            alt={alt}
+            style={{ y, scale }}
+            initial={{
+              opacity: 0,
+              scale: reduced ? 1 : 1.04,
+            }}
+            animate={{
+              opacity: 1,
+              scale: reduced ? 1 : 1.04,
+            }}
+            exit={{
+              opacity: 0,
+              scale: reduced ? 1 : 1.08,
+            }}
+            transition={{
+              opacity: {
+                duration: reduced ? 0 : 0.8,
+                ease: revealEase,
+              },
+              scale: {
+                duration: reduced ? 0 : 1.5,
+                ease: [0.16, 1, 0.3, 1],
+              },
+            }}
+            className="
+              absolute
+              inset-0
+              hidden
+              h-full
+              w-full
+              object-cover
+              object-center
+              saturate-[0.72]
+              md:block
+            "
+          />
+        </AnimatePresence>
       )}
 
       {/* Mobile */}
       {mobileSrc && (
-        <motion.img
-          src={mobileSrc}
-          alt={alt}
-          style={{ y, scale }}
-          initial={{
-            opacity: 0,
-            scale: reduced ? 1 : 1.04,
-          }}
-          animate={{
-            opacity: 1,
-            scale: reduced ? 1 : 1.04,
-          }}
-          transition={{
-            opacity: {
-              duration: reduced ? 0 : 0.9,
-              ease: revealEase,
-            },
-            scale: {
-              duration: reduced ? 0 : 1.5,
-              ease: [0.16, 1, 0.3, 1],
-            },
-          }}
+        <AnimatePresence mode="sync" initial={false}>
+          <motion.img
+            key={`mobile-${currentIndex}`}
+            src={mobileSrc}
+            alt={alt}
+            style={{ y, scale }}
+            initial={{
+              opacity: 0,
+              scale: reduced ? 1 : 1.04,
+            }}
+            animate={{
+              opacity: 1,
+              scale: reduced ? 1 : 1.04,
+            }}
+            exit={{
+              opacity: 0,
+              scale: reduced ? 1 : 1.08,
+            }}
+            transition={{
+              opacity: {
+                duration: reduced ? 0 : 0.8,
+                ease: revealEase,
+              },
+              scale: {
+                duration: reduced ? 0 : 1.5,
+                ease: [0.16, 1, 0.3, 1],
+              },
+            }}
+            className="
+              absolute
+              inset-0
+              block
+              h-full
+              w-full
+              object-cover
+              object-center
+              saturate-[0.72]
+              md:hidden
+            "
+          />
+        </AnimatePresence>
+      )}
+
+      {/* Carousel indicators */}
+      {images.length > 1 && (
+        <div
           className="
-            block
-            h-full
-            w-full
-            object-cover
-            object-center
-            saturate-[0.72]
-            md:hidden
+            absolute
+            bottom-6
+            left-1/2
+            z-10
+            flex
+            -translate-x-1/2
+            items-center
+            gap-2
           "
-        />
+          role="tablist"
+          aria-label="Hero images"
+        >
+          {images.map((_, index) => {
+            const isActive = index === currentIndex;
+
+            return (
+              <button
+                key={index}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-label={`Go to image ${index + 1}`}
+                onClick={() => goToSlide(index)}
+                className="
+                  group
+                  relative
+                  h-1
+                  w-10
+                  overflow-hidden
+                  rounded-full
+                  bg-white/30
+                  transition-all
+                  duration-300
+                  hover:bg-white/50
+                  focus:outline-none
+                  focus-visible:ring-2
+                  focus-visible:ring-white
+                  focus-visible:ring-offset-2
+                  focus-visible:ring-offset-transparent
+                "
+              >
+                {/* Progress */}
+                <span
+                  className="
+                    absolute
+                    inset-y-0
+                    left-0
+                    rounded-full
+                    bg-white
+                  "
+                  style={{
+                    width: isActive
+                      ? `${progress * 100}%`
+                      : index < currentIndex
+                        ? "100%"
+                        : "0%",
+                    transition:
+                      isActive && progress === 0
+                        ? "none"
+                        : "width 50ms linear",
+                  }}
+                />
+              </button>
+            );
+          })}
+        </div>
       )}
     </div>
   );
@@ -628,19 +771,7 @@ export default function Page() {
   const pageMagazine =
     pageMagazines[0] || magazines[0];
 
-  /*
-   * IMPORTANT:
-   * The hero has no local fallback.
-   * It only exists when the API returns a hero image.
-   */
-  const pageHeroImageDesktop =
-    heroQuery.data?.hero_image_url_desktop || null;
-
-  const pageHeroImageMobile =
-    heroQuery.data?.hero_image_url_mobile || null;
-
-  const hasHeroImage =
-    Boolean(pageHeroImageDesktop || pageHeroImageMobile);
+  const hasHeroStories = pageStories.length > 0;
 
   const showNewsletter =
     process.env.NEXT_PUBLIC_SHOW_NEWSLETTER !== "false";
@@ -663,15 +794,21 @@ export default function Page() {
           border-white/15
         "
       >
-        {/* API hero image with restored parallax */}
-        <HeroImage
-          desktopSrc={pageHeroImageDesktop}
-          mobileSrc={pageHeroImageMobile}
+        {/* Hero slideshow with latest article images */}
+        <HeroSlideshow
+          images={[{
+            desktop: heroQuery.data?.hero_image_url_desktop!,
+            mobile: heroQuery.data?.hero_image_url_mobile!
+          },
+          ...pageStories.slice(0, 5).map((story) => ({
+            desktop: story.image,
+            mobile: story.image,
+          }))]}
           alt={imageAlt(pageFeaturedStory.title)}
         />
 
         {/* Contrast layers */}
-        {hasHeroImage && (
+        {pageStories.length > 0 && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
@@ -699,52 +836,44 @@ export default function Page() {
         {/* Hero content — mobile                                             */}
         {/* ---------------------------------------------------------------- */}
 
-        <div
-          className="
-            absolute
-            inset-x-[5vw]
-            bottom-[6vh]
-            z-10
-            md:hidden
-          "
-        >
-          {pageHeroImageMobile ? (
-            <ContrastText src={pageHeroImageMobile}>
+        {pageStories[0]?.image && (
+          <div
+            className="
+              absolute
+              inset-x-[5vw]
+              bottom-[6vh]
+              z-10
+              md:hidden
+            "
+          >
+            <ContrastText src={pageStories[0].image}>
               <HeroContent />
             </ContrastText>
-          ) : pageHeroImageDesktop ? (
-            <ContrastText src={pageHeroImageDesktop}>
-              <HeroContent />
-            </ContrastText>
-          ) : null}
-        </div>
+          </div>
+        )}
 
         {/* ---------------------------------------------------------------- */}
         {/* Hero content — desktop                                            */}
         {/* ---------------------------------------------------------------- */}
 
-        <div
-          className="
-            absolute
-            inset-x-[5vw]
-            bottom-[6vh]
-            z-10
-            hidden
-            md:block
-            sm:bottom-[7vh]
-            lg:bottom-[8vh]
-          "
-        >
-          {pageHeroImageDesktop ? (
-            <ContrastText src={pageHeroImageDesktop}>
+        {pageStories[0]?.image && (
+          <div
+            className="
+              absolute
+              inset-x-[5vw]
+              bottom-[6vh]
+              z-10
+              hidden
+              md:block
+              sm:bottom-[7vh]
+              lg:bottom-[8vh]
+            "
+          >
+            <ContrastText src={pageStories[0].image}>
               <HeroContent />
             </ContrastText>
-          ) : pageHeroImageMobile ? (
-            <ContrastText src={pageHeroImageMobile}>
-              <HeroContent />
-            </ContrastText>
-          ) : null}
-        </div>
+          </div>
+        )}
 
         {/* ---------------------------------------------------------------- */}
         {/* Scroll indicator                                                   */}
@@ -983,208 +1112,158 @@ export default function Page() {
       {/* ------------------------------------------------------------------ */}
       <section
         id="magazine"
-        className="px-[5vw] py-16 sm:py-20 lg:py-28"
+        className="border-b border-border py-16 sm:py-20 lg:py-28"
       >
-        <SectionHeader
-          number="03"
-          title="Magazine"
-          description="The physical edition of Contribution Magazine."
-          href="/magazine"
-          action="View issue"
-        />
+        <div className="mb-8 border-b border-border px-[5vw] pb-4 lg:hidden">
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <p className="eyebrow">03 · Magazine</p>
+            </div>
+            <AnimatedArrowLink href="/magazine">
+              View all
+            </AnimatedArrowLink>
+          </div>
+        </div>
 
         {magazinesQuery.isLoading ? (
           <FadeUp>
-            <p className="py-10 text-sm text-muted-foreground">
-              Loading issues…
-            </p>
+            <div className="px-[5vw]">
+              <p className="py-10 text-sm text-muted-foreground">
+                Loading issues…
+              </p>
+            </div>
           </FadeUp>
         ) : showNoMagazines ? (
           <FadeUp>
-            <p className="py-10 text-sm text-muted-foreground">
-              {noIssuesLabel}
-            </p>
+            <div className="px-[5vw]">
+              <p className="py-10 text-sm text-muted-foreground">
+                {noIssuesLabel}
+              </p>
+            </div>
           </FadeUp>
         ) : (
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{
-              once: true,
-              amount: 0.05,
-            }}
-            variants={{
-              hidden: {},
-              visible: {
-                transition: {
-                  staggerChildren: 0.08,
-                },
-              },
-            }}
-            className="
-        grid
-        grid-cols-2
-        gap-3
-        sm:gap-4
-        lg:grid-cols-4
-        xl:grid-cols-6
-      "
-          >
-            {/* NEWEST ISSUE — COVER */}
-            <motion.div
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  y: 30,
-                },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    duration: 0.65,
-                    ease: revealEase,
-                  },
-                },
-              }}
-              className="aspect-square"
-            >
+          <div className="flex flex-col lg:flex-row">
+            {/* Mobile: Latest issue first, edge-to-edge */}
+            <div className="relative aspect-[0.72] w-full lg:hidden">
               <Link
                 href={magazinePath(pageMagazine.slug)}
                 className="group block h-full"
               >
-                <motion.div
-                  whileHover={{ scale: 1.015 }}
-                  transition={{
-                    duration: 0.7,
-                    ease: revealEase,
-                  }}
-                  className="
-              relative
-              h-full
-              w-full
-              overflow-hidden
-              bg-muted
-            "
-                >
+                <div className="relative h-full w-full overflow-hidden bg-muted">
                   <img
                     src={pageMagazine.image}
                     alt={imageAlt(pageMagazine.title)}
-                    className="
-                h-full
-                w-full
-                object-cover
-                transition-transform
-                duration-700
-                ease-out
-                group-hover:scale-[1.025]
-              "
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                   />
-
-                  <div
-                    className="
-                absolute
-                inset-0
-                bg-black/0
-                transition-colors
-                duration-500
-                group-hover:bg-black/10
-              "
-                  />
-                </motion.div>
+                  <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+                </div>
               </Link>
-            </motion.div>
-
-            {/* NEWEST ISSUE — INFO */}
-            <motion.div
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  y: 30,
-                },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    duration: 0.65,
-                    ease: revealEase,
-                  },
-                },
-              }}
-              className="
-          aspect-square
-          flex
-          items-center
-        "
-            >
-              <div className="w-full">
-                <p className="eyebrow">
-                  {productBlurb}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-5 py-4">
+                <p className="text-[8px] uppercase tracking-[0.08em] text-white/70">
+                  {pageMagazine.issue}
                 </p>
-
-                <h2
-                  className="
-              mt-4
-              text-[clamp(42px,6vw,82px)]
-              font-normal
-              leading-[0.82]
-              tracking-[-0.09em]
-            "
-                >
+                <h2 className="mt-1 text-[clamp(24px,6vw,42px)] font-bold uppercase leading-[0.9] tracking-[-0.05em] text-white">
                   {pageMagazine.title}
                 </h2>
-
-                <p
-                  className="
-                    mt-5
-                    line-clamp-2
-                    sm:line-clamp-3
-                    max-w-[360px]
-                    text-[13px]
-                    leading-[1.5]
-                    text-muted-foreground
-                  "
-                >
-                  {pageMagazine.description}
+                <p className="mt-2 text-[11px] text-white/80">
+                  {pageMagazine.price}
                 </p>
-                <AnimatedArrowLink
-                  href={magazinePath(pageMagazine.slug)}
-                >
-                  View {pageMagazine.price}
-                </AnimatedArrowLink>
               </div>
-            </motion.div>
+            </div>
 
-            {/* ALL OTHER ISSUES — ONE SQUARE EACH */}
-            {pageMagazines.slice(1).map((magazine, index) => (
-              <motion.div
-                key={magazine.slug}
-                variants={{
-                  hidden: {
-                    opacity: 0,
-                    y: 30,
-                  },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      duration: 0.65,
-                      ease: revealEase,
-                    },
-                  },
-                }}
-                className="aspect-square"
-              >
-                <MagazineCover
-                  cover={{
-                    name: magazine.title,
-                    image: magazine.image,
-                  }}
-                  index={index}
-                  href={magazinePath(magazine.slug)}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
+            {/* Desktop: Grid layout */}
+            <div className="hidden w-full px-[5vw] lg:block">
+              <div className="mx-auto max-w-[1380px]">
+                <div className="mb-8 flex items-end justify-between gap-6">
+                  <div>
+                    <p className="eyebrow">03 · Magazine</p>
+                    <p className="mt-2 hidden max-w-[380px] text-[12px] leading-[1.45] text-muted-foreground sm:block">
+                      The physical edition of Contribution Magazine.
+                    </p>
+                  </div>
+                  <AnimatedArrowLink href="/magazine">
+                    View all
+                  </AnimatedArrowLink>
+                </div>
+
+                <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-[5vw]">
+                  {/* LEFT: List of all issues */}
+                  <div>
+                    <div className="mb-6 flex items-center justify-between border-b border-border pb-3">
+                      <p className="text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                        All Issues
+                      </p>
+                    </div>
+                    <div className="flex flex-col divide-y divide-border">
+                      {pageMagazines.map((magazine, index) => (
+                        <div key={magazine.slug} className="py-4 first:pt-0">
+                          <Link
+                            href={magazinePath(magazine.slug)}
+                            className="group flex items-center gap-4"
+                          >
+                            <div className="relative aspect-[0.72] w-16 shrink-0 overflow-hidden bg-muted">
+                              <img
+                                src={magazine.image}
+                                alt={imageAlt(magazine.title)}
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
+                                {magazine.issue}
+                              </p>
+                              <h3 className="mt-0.5 truncate text-[clamp(18px,2.5vw,28px)] font-medium leading-[1] tracking-[-0.04em]">
+                                {magazine.title}
+                              </h3>
+                              <p className="mt-1 text-[11px] text-muted-foreground">
+                                {magazine.price}
+                              </p>
+                            </div>
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center border border-border text-foreground transition-all duration-300 group-hover:border-foreground group-hover:bg-foreground group-hover:text-background">
+                              <ArrowUpRight size={14} />
+                            </div>
+                          </Link>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* RIGHT: Latest issue featured */}
+                  <div className="lg:sticky lg:top-24 lg:self-start">
+                    <div className="mb-6 flex items-center justify-between border-b border-border pb-3">
+                      <p className="text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                        Latest Issue
+                      </p>
+                    </div>
+                    <Link
+                      href={magazinePath(pageMagazine.slug)}
+                      className="group block"
+                    >
+                      <div className="relative aspect-[0.72] w-full overflow-hidden bg-muted">
+                        <img
+                          src={pageMagazine.image}
+                          alt={imageAlt(pageMagazine.title)}
+                          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                        />
+                        <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-6 py-5">
+                          <p className="text-[9px] uppercase tracking-[0.1em] text-white/70">
+                            {pageMagazine.issue}
+                          </p>
+                          <h2 className="mt-1 text-[clamp(28px,5vw,56px)] font-bold uppercase leading-[0.85] tracking-[-0.06em] text-white">
+                            {pageMagazine.title}
+                          </h2>
+                          <p className="mt-2 text-[14px] text-white/80">
+                            {pageMagazine.price}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </section>
       <SiteFooter />

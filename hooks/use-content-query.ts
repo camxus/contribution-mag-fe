@@ -13,14 +13,21 @@ import {
   heroImage,
   featuredStory,
 } from "@/lib/content";
+import { decode } from "he";
+
 import type { AboutContent, LegalPageContent, SiteContact } from "@/lib/types";
 
 export const useMocks = process.env.NEXT_PUBLIC_USE_MOCKS !== "false";
 type Rendered = string | { rendered?: string };
-const text = (value: Rendered | undefined) =>
-  typeof value === "string"
-    ? value
-    : value?.rendered?.replace(/<[^>]+>/g, "").trim() || "";
+
+const text = (value: Rendered | undefined) => {
+  const raw =
+    typeof value === "string"
+      ? value
+      : value?.rendered?.replace(/<[^>]+>/g, "").trim() || "";
+
+  return decode(raw);
+};
 const media = (item: any) =>
   item?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
   item?.cover_image_url ||
@@ -34,15 +41,16 @@ export function useStories() {
       useMocks
         ? stories
         : (await getWp<any[]>("/wp/v2/stories?_embed=1")).map((item) => ({
-            slug: item.slug,
-            title: text(item.title),
-            dek: item.description || text(item.excerpt),
-            category: item.category || "Culture",
-            author: item.author || "Contribution Magazine",
-            date: item.date || "",
-            image: media(item),
-            body: [text(item.content)],
-          })),
+          slug: item.slug,
+          title: text(item.title),
+          dek: item.description || text(item.excerpt),
+          category: item.category || "Culture",
+          author: item.author || "Contribution Magazine",
+          date: item.date || "",
+          image: media(item),
+          body: [text(item.content)],
+          content_html: item.content_html || "",
+        })),
   });
 }
 export function useInterviews() {
@@ -52,13 +60,14 @@ export function useInterviews() {
       useMocks
         ? interviews
         : (await getWp<any[]>("/wp/v2/interviews?_embed=1")).map((item) => ({
-            slug: item.slug,
-            name: item.subject_name || text(item.title),
-            role: item.kicker || "Interview",
-            image: media(item),
-            quote: item.pull_quote || "",
-            body: [text(item.content)],
-          })),
+          slug: item.slug,
+          name: item.subject_name || text(item.title),
+          role: item.kicker || "Interview",
+          image: media(item),
+          quote: item.pull_quote || "",
+          body: [text(item.content)],
+          content_html: item.content_html || "",
+        })),
   });
 }
 export function useMagazines() {
@@ -68,20 +77,20 @@ export function useMagazines() {
       useMocks
         ? magazines
         : (await getWp<any[]>("/wp/v2/magazines?_embed=1")).map((item) => ({
-            slug: item.slug,
-            title: text(item.title),
-            issue: item.issue_number
-              ? `Issue ${item.issue_number}`
-              : "Contribution Magazine",
-            price: item.price_print
-              ? `$${Number(item.price_print).toFixed(2)} USD`
-              : "Available soon",
-            image: media(item),
-            description: text(item.content),
-            stripeBuyLinkDigital: item.stripe_buy_link_digital,
-            stripeBuyLinkPrint: item.stripe_buy_link_print,
-            soldOut: item.sold_out,
-          })),
+          slug: item.slug,
+          title: text(item.title),
+          issue: item.issue_number
+            ? `Issue ${item.issue_number}`
+            : "Contribution Magazine",
+          price: item.price_print
+            ? `$${Number(item.price_print).toFixed(2)} USD`
+            : "Available soon",
+          image: media(item),
+          description: text(item.content),
+          stripeBuyLinkDigital: item.stripe_buy_link_digital,
+          stripeBuyLinkPrint: item.stripe_buy_link_print,
+          soldOut: item.sold_out,
+        })),
   });
 }
 export type Hero = {
@@ -130,11 +139,11 @@ export function useSiteContact() {
     ...query,
     data: query.data
       ? ({
-          email: query.data.email,
-          instagram: query.data.instagram,
-          social_links: query.data.social_links,
-          contact: query.data.contact,
-        } satisfies SiteContact)
+        email: query.data.email,
+        instagram: query.data.instagram,
+        social_links: query.data.social_links,
+        contact: query.data.contact,
+      } satisfies SiteContact)
       : undefined,
   };
 }
