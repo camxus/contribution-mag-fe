@@ -85,18 +85,11 @@ function HeroSlideshow({
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
     setProgress(0);
-    setIsLoading(true);
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => {
-      const nextIndex = prev + 1;
-
-      return nextIndex >= images.length ? 0 : nextIndex;
-    });
-
+    setCurrentIndex((prev) => (prev + 1) % images.length);
     setProgress(0);
-    setIsLoading(true);
   };
 
   // Auto progress
