@@ -16,6 +16,7 @@ export type Magazine = {
   price: string;
   image: string;
   description: string;
+  video_url?: string;
   stripeBuyLinkDigital?: string;
   stripeBuyLinkPrint?: string;
   soldOut?: boolean;
@@ -87,6 +88,7 @@ export const magazines: Magazine[] = [
     price: "$40.00 USD",
     image:
       "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=900&q=85",
+    video_url: "https://example.com/wp-content/uploads/2026/08/issue-001.mp4",
     description:
       "Our first print issue looks at the people unwrapping culture and rebuilding it in public.",
   },

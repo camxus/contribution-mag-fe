@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Volume, VolumeX } from "lucide-react";
 import {
   AnimatePresence,
   motion,
@@ -35,6 +35,7 @@ import {
   noStoriesLabel,
   noInterviewsLabel,
   noIssuesLabel,
+  viewIssueLabel,
 } from "@/lib/content";
 
 /* -------------------------------------------------------------------------- */
@@ -46,7 +47,6 @@ const revealEase = [0.22, 1, 0.36, 1] as const;
 /* -------------------------------------------------------------------------- */
 /* Hero slideshow                                                             */
 /* -------------------------------------------------------------------------- */
-
 function HeroSlideshow({
   images,
   alt,
@@ -56,6 +56,7 @@ function HeroSlideshow({
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const reduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -84,11 +85,18 @@ function HeroSlideshow({
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
     setProgress(0);
+    setIsLoading(true);
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
+    setCurrentIndex((prev) => {
+      const nextIndex = prev + 1;
+
+      return nextIndex >= images.length ? 0 : nextIndex;
+    });
+
     setProgress(0);
+    setIsLoading(true);
   };
 
   // Auto progress
@@ -137,97 +145,144 @@ function HeroSlideshow({
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 -z-20 overflow-hidden"
+      className="absolute inset-0 overflow-hidden"
     >
-      {/* Desktop */}
-      {desktopSrc && (
-        <AnimatePresence mode="sync" initial={false}>
-          <motion.img
-            key={`desktop-${currentIndex}`}
-            src={desktopSrc}
-            alt={alt}
-            style={{ y, scale }}
-            initial={{
-              opacity: 0,
-              scale: reduced ? 1 : 1.04,
-            }}
-            animate={{
-              opacity: 1,
-              scale: reduced ? 1 : 1.04,
-            }}
-            exit={{
-              opacity: 0,
-              scale: reduced ? 1 : 1.08,
-            }}
-            transition={{
-              opacity: {
-                duration: reduced ? 0 : 0.8,
-                ease: revealEase,
-              },
-              scale: {
-                duration: reduced ? 0 : 1.5,
-                ease: [0.16, 1, 0.3, 1],
-              },
-            }}
-            className="
-              absolute
-              inset-0
-              hidden
-              h-full
-              w-full
-              object-cover
-              object-center
-              saturate-[0.72]
-              md:block
-            "
-          />
-        </AnimatePresence>
-      )}
+      {/* Images */}
+      <div className="absolute inset-0 z-0">
+        {/* Desktop */}
+        {desktopSrc && (
+          <AnimatePresence mode="sync" initial={false}>
+            <motion.img
+              key={`desktop-${currentIndex}`}
+              src={desktopSrc}
+              alt={alt}
+              onLoad={() => {
+                if (window.matchMedia("(min-width: 768px)").matches) {
+                  setIsLoading(false);
+                }
+              }}
+              style={{ y, scale }}
+              initial={{
+                opacity: 0,
+                scale: reduced ? 1 : 1.04,
+              }}
+              animate={{
+                opacity: isLoading ? 0 : 1,
+                scale: reduced ? 1 : 1.04,
+              }}
+              exit={{
+                opacity: 0,
+                scale: reduced ? 1 : 1.08,
+              }}
+              transition={{
+                opacity: {
+                  duration: reduced ? 0 : 1.2,
+                  ease: [0.22, 1, 0.36, 1],
+                },
+                scale: {
+                  duration: reduced ? 0 : 1.5,
+                  ease: [0.16, 1, 0.3, 1],
+                },
+              }}
+              className="
+                absolute
+                inset-0
+                hidden
+                h-full
+                w-full
+                object-cover
+                object-center
+                saturate-[0.72]
+                md:block
+              "
+            />
+          </AnimatePresence>
+        )}
 
-      {/* Mobile */}
-      {mobileSrc && (
-        <AnimatePresence mode="sync" initial={false}>
-          <motion.img
-            key={`mobile-${currentIndex}`}
-            src={mobileSrc}
-            alt={alt}
-            style={{ y, scale }}
-            initial={{
-              opacity: 0,
-              scale: reduced ? 1 : 1.04,
-            }}
-            animate={{
-              opacity: 1,
-              scale: reduced ? 1 : 1.04,
-            }}
-            exit={{
-              opacity: 0,
-              scale: reduced ? 1 : 1.08,
-            }}
-            transition={{
-              opacity: {
-                duration: reduced ? 0 : 0.8,
-                ease: revealEase,
-              },
-              scale: {
-                duration: reduced ? 0 : 1.5,
-                ease: [0.16, 1, 0.3, 1],
-              },
-            }}
+        {/* Mobile */}
+        {mobileSrc && (
+          <AnimatePresence mode="sync" initial={false}>
+            <motion.img
+              key={`mobile-${currentIndex}`}
+              src={mobileSrc}
+              alt={alt}
+              onLoad={() => {
+                if (window.matchMedia("(max-width: 767px)").matches) {
+                  setIsLoading(false);
+                }
+              }}
+              style={{ y, scale }}
+              initial={{
+                opacity: 0,
+                scale: reduced ? 1 : 1.04,
+              }}
+              animate={{
+                opacity: isLoading ? 0 : 1,
+                scale: reduced ? 1 : 1.04,
+              }}
+              exit={{
+                opacity: 0,
+                scale: reduced ? 1 : 1.08,
+              }}
+              transition={{
+                opacity: {
+                  duration: reduced ? 0 : 1.2,
+                  ease: [0.22, 1, 0.36, 1],
+                },
+                scale: {
+                  duration: reduced ? 0 : 1.5,
+                  ease: [0.16, 1, 0.3, 1],
+                },
+              }}
+              className="
+                absolute
+                inset-0
+                block
+                h-full
+                w-full
+                object-cover
+                object-center
+                saturate-[0.72]
+                md:hidden
+              "
+            />
+          </AnimatePresence>
+        )}
+      </div>
+
+      {/* Loading indicator */}
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
             className="
               absolute
               inset-0
-              block
-              h-full
-              w-full
-              object-cover
-              object-center
-              saturate-[0.72]
-              md:hidden
+              z-20
+              flex
+              items-center
+              justify-center
+              pointer-events-none
             "
-          />
-        </AnimatePresence>
-      )}
+          >
+            <div className="h-px w-24 overflow-hidden bg-white/20">
+              <motion.div
+                className="h-full w-1/2 bg-white"
+                initial={{ x: "-100%" }}
+                animate={{ x: "200%" }}
+                transition={{
+                  duration: 1.2,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                }}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Carousel indicators */}
       {images.length > 1 && (
@@ -236,7 +291,7 @@ function HeroSlideshow({
             absolute
             bottom-6
             left-1/2
-            z-10
+            z-30
             flex
             -translate-x-1/2
             items-center
@@ -274,7 +329,6 @@ function HeroSlideshow({
                   focus-visible:ring-offset-transparent
                 "
               >
-                {/* Progress */}
                 <span
                   className="
                     absolute
@@ -308,7 +362,7 @@ function HeroSlideshow({
 /* Hero content                                                               */
 /* -------------------------------------------------------------------------- */
 
-function HeroContent() {
+function HeroContent({ src }: { src: string }) {
   return (
     <motion.div
       initial="hidden"
@@ -324,22 +378,23 @@ function HeroContent() {
       }}
       className="max-w-[1100px]"
     >
-      <motion.div
-        variants={{
-          hidden: {
-            opacity: 0,
-            y: 18,
-          },
-          visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-              duration: 0.65,
-              ease: revealEase,
+      <ContrastText src={src}>
+        <motion.div
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 18,
             },
-          },
-        }}
-        className="
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.65,
+                ease: revealEase,
+              },
+            },
+          }}
+          className="
           mb-4
           flex
           items-center
@@ -350,31 +405,29 @@ function HeroContent() {
           sm:mb-5
           sm:text-[10px]
         "
-      >
-        <span className="h-px w-7 bg-current opacity-70 sm:w-10" />
-        <span>Independent journal</span>
-        <span className="opacity-40">·</span>
-        <span>Vol. 01</span>
-      </motion.div>
+        >
+          <span className="h-px w-7 bg-current opacity-70 sm:w-10" />
+          <span>Independent journal</span>
+        </motion.div>
 
-      <motion.h1
-        variants={{
-          hidden: {
-            opacity: 0,
-            y: 45,
-            filter: "blur(8px)",
-          },
-          visible: {
-            opacity: 1,
-            y: 0,
-            filter: "blur(0px)",
-            transition: {
-              duration: 1,
-              ease: [0.16, 1, 0.3, 1],
+        <motion.h1
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 45,
+              filter: "blur(8px)",
             },
-          },
-        }}
-        className="
+            visible: {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              transition: {
+                duration: 1,
+                ease: [0.16, 1, 0.3, 1],
+              },
+            },
+          }}
+          className="
           max-w-[1050px]
           text-[clamp(54px,10vw,148px)]
           font-bold
@@ -382,9 +435,10 @@ function HeroContent() {
           leading-[0.76]
           tracking-[-0.105em]
         "
-      >
-        {contributionTitle}
-      </motion.h1>
+        >
+          {contributionTitle}
+        </motion.h1>
+      </ContrastText>
 
       <motion.div
         variants={{
@@ -430,6 +484,358 @@ function HeroContent() {
     </motion.div>
   );
 }
+
+/* -------------------------------------------------------------------------- */
+/* Video hero section (latest magazine issue)                                 */
+/* -------------------------------------------------------------------------- */
+
+function VideoHeroSection({
+  magazine,
+}: {
+  magazine: typeof magazines[number];
+}) {
+  const [isMuted, setIsMuted] = useState(true);
+  const reduced = useReducedMotion();
+
+  const reveal = {
+    hidden: {
+      opacity: 0,
+      y: 28,
+      filter: "blur(10px)",
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+    },
+  };
+
+  const videoReveal = {
+    hidden: {
+      opacity: 0,
+      scale: reduced ? 1 : 1.06,
+      filter: "blur(8px)",
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      filter: "blur(0px)",
+    },
+  };
+
+  if (!magazine.video_url) { return null }
+
+  return (
+    <section
+      className="
+        relative
+        isolate
+        min-h-[60vh]
+        max-h-[700px]
+        overflow-hidden
+        bg-black
+      "
+      aria-label={`Latest issue: ${magazine.title}`}
+    >
+      {/* ------------------------------------------------------------------ */}
+      {/* Video                                                               */}
+      {/* ------------------------------------------------------------------ */}
+
+      <motion.video
+        autoPlay
+        loop
+        muted={isMuted}
+        playsInline
+        poster={magazine.image}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={videoReveal}
+        transition={{
+          duration: reduced ? 0 : 1.4,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        className="
+          absolute
+          inset-0
+          h-full
+          w-full
+          object-cover
+        "
+      >
+        <source
+          src={
+            magazine.video_url
+          }
+          type="video/mp4"
+        />
+      </motion.video>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Cinematic overlays                                                  */}
+      {/* ------------------------------------------------------------------ */}
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{
+          duration: reduced ? 0 : 1.2,
+          ease: revealEase,
+        }}
+        className="
+          absolute
+          inset-0
+          bg-black/20
+        "
+      />
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{
+          duration: reduced ? 0 : 1.6,
+          delay: reduced ? 0 : 0.15,
+          ease: revealEase,
+        }}
+        className="
+          absolute
+          inset-0
+          bg-gradient-to-t
+          from-black/90
+          via-black/20
+          to-black/10
+        "
+      />
+
+      {/* Subtle bottom vignette */}
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-x-0
+          bottom-0
+          h-1/2
+          bg-gradient-to-t
+          from-black/30
+          to-transparent
+        "
+      />
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Content                                                             */}
+      {/* ------------------------------------------------------------------ */}
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{
+          once: true,
+          amount: 0.25,
+        }}
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              delayChildren: reduced ? 0 : 0.35,
+              staggerChildren: reduced ? 0 : 0.11,
+            },
+          },
+        }}
+        className="
+          relative
+          flex
+          min-h-[60vh]
+          max-h-[700px]
+          flex-col
+          items-start
+          justify-end
+          px-[5vw]
+          pb-12
+          sm:pb-14
+          lg:pb-20
+        "
+      >
+        <div className="w-full max-w-[1100px]">
+          {/* Issue */}
+          <motion.p
+            variants={reveal}
+            transition={{
+              duration: reduced ? 0 : 0.7,
+              ease: revealEase,
+            }}
+            className="
+              mb-3
+              text-[9px]
+              uppercase
+              tracking-[0.18em]
+              text-white/70
+              sm:text-[10px]
+            "
+          >
+            {magazine.issue}
+          </motion.p>
+
+          {/* Title */}
+          <motion.h2
+            variants={reveal}
+            transition={{
+              duration: reduced ? 0 : 0.95,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="
+              max-w-[1050px]
+              text-[clamp(48px,8vw,120px)]
+              font-bold
+              uppercase
+              leading-[0.78]
+              tracking-[-0.095em]
+              text-white
+            "
+          >
+            {magazine.title}
+          </motion.h2>
+
+          {/* Meta / CTA */}
+          <motion.div
+            variants={reveal}
+            transition={{
+              duration: reduced ? 0 : 0.75,
+              ease: revealEase,
+            }}
+            className="
+              mt-6
+              flex
+              items-center
+              gap-4
+              sm:mt-7
+            "
+          >
+            <MagneticLink
+              href={magazinePath(magazine.slug)}
+              inverted
+            >
+              {viewIssueLabel}
+            </MagneticLink>
+
+            <span
+              className="
+                text-[10px]
+                uppercase
+                tracking-[0.12em]
+                text-white/60
+              "
+            >
+              {magazine.price}
+            </span>
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Mute control                                                        */}
+      {/* ------------------------------------------------------------------ */}
+
+      <motion.button
+        type="button"
+        onClick={() => setIsMuted((prev) => !prev)}
+        aria-label={isMuted ? "Unmute video" : "Mute video"}
+        initial={
+          reduced
+            ? false
+            : {
+              opacity: 0,
+              scale: 0.85,
+              filter: "blur(6px)",
+            }
+        }
+        whileInView={
+          reduced
+            ? undefined
+            : {
+              opacity: 1,
+              scale: 1,
+              filter: "blur(0px)",
+            }
+        }
+        viewport={{ once: true }}
+        transition={{
+          duration: reduced ? 0 : 0.6,
+          delay: reduced ? 0 : 0.8,
+          ease: revealEase,
+        }}
+        whileHover={
+          reduced
+            ? undefined
+            : {
+              scale: 1.08,
+            }
+        }
+        whileTap={{
+          scale: 0.94,
+        }}
+        className="
+          absolute
+          bottom-5
+          right-5
+          z-10
+          flex
+          h-9
+          w-9
+          items-center
+          justify-center
+          rounded-full
+          border
+          border-white/30
+          bg-black/30
+          text-white
+          backdrop-blur-sm
+          transition-colors
+          duration-300
+          hover:border-white/60
+          hover:bg-black/50
+          focus:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-white
+          focus-visible:ring-offset-2
+          focus-visible:ring-offset-black
+        "
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={isMuted ? "muted" : "unmuted"}
+            initial={{
+              opacity: 0,
+              scale: 0.7,
+              rotate: -15,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              rotate: 0,
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.7,
+              rotate: 15,
+            }}
+            transition={{
+              duration: 0.2,
+            }}
+          >
+            {isMuted ? (
+              <VolumeX size={17} />
+            ) : (
+              <Volume size={17} />
+            )}
+          </motion.span>
+        </AnimatePresence>
+      </motion.button>
+    </section>
+  );
+}
+
 
 /* -------------------------------------------------------------------------- */
 /* Fade up                                                                    */
@@ -796,14 +1202,25 @@ export default function Page() {
       >
         {/* Hero slideshow with latest article images */}
         <HeroSlideshow
-          images={[{
-            desktop: heroQuery.data?.hero_image_url_desktop!,
-            mobile: heroQuery.data?.hero_image_url_mobile!
-          },
-          ...pageStories.slice(0, 5).map((story) => ({
-            desktop: story.image,
-            mobile: story.image,
-          }))]}
+          images={[
+            ...(heroQuery.data?.hero_image_url_desktop ||
+              heroQuery.data?.hero_image_url_mobile
+              ? [
+                {
+                  desktop: heroQuery.data.hero_image_url_desktop ?? null,
+                  mobile: heroQuery.data.hero_image_url_mobile ?? null,
+                },
+              ]
+              : []),
+
+            ...pageStories
+              .slice(0, 5)
+              .filter((story) => Boolean(story.image))
+              .map((story) => ({
+                desktop: story.image,
+                mobile: story.image,
+              })),
+          ]}
           alt={imageAlt(pageFeaturedStory.title)}
         />
 
@@ -846,9 +1263,7 @@ export default function Page() {
               md:hidden
             "
           >
-            <ContrastText src={pageStories[0].image}>
-              <HeroContent />
-            </ContrastText>
+            <HeroContent src={pageStories[0].image} />
           </div>
         )}
 
@@ -910,6 +1325,11 @@ export default function Page() {
           <span>Scroll to explore</span>
         </motion.div>
       </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* VIDEO HERO - Latest Magazine Issue                                   */}
+      {/* ------------------------------------------------------------------ */}
+      <VideoHeroSection magazine={pageMagazine} />
 
       {/* ------------------------------------------------------------------ */}
       {/* COMMUNITY                                                           */}
@@ -1230,34 +1650,168 @@ export default function Page() {
 
                   {/* RIGHT: Latest issue featured */}
                   <div className="lg:sticky lg:top-24 lg:self-start">
-                    <div className="mb-6 flex items-center justify-between border-b border-border pb-3">
-                      <p className="text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-10% 0px" }}
+                      transition={{
+                        duration: 0.7,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      className="mb-6 flex items-center justify-between border-b border-border pb-3"
+                    >
+                      <p className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
                         Latest Issue
                       </p>
-                    </div>
+
+                      <p className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+                        {pageMagazine.issue}
+                      </p>
+                    </motion.div>
+
                     <Link
                       href={magazinePath(pageMagazine.slug)}
                       className="group block"
                     >
-                      <div className="relative aspect-[0.72] w-full overflow-hidden bg-muted">
-                        <img
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-10% 0px" }}
+                        transition={{
+                          duration: 0.9,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                        className="relative aspect-[0.72] w-full overflow-hidden bg-muted"
+                      >
+                        {/* Image */}
+                        <motion.img
                           src={pageMagazine.image}
                           alt={imageAlt(pageMagazine.title)}
-                          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                          initial={{ scale: 1.04 }}
+                          whileInView={{ scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{
+                            duration: 1.4,
+                            ease: [0.16, 1, 0.3, 1],
+                          }}
+                          className="
+          absolute
+          inset-0
+          h-full
+          w-full
+          object-cover
+          transition-transform
+          duration-[1200ms]
+          ease-out
+          group-hover:scale-[1.035]
+        "
                         />
-                        <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-6 py-5">
-                          <p className="text-[9px] uppercase tracking-[0.1em] text-white/70">
-                            {pageMagazine.issue}
-                          </p>
-                          <h2 className="mt-1 text-[clamp(28px,5vw,56px)] font-bold uppercase leading-[0.85] tracking-[-0.06em] text-white">
+
+                        {/* Overall hover veil */}
+                        <motion.div
+                          className="absolute inset-0 bg-black/0 transition-colors duration-700 group-hover:bg-black/10"
+                        />
+
+                        {/* Top gradient */}
+                        <div
+                          className="
+          absolute
+          inset-x-0
+          top-0
+          h-[55%]
+          bg-gradient-to-b
+          from-black/75
+          via-black/25
+          to-transparent
+        "
+                        />
+
+                        {/* Bottom subtle vignette */}
+                        <div
+                          className="
+          absolute
+          inset-x-0
+          bottom-0
+          h-[30%]
+          bg-gradient-to-t
+          from-black/30
+          to-transparent
+        "
+                        />
+
+                        {/* Content */}
+                        <motion.div
+                          initial={{
+                            opacity: 0,
+                            y: 16,
+                            filter: "blur(6px)",
+                          }}
+                          whileInView={{
+                            opacity: 1,
+                            y: 0,
+                            filter: "blur(0px)",
+                          }}
+                          viewport={{ once: true }}
+                          transition={{
+                            delay: 0.15,
+                            duration: 0.8,
+                            ease: [0.16, 1, 0.3, 1],
+                          }}
+                          className="absolute left-0 right-0 top-0 px-6 pb-16 pt-6 sm:px-8 sm:pt-8"
+                        >
+                          {/* Issue */}
+                          <div className="mb-3 flex items-center gap-3">
+                            <span className="h-px w-6 bg-white/60" />
+
+                            <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/70">
+                              {pageMagazine.issue}
+                            </p>
+                          </div>
+
+                          {/* Title */}
+                          <h2
+                            className="
+            max-w-[90%]
+            text-[clamp(32px,5vw,64px)]
+            font-bold
+            uppercase
+            leading-[0.82]
+            tracking-[-0.065em]
+            text-white
+          "
+                          >
                             {pageMagazine.title}
                           </h2>
-                          <p className="mt-2 text-[14px] text-white/80">
+
+                          {/* Price */}
+                          <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-white/65">
                             {pageMagazine.price}
                           </p>
-                        </div>
-                      </div>
+                        </motion.div>
+
+                        {/* Hover indicator */}
+                        <motion.div
+                          initial={{ opacity: 0, x: -8 }}
+                          whileHover={{ opacity: 1, x: 0 }}
+                          className="
+          absolute
+          bottom-6
+          right-6
+          flex
+          h-9
+          w-9
+          items-center
+          justify-center
+          rounded-full
+          border
+          border-white/40
+          bg-black/10
+          backdrop-blur-sm
+        "
+                        >
+                          <span className="text-sm text-white">↗</span>
+                        </motion.div>
+                      </motion.div>
                     </Link>
                   </div>
                 </div>

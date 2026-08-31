@@ -43,6 +43,7 @@ export interface Interview extends WPBase {
 }
 export interface MagazineIssue extends WPBase {
   cover_image_url: string;
+  video_url: string;
   issue_number: string;
   price_digital: number;
   price_print: number;

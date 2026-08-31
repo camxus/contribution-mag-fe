@@ -476,7 +476,6 @@ export function SiteHeader() {
               "
             >
               <span>London · Lagos · New York</span>
-              <span>Vol. 01</span>
             </motion.div>
           </motion.div>
         )}
