@@ -898,24 +898,22 @@ export default function Page() {
   const magazinesQuery = useMagazines();
   const heroQuery = useHero();
 
-  const pageStories = storiesQuery.data || stories;
-  const pageInterviews = interviewsQuery.data || interviews;
-  const pageMagazines = magazinesQuery.data || magazines;
+  const pageStories = storiesQuery.data;
+  const pageInterviews = interviewsQuery.data;
+  const pageMagazines = magazinesQuery.data;
 
   const showNoStories = storiesQuery.data?.length === 0;
   const showNoInterviews = interviewsQuery.data?.length === 0;
   const showNoMagazines = magazinesQuery.data?.length === 0;
 
   const pageFeaturedStory =
-    pageStories[0] || featuredStory;
+    pageStories?.[0] || featuredStory;
 
   const pageFeaturedInterview =
-    pageInterviews[0] || featuredInterview;
+    pageInterviews?.[0] || featuredInterview;
 
   const pageMagazine =
-    pageMagazines[0] || magazines[0];
-
-  const hasHeroStories = pageStories.length > 0;
+    pageMagazines?.[0] || magazines[0];
 
   const isLoadingHeroImages = storiesQuery.isLoading || heroQuery.isLoading
 
@@ -954,7 +952,7 @@ export default function Page() {
               ]
               : []),
 
-            ...pageStories
+            ...(pageStories || [])
               .slice(0, 5)
               .filter((story) => Boolean(story.image))
               .map((story) => ({
@@ -966,7 +964,7 @@ export default function Page() {
         />
 
         {/* Contrast layers */}
-        {pageStories.length > 0 && (
+        {(pageStories || [])?.length > 0 && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
@@ -994,7 +992,7 @@ export default function Page() {
         {/* Hero content — mobile                                             */}
         {/* ---------------------------------------------------------------- */}
 
-        {pageStories[0]?.image && (
+        {pageStories?.[0]?.image && (
           <div
             className="
               absolute
@@ -1004,7 +1002,7 @@ export default function Page() {
               md:hidden
             "
           >
-            <HeroContent src={pageStories[0].image} />
+            <HeroContent src={pageStories?.[0].image || ""} />
           </div>
         )}
 
@@ -1012,7 +1010,7 @@ export default function Page() {
         {/* Hero content — desktop                                            */}
         {/* ---------------------------------------------------------------- */}
 
-        {pageStories[0]?.image && (
+        {pageStories?.[0]?.image && (
           <div
             className="
               absolute
@@ -1025,7 +1023,7 @@ export default function Page() {
               lg:bottom-[8vh]
             "
           >
-            <HeroContent src={pageStories[0].image} />
+            <HeroContent src={pageStories?.[0].image || ""} />
           </div>
         )}
 
@@ -1220,7 +1218,7 @@ export default function Page() {
           </FadeUp>
         ) : (
           <FadeUp delay={0.08}>
-            <StoryList items={pageStories} />
+            <StoryList items={pageStories || []} />
           </FadeUp>
         )}
       </section>
@@ -1261,7 +1259,7 @@ export default function Page() {
           </FadeUp>
         ) : (
           <FadeUp delay={0.08}>
-            <InterviewList items={pageInterviews} />
+            <InterviewList items={pageInterviews || []} />
           </FadeUp>
         )}
       </section>
@@ -1347,7 +1345,7 @@ export default function Page() {
                 </div>
 
                 <div className="flex flex-col divide-y divide-border">
-                  {pageMagazines.map((magazine) => (
+                  {pageMagazines?.map((magazine) => (
                     <div key={magazine.slug} className="py-3 first:pt-0 sm:py-4">
                       <Link
                         href={magazinePath(magazine.slug)}
