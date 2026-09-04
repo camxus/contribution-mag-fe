@@ -1122,9 +1122,7 @@ export default function Page() {
               lg:bottom-[8vh]
             "
           >
-            <ContrastText src={pageStories[0].image}>
-              <HeroContent />
-            </ContrastText>
+            <HeroContent src={pageStories[0].image} />
           </div>
         )}
 
