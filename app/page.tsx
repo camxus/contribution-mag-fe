@@ -149,11 +149,7 @@ function HeroSlideshow({
               key={`desktop-${currentIndex}`}
               src={desktopSrc}
               alt={alt}
-              onLoad={() => {
-                if (window.matchMedia("(min-width: 768px)").matches) {
-                  setIsLoading(false);
-                }
-              }}
+              onLoad={() => setIsLoading(false)}
               style={{ y, scale }}
               initial={{
                 opacity: 0,
@@ -199,11 +195,7 @@ function HeroSlideshow({
               key={`mobile-${currentIndex}`}
               src={mobileSrc}
               alt={alt}
-              onLoad={() => {
-                if (window.matchMedia("(max-width: 767px)").matches) {
-                  setIsLoading(false);
-                }
-              }}
+              onLoad={() => setIsLoading(false)}
               style={{ y, scale }}
               initial={{
                 opacity: 0,
@@ -993,153 +985,6 @@ function SectionHeader({
         </AnimatedArrowLink>
       </div>
     </FadeUp>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* Magazine cover                                                             */
-/* -------------------------------------------------------------------------- */
-
-function MagazineCover({
-  cover,
-  index,
-  href,
-}: {
-  cover: (typeof coverProducts)[number];
-  index: number;
-  href: string;
-}) {
-  return (
-    <Link href={href} className="group block min-w-0">
-      <motion.div
-        initial="rest"
-        whileHover="hover"
-        animate="rest"
-        variants={{
-          rest: {
-            y: 0,
-            rotateX: 0,
-            rotateY: 0,
-          },
-          hover: {
-            y: -8,
-            rotateX: 2,
-            rotateY: -2,
-          },
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 300,
-          damping: 22,
-        }}
-        style={{
-          transformPerspective: 1000,
-        }}
-        className={`relative aspect-[0.72] overflow-hidden text-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]`}
-      >
-        <motion.img
-          src={cover.image}
-          alt={`${cover.name} cover`}
-          variants={{
-            rest: {
-              scale: 1,
-            },
-            hover: {
-              scale: 1.045,
-            },
-          }}
-          transition={{
-            duration: 0.7,
-            ease: revealEase,
-          }}
-          className="
-            absolute
-            inset-0
-            h-full
-            w-full
-            object-cover
-            mix-blend-multiply
-            saturate-90
-            contrast-105
-          "
-        />
-
-        <motion.div
-          variants={{
-            rest: {
-              opacity: 0,
-            },
-            hover: {
-              opacity: 1,
-            },
-          }}
-          transition={{ duration: 0.35 }}
-          className="absolute inset-0 bg-black/10"
-        />
-
-        <strong
-          className="
-            absolute
-            left-3
-            top-3
-            max-w-[90%]
-            text-[clamp(18px,2.5vw,42px)]
-            font-bold
-            uppercase
-            leading-[0.8]
-            tracking-[-0.09em]
-          "
-        >
-          contribution magazine
-        </strong>
-
-        <b
-          className="
-            absolute
-            bottom-3
-            left-3
-            text-[clamp(13px,1.5vw,24px)]
-            leading-none
-          "
-        >
-          {cover.name}
-        </b>
-
-        <motion.span
-          variants={{
-            rest: {
-              opacity: 0,
-              x: 8,
-            },
-            hover: {
-              opacity: 1,
-              x: 0,
-            },
-          }}
-          transition={{
-            duration: 0.3,
-          }}
-          className="
-            absolute
-            right-3
-            top-3
-            text-[9px]
-            uppercase
-            tracking-[0.1em]
-          "
-        >
-          0{index + 1}
-        </motion.span>
-      </motion.div>
-
-      <p className="mt-3 text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
-        {productBlurb}
-      </p>
-
-      <span className="mt-1 block text-[10px]">
-        {priceBlurb}
-      </span>
-    </Link>
   );
 }
 
