@@ -50,13 +50,14 @@ const revealEase = [0.22, 1, 0.36, 1] as const;
 function HeroSlideshow({
   images,
   alt,
+  isLoading,
 }: {
   images: { desktop: string | null; mobile: string | null }[];
   alt: string;
+  isLoading: boolean;
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
 
   const reduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -70,17 +71,8 @@ function HeroSlideshow({
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduced ? ["0%", "0%"] : ["0%", "16%"],
-  );
-
-  const scale = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduced ? [1, 1] : [1.04, 1.12],
-  );
+  const y = useTransform(scrollYProgress, [0, 1], reduced ? ["0%", "0%"] : ["0%", "16%"]);
+  const scale = useTransform(scrollYProgress, [0, 1], reduced ? [1, 1] : [1.04, 1.12]);
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
@@ -92,7 +84,6 @@ function HeroSlideshow({
     setProgress(0);
   };
 
-  // Auto progress
   useEffect(() => {
     if (reduced || images.length <= 1) return;
 
@@ -101,33 +92,24 @@ function HeroSlideshow({
     const updateProgress = (now: number) => {
       const elapsed = now - start;
       const nextProgress = Math.min(elapsed / AUTOPLAY_DURATION, 1);
-
       setProgress(nextProgress);
-
       if (nextProgress < 1) {
         progressRef.current = requestAnimationFrame(updateProgress);
       }
     };
 
     progressRef.current = requestAnimationFrame(updateProgress);
-
     intervalRef.current = setTimeout(() => {
       nextSlide();
     }, AUTOPLAY_DURATION);
 
     return () => {
-      if (progressRef.current !== null) {
-        cancelAnimationFrame(progressRef.current);
-      }
-
-      if (intervalRef.current) {
-        clearTimeout(intervalRef.current);
-      }
+      if (progressRef.current !== null) cancelAnimationFrame(progressRef.current);
+      if (intervalRef.current) clearTimeout(intervalRef.current);
     };
   }, [currentIndex, images.length, reduced]);
 
   const currentImage = images[currentIndex];
-
   const desktopSrc = currentImage?.desktop ?? null;
   const mobileSrc = currentImage?.mobile ?? null;
 
@@ -136,106 +118,48 @@ function HeroSlideshow({
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 overflow-hidden"
-    >
-      {/* Images */}
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden">
       <div className="absolute inset-0 z-0">
-        {/* Desktop */}
         {desktopSrc && (
           <AnimatePresence mode="sync" initial={false}>
             <motion.img
               key={`desktop-${currentIndex}`}
               src={desktopSrc}
               alt={alt}
-              onLoad={() => setIsLoading(false)}
               style={{ y, scale }}
-              initial={{
-                opacity: 0,
-                scale: reduced ? 1 : 1.04,
-              }}
-              animate={{
-                opacity: isLoading ? 0 : 1,
-                scale: reduced ? 1 : 1.04,
-              }}
-              exit={{
-                opacity: 0,
-                scale: reduced ? 1 : 1.08,
-              }}
+              initial={{ opacity: 0, scale: reduced ? 1 : 1.04 }}
+              animate={{ opacity: isLoading ? 0 : 1, scale: reduced ? 1 : 1.04 }}
+              exit={{ opacity: 0, scale: reduced ? 1 : 1.08 }}
               transition={{
-                opacity: {
-                  duration: reduced ? 0 : 1.2,
-                  ease: [0.22, 1, 0.36, 1],
-                },
-                scale: {
-                  duration: reduced ? 0 : 1.5,
-                  ease: [0.16, 1, 0.3, 1],
-                },
+                opacity: { duration: reduced ? 0 : 1.2, ease: [0.22, 1, 0.36, 1] },
+                scale: { duration: reduced ? 0 : 1.5, ease: [0.16, 1, 0.3, 1] },
               }}
-              className="
-                absolute
-                inset-0
-                hidden
-                h-full
-                w-full
-                object-cover
-                object-center
-                saturate-[0.72]
-                md:block
-              "
+              className="absolute inset-0 hidden h-full w-full object-cover object-center saturate-[0.72] md:block"
             />
           </AnimatePresence>
         )}
 
-        {/* Mobile */}
         {mobileSrc && (
           <AnimatePresence mode="sync" initial={false}>
             <motion.img
               key={`mobile-${currentIndex}`}
               src={mobileSrc}
               alt={alt}
-              onLoad={() => setIsLoading(false)}
+              onLoad={() => setLoadedSrc(currentSrc)}
               style={{ y, scale }}
-              initial={{
-                opacity: 0,
-                scale: reduced ? 1 : 1.04,
-              }}
-              animate={{
-                opacity: isLoading ? 0 : 1,
-                scale: reduced ? 1 : 1.04,
-              }}
-              exit={{
-                opacity: 0,
-                scale: reduced ? 1 : 1.08,
-              }}
+              initial={{ opacity: 0, scale: reduced ? 1 : 1.04 }}
+              animate={{ opacity: isLoading ? 0 : 1, scale: reduced ? 1 : 1.04 }}
+              exit={{ opacity: 0, scale: reduced ? 1 : 1.08 }}
               transition={{
-                opacity: {
-                  duration: reduced ? 0 : 1.2,
-                  ease: [0.22, 1, 0.36, 1],
-                },
-                scale: {
-                  duration: reduced ? 0 : 1.5,
-                  ease: [0.16, 1, 0.3, 1],
-                },
+                opacity: { duration: reduced ? 0 : 1.2, ease: [0.22, 1, 0.36, 1] },
+                scale: { duration: reduced ? 0 : 1.5, ease: [0.16, 1, 0.3, 1] },
               }}
-              className="
-                absolute
-                inset-0
-                block
-                h-full
-                w-full
-                object-cover
-                object-center
-                saturate-[0.72]
-                md:hidden
-              "
+              className="absolute inset-0 block h-full w-full object-cover object-center saturate-[0.72] md:hidden"
             />
           </AnimatePresence>
         )}
       </div>
 
-      {/* Loading indicator */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
@@ -243,51 +167,28 @@ function HeroSlideshow({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
-            className="
-              absolute
-              inset-0
-              z-20
-              flex
-              items-center
-              justify-center
-              pointer-events-none
-            "
+            className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
           >
             <div className="h-px w-24 overflow-hidden bg-white/20">
               <motion.div
                 className="h-full w-1/2 bg-white"
                 initial={{ x: "-100%" }}
                 animate={{ x: "200%" }}
-                transition={{
-                  duration: 1.2,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                }}
+                transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity }}
               />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Carousel indicators */}
       {images.length > 1 && (
         <div
-          className="
-            absolute
-            bottom-6
-            left-1/2
-            z-30
-            flex
-            -translate-x-1/2
-            items-center
-            gap-2
-          "
+          className="absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2"
           role="tablist"
           aria-label="Hero images"
         >
           {images.map((_, index) => {
             const isActive = index === currentIndex;
-
             return (
               <button
                 key={index}
@@ -296,42 +197,13 @@ function HeroSlideshow({
                 aria-selected={isActive}
                 aria-label={`Go to image ${index + 1}`}
                 onClick={() => goToSlide(index)}
-                className="
-                  group
-                  relative
-                  h-1
-                  w-10
-                  overflow-hidden
-                  rounded-full
-                  bg-white/30
-                  transition-all
-                  duration-300
-                  hover:bg-white/50
-                  focus:outline-none
-                  focus-visible:ring-2
-                  focus-visible:ring-white
-                  focus-visible:ring-offset-2
-                  focus-visible:ring-offset-transparent
-                "
+                className="group relative h-1 w-10 overflow-hidden rounded-full bg-white/30 transition-all duration-300 hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
               >
                 <span
-                  className="
-                    absolute
-                    inset-y-0
-                    left-0
-                    rounded-full
-                    bg-white
-                  "
+                  className="absolute inset-y-0 left-0 rounded-full bg-white"
                   style={{
-                    width: isActive
-                      ? `${progress * 100}%`
-                      : index < currentIndex
-                        ? "100%"
-                        : "0%",
-                    transition:
-                      isActive && progress === 0
-                        ? "none"
-                        : "width 50ms linear",
+                    width: isActive ? `${progress * 100}%` : index < currentIndex ? "100%" : "0%",
+                    transition: isActive && progress === 0 ? "none" : "width 50ms linear",
                   }}
                 />
               </button>
@@ -423,7 +295,39 @@ function HeroContent({ src }: { src: string }) {
         >
           {contributionTitle}
         </motion.h1>
+        <motion.div
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 20,
+            },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.7,
+                ease: revealEase,
+              },
+            },
+          }}
+          className="
+          mt-6
+          flex
+          flex-col
+          gap-5
+          sm:mt-7
+          sm:flex-row
+          sm:items-end
+          sm:justify-between
+          lg:mt-8
+        "
+        >
+          <p className="max-w-[360px] text-[15px] leading-[1.35] sm:text-[17px] lg:text-[18px]">
+            Culture, community, and creative practice.
+          </p>
+        </motion.div>
       </ContrastText>
+
 
       <motion.div
         variants={{
@@ -452,10 +356,6 @@ function HeroContent({ src }: { src: string }) {
           lg:mt-8
         "
       >
-        <p className="max-w-[360px] text-[15px] leading-[1.35] sm:text-[17px] lg:text-[18px]">
-          Culture, community, and creative practice.
-        </p>
-
         <div className="flex gap-2">
           <MagneticLink href="#stories">
             Explore stories
@@ -1017,6 +917,8 @@ export default function Page() {
 
   const hasHeroStories = pageStories.length > 0;
 
+  const isLoadingHeroImages = storiesQuery.isLoading || heroQuery.isLoading
+
   const showNewsletter =
     process.env.NEXT_PUBLIC_SHOW_NEWSLETTER !== "false";
 
@@ -1040,6 +942,7 @@ export default function Page() {
       >
         {/* Hero slideshow with latest article images */}
         <HeroSlideshow
+          isLoading={isLoadingHeroImages}
           images={[
             ...(heroQuery.data?.hero_image_url_desktop ||
               heroQuery.data?.hero_image_url_mobile
@@ -1399,31 +1302,82 @@ export default function Page() {
           </FadeUp>
         ) : (
           <div className="flex flex-col lg:flex-row">
-            {/* Mobile: Latest issue first, edge-to-edge */}
-            <div className="relative aspect-[0.72] w-full lg:hidden">
-              <Link
-                href={magazinePath(pageMagazine.slug)}
-                className="group block h-full"
-              >
-                <div className="relative h-full w-full overflow-hidden bg-muted">
-                  <img
-                    src={pageMagazine.image}
-                    alt={imageAlt(pageMagazine.title)}
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-                  />
-                  <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+            {/* Mobile/Tablet: Featured issue edge-to-edge + list below */}
+            <div className="lg:hidden">
+              <div className="relative aspect-[0.85] w-full sm:aspect-[1.1]">
+                <Link
+                  href={magazinePath(pageMagazine.slug)}
+                  className="group block h-full"
+                >
+                  <div className="relative h-full w-full overflow-hidden bg-muted">
+                    <img
+                      src={pageMagazine.image}
+                      alt={imageAlt(pageMagazine.title)}
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                    />
+                    <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+                  </div>
+                </Link>
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-5 py-4 sm:px-[5vw] sm:py-6">
+                  <p className="text-[8px] uppercase tracking-[0.08em] text-white/70">
+                    {pageMagazine.issue}
+                  </p>
+                  <h2 className="mt-1 text-[clamp(24px,6vw,42px)] font-bold uppercase leading-[0.9] tracking-[-0.05em] text-white">
+                    {pageMagazine.title}
+                  </h2>
+                  <p className="mt-2 text-[11px] text-white/80">
+                    {pageMagazine.price}
+                  </p>
                 </div>
-              </Link>
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-5 py-4">
-                <p className="text-[8px] uppercase tracking-[0.08em] text-white/70">
-                  {pageMagazine.issue}
-                </p>
-                <h2 className="mt-1 text-[clamp(24px,6vw,42px)] font-bold uppercase leading-[0.9] tracking-[-0.05em] text-white">
-                  {pageMagazine.title}
-                </h2>
-                <p className="mt-2 text-[11px] text-white/80">
-                  {pageMagazine.price}
-                </p>
+              </div>
+
+              {/* Issue list — mobile/tablet only */}
+              <div className="px-[5vw] py-8 sm:py-10">
+                <div className="mb-2 flex items-end justify-between gap-6">
+                  <p className="eyebrow">03 · Magazine</p>
+                  <AnimatedArrowLink href="/magazine">
+                    View all
+                  </AnimatedArrowLink>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between border-b border-border pb-3">
+                  <p className="text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                    All Issues
+                  </p>
+                </div>
+
+                <div className="flex flex-col divide-y divide-border">
+                  {pageMagazines.map((magazine) => (
+                    <div key={magazine.slug} className="py-3 first:pt-0 sm:py-4">
+                      <Link
+                        href={magazinePath(magazine.slug)}
+                        className="group flex items-center gap-3 sm:gap-4"
+                      >
+                        <div className="relative aspect-[0.72] w-12 shrink-0 overflow-hidden bg-muted sm:w-16">
+                          <img
+                            src={magazine.image}
+                            alt={imageAlt(magazine.title)}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[8px] uppercase tracking-[0.1em] text-muted-foreground sm:text-[9px]">
+                            {magazine.issue}
+                          </p>
+                          <h3 className="mt-0.5 truncate text-[clamp(15px,4vw,28px)] font-medium leading-[1] tracking-[-0.04em]">
+                            {magazine.title}
+                          </h3>
+                          <p className="mt-1 text-[10px] text-muted-foreground sm:text-[11px]">
+                            {magazine.price}
+                          </p>
+                        </div>
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center border border-border text-foreground transition-all duration-300 group-hover:border-foreground group-hover:bg-foreground group-hover:text-background sm:h-8 sm:w-8">
+                          <ArrowUpRight size={13} />
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -1451,7 +1405,7 @@ export default function Page() {
                       </p>
                     </div>
                     <div className="flex flex-col divide-y divide-border">
-                      {pageMagazines.map((magazine, index) => (
+                      {pageMagazines.map((magazine) => (
                         <div key={magazine.slug} className="py-4 first:pt-0">
                           <Link
                             href={magazinePath(magazine.slug)}
@@ -1490,16 +1444,12 @@ export default function Page() {
                       initial={{ opacity: 0, y: 12 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-10% 0px" }}
-                      transition={{
-                        duration: 0.7,
-                        ease: [0.16, 1, 0.3, 1],
-                      }}
+                      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                       className="mb-6 flex items-center justify-between border-b border-border pb-3"
                     >
                       <p className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
                         Latest Issue
                       </p>
-
                       <p className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
                         {pageMagazine.issue}
                       </p>
@@ -1513,137 +1463,52 @@ export default function Page() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-10% 0px" }}
-                        transition={{
-                          duration: 0.9,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
+                        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                         className="relative aspect-[0.72] w-full overflow-hidden bg-muted"
                       >
-                        {/* Image */}
                         <motion.img
                           src={pageMagazine.image}
                           alt={imageAlt(pageMagazine.title)}
                           initial={{ scale: 1.04 }}
                           whileInView={{ scale: 1 }}
                           viewport={{ once: true }}
-                          transition={{
-                            duration: 1.4,
-                            ease: [0.16, 1, 0.3, 1],
-                          }}
-                          className="
-          absolute
-          inset-0
-          h-full
-          w-full
-          object-cover
-          transition-transform
-          duration-[1200ms]
-          ease-out
-          group-hover:scale-[1.035]
-        "
+                          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.035]"
                         />
 
-                        {/* Overall hover veil */}
+                        <motion.div className="absolute inset-0 bg-black/0 transition-colors duration-700 group-hover:bg-black/10" />
+
+                        <div className="absolute inset-x-0 top-0 h-[55%] bg-gradient-to-b from-black/75 via-black/25 to-transparent" />
+
+                        <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-black/30 to-transparent" />
+
                         <motion.div
-                          className="absolute inset-0 bg-black/0 transition-colors duration-700 group-hover:bg-black/10"
-                        />
-
-                        {/* Top gradient */}
-                        <div
-                          className="
-          absolute
-          inset-x-0
-          top-0
-          h-[55%]
-          bg-gradient-to-b
-          from-black/75
-          via-black/25
-          to-transparent
-        "
-                        />
-
-                        {/* Bottom subtle vignette */}
-                        <div
-                          className="
-          absolute
-          inset-x-0
-          bottom-0
-          h-[30%]
-          bg-gradient-to-t
-          from-black/30
-          to-transparent
-        "
-                        />
-
-                        {/* Content */}
-                        <motion.div
-                          initial={{
-                            opacity: 0,
-                            y: 16,
-                            filter: "blur(6px)",
-                          }}
-                          whileInView={{
-                            opacity: 1,
-                            y: 0,
-                            filter: "blur(0px)",
-                          }}
+                          initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
+                          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                           viewport={{ once: true }}
-                          transition={{
-                            delay: 0.15,
-                            duration: 0.8,
-                            ease: [0.16, 1, 0.3, 1],
-                          }}
+                          transition={{ delay: 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                           className="absolute left-0 right-0 top-0 px-6 pb-16 pt-6 sm:px-8 sm:pt-8"
                         >
-                          {/* Issue */}
                           <div className="mb-3 flex items-center gap-3">
                             <span className="h-px w-6 bg-white/60" />
-
                             <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/70">
                               {pageMagazine.issue}
                             </p>
                           </div>
 
-                          {/* Title */}
-                          <h2
-                            className="
-            max-w-[90%]
-            text-[clamp(32px,5vw,64px)]
-            font-bold
-            uppercase
-            leading-[0.82]
-            tracking-[-0.065em]
-            text-white
-          "
-                          >
+                          <h2 className="max-w-[90%] text-[clamp(32px,5vw,64px)] font-bold uppercase leading-[0.82] tracking-[-0.065em] text-white">
                             {pageMagazine.title}
                           </h2>
 
-                          {/* Price */}
                           <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-white/65">
                             {pageMagazine.price}
                           </p>
                         </motion.div>
 
-                        {/* Hover indicator */}
                         <motion.div
                           initial={{ opacity: 0, x: -8 }}
                           whileHover={{ opacity: 1, x: 0 }}
-                          className="
-          absolute
-          bottom-6
-          right-6
-          flex
-          h-9
-          w-9
-          items-center
-          justify-center
-          rounded-full
-          border
-          border-white/40
-          bg-black/10
-          backdrop-blur-sm
-        "
+                          className="absolute bottom-6 right-6 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-black/10 backdrop-blur-sm"
                         >
                           <span className="text-sm text-white">↗</span>
                         </motion.div>

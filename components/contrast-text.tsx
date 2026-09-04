@@ -16,6 +16,8 @@ export function ContrastText({
   const tone = useImageContrast(src);
   const reduced = useReducedMotion();
 
+  const isReady = tone === "light" || tone === "dark";
+
   const duration = reduced ? 0 : 0.35;
 
   return (
@@ -30,7 +32,7 @@ export function ContrastText({
           textShadow: "0 1px 12px rgba(0, 0, 0, 0.42)",
         }}
         animate={{
-          opacity: tone === "light" ? 1 : 0,
+          opacity: isReady && tone === "light" ? 1 : 0,
         }}
         transition={{
           duration,
@@ -48,7 +50,7 @@ export function ContrastText({
           textShadow: "0 1px 12px rgba(255, 255, 255, 0.42)",
         }}
         animate={{
-          opacity: tone === "dark" ? 1 : 0,
+          opacity: isReady && tone === "dark" ? 1 : 0,
         }}
         transition={{
           duration,
