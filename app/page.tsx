@@ -145,7 +145,6 @@ function HeroSlideshow({
               key={`mobile-${currentIndex}`}
               src={mobileSrc}
               alt={alt}
-              onLoad={() => setLoadedSrc(currentSrc)}
               style={{ y, scale }}
               initial={{ opacity: 0, scale: reduced ? 1 : 1.04 }}
               animate={{ opacity: isLoading ? 0 : 1, scale: reduced ? 1 : 1.04 }}
