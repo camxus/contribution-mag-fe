@@ -26,17 +26,27 @@ function ListRow({
   title,
   description,
   image,
+  backgroundImage = false,
 }: {
   href: string;
   eyebrow: string;
   title: string;
   description: string;
   image: string;
+  backgroundImage?: boolean;
 }) {
   const reduced = useReducedMotion();
 
   return (
     <motion.li
+      className="
+        group
+        relative
+        overflow-hidden
+        border-t
+        border-black/15
+        first:border-t-0
+      "
       variants={{
         hidden: {
           opacity: 0,
@@ -51,27 +61,59 @@ function ListRow({
           },
         },
       }}
-      whileHover={
-        reduced
-          ? undefined
-          : {
-            opacity: 0.78,
-          }
-      }
     >
+      {/* Background image */}
+      {backgroundImage && (
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            z-0
+            overflow-hidden
+            opacity-0
+            transition-opacity
+            duration-500
+            ease-out
+            group-hover:opacity-100
+          "
+        >
+          <Image
+            src={image}
+            alt=""
+            fill
+            sizes="100vw"
+            className="
+              object-cover
+              scale-105
+              transition-transform
+              duration-1000
+              ease-out
+              group-hover:scale-100
+            "
+          />
+
+          <div className="absolute inset-0 bg-white/75" />
+        </div>
+      )}
+
       <Link
         href={href}
         className={`
-          group
-          flex w-full items-center
+          relative
+          z-10
+          flex
+          w-full
+          items-center
           gap-4
-          border-t border-black/15
+          p-4
           py-5
-          sm:gap-6 sm:py-6
+          sm:gap-6
+          sm:py-6
           ${ink}
         `}
       >
-        {/* Image */}
+        {/* Thumbnail */}
         <span
           className="
             relative
@@ -91,12 +133,12 @@ function ListRow({
             fill
             sizes="(max-width: 640px) 80px, 96px"
             className="
-                object-cover
-                transition-transform
-                duration-700
-                ease-out
-                group-hover:scale-[1.04]
-              "
+              object-cover
+              transition-transform
+              duration-700
+              ease-out
+              group-hover:scale-[1.04]
+            "
           />
 
           <span
@@ -220,7 +262,6 @@ function AnimatedList({ children }: { children: ReactNode }) {
         list-none
         flex-col
         gap-0
-        border-t
         border-black/15
         p-0
       "
@@ -259,6 +300,7 @@ export function StoryList({ items }: { items: Story[] }) {
           title={item.title}
           description={item.dek}
           image={item.image}
+          backgroundImage
         />
       ))}
     </AnimatedList>
@@ -276,6 +318,7 @@ export function InterviewList({ items }: { items: Interview[] }) {
           title={item.name}
           description={`“${item.quote}”`}
           image={item.image}
+          backgroundImage
         />
       ))}
     </AnimatedList>
@@ -293,6 +336,7 @@ export function MagazineList({ items }: { items: Magazine[] }) {
           title={item.title}
           description={`${item.price} · ${item.description}`}
           image={item.image}
+          backgroundImage
         />
       ))}
     </AnimatedList>

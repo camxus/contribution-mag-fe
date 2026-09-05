@@ -12,7 +12,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
-import { StoryList, InterviewList } from "@/components/collection-list";
+import { StoryList, InterviewList, MagazineList } from "@/components/collection-list";
 import { ContrastText } from "@/components/contrast-text";
 
 import {
@@ -1189,13 +1189,13 @@ export default function Page() {
       <section
         id="stories"
         className="
-          border-b
-          border-border
-          px-[5vw]
-          py-16
-          sm:py-20
-          lg:py-24
-        "
+    border-b
+    border-border
+    px-[5vw]
+    py-16
+    sm:py-20
+    lg:py-24
+  "
       >
         <SectionHeader
           number="01"
@@ -1345,36 +1345,7 @@ export default function Page() {
                 </div>
 
                 <div className="flex flex-col divide-y divide-border">
-                  {pageMagazines?.map((magazine) => (
-                    <div key={magazine.slug} className="py-3 first:pt-0 sm:py-4">
-                      <Link
-                        href={magazinePath(magazine.slug)}
-                        className="group flex items-center gap-3 sm:gap-4"
-                      >
-                        <div className="relative aspect-[0.72] w-12 shrink-0 overflow-hidden bg-muted sm:w-16">
-                          <img
-                            src={magazine.image}
-                            alt={imageAlt(magazine.title)}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-[8px] uppercase tracking-[0.1em] text-muted-foreground sm:text-[9px]">
-                            {magazine.issue}
-                          </p>
-                          <h3 className="mt-0.5 truncate text-[clamp(15px,4vw,28px)] font-medium leading-[1] tracking-[-0.04em]">
-                            {magazine.title}
-                          </h3>
-                          <p className="mt-1 text-[10px] text-muted-foreground sm:text-[11px]">
-                            {magazine.price}
-                          </p>
-                        </div>
-                        <div className="flex h-7 w-7 shrink-0 items-center justify-center border border-border text-foreground transition-all duration-300 group-hover:border-foreground group-hover:bg-foreground group-hover:text-background sm:h-8 sm:w-8">
-                          <ArrowUpRight size={13} />
-                        </div>
-                      </Link>
-                    </div>
-                  ))}
+                  <MagazineList items={pageMagazines || []} />
                 </div>
               </div>
             </div>
@@ -1403,36 +1374,7 @@ export default function Page() {
                       </p>
                     </div>
                     <div className="flex flex-col divide-y divide-border">
-                      {pageMagazines.map((magazine) => (
-                        <div key={magazine.slug} className="py-4 first:pt-0">
-                          <Link
-                            href={magazinePath(magazine.slug)}
-                            className="group flex items-center gap-4"
-                          >
-                            <div className="relative aspect-[0.72] w-16 shrink-0 overflow-hidden bg-muted">
-                              <img
-                                src={magazine.image}
-                                alt={imageAlt(magazine.title)}
-                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                              />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
-                                {magazine.issue}
-                              </p>
-                              <h3 className="mt-0.5 truncate text-[clamp(18px,2.5vw,28px)] font-medium leading-[1] tracking-[-0.04em]">
-                                {magazine.title}
-                              </h3>
-                              <p className="mt-1 text-[11px] text-muted-foreground">
-                                {magazine.price}
-                              </p>
-                            </div>
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center border border-border text-foreground transition-all duration-300 group-hover:border-foreground group-hover:bg-foreground group-hover:text-background">
-                              <ArrowUpRight size={14} />
-                            </div>
-                          </Link>
-                        </div>
-                      ))}
+                      <MagazineList items={pageMagazines || []} />
                     </div>
                   </div>
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   ArrowLeft,
   ArrowUpRight,
+  Mail,
   Menu,
   ShoppingBag,
   X,
@@ -669,6 +670,9 @@ export function SiteFooter() {
                   <a
                     href={`mailto:${contactQuery.data.email}`}
                     className="
+                      flex
+                      items-center
+                      gap-2
                       w-fit
                       transition-opacity
                       duration-300
@@ -676,6 +680,10 @@ export function SiteFooter() {
                     "
                   >
                     {contactQuery.data.email}
+                    <Mail
+                      size={16}
+                      strokeWidth={1.5}
+                    />
                   </a>
                 )}
 
