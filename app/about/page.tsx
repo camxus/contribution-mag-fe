@@ -19,10 +19,10 @@ export default function AboutPage() {
   const reduced = useReducedMotion();
 
   return (
-    <main className="min-h-screen overflow-hidden bg-background text-foreground">
+    <>
       <SiteHeader />
-
-      <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-24 pt-[100px] sm:pb-28 sm:pt-[130px] lg:pb-36 lg:pt-[160px]">
+      <main className="min-h-screen overflow-hidden bg-background text-foreground">
+        <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-24 pt-[100px] sm:pb-28 sm:pt-[130px] lg:pb-36 lg:pt-[160px]">
         {/* ---------------------------------------------------------------- */}
         {/* Header                                                             */}
         {/* ---------------------------------------------------------------- */}

@@ -334,7 +334,7 @@ export function MagazineList({ items }: { items: Magazine[] }) {
           href={magazinePath(item.slug)}
           eyebrow={item.issue}
           title={item.title}
-          description={`${item.price} · ${item.description}`}
+          description={`${item.pricePrint ? `$${item.pricePrint}.00 USD` : "Available soon"} · Print edition`}
           image={item.image}
           backgroundImage
         />

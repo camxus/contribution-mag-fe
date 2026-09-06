@@ -17,11 +17,11 @@ export default function MagazinesPage() {
   const showNoIssues = query.data?.length === 0;
 
   return (
-    <main className="min-h-screen overflow-hidden bg-background text-foreground">
+    <>
       <SiteHeader />
-
-      <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-20 pt-[100px] sm:pb-24 sm:pt-[130px] lg:pb-32 lg:pt-[160px]">
-        {/* Header */}
+      <main className="min-h-screen overflow-hidden bg-background text-foreground">
+        <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-20 pt-[100px] sm:pb-24 sm:pt-[130px] lg:pb-32 lg:pt-[160px]">
+          {/* Header */}
         <motion.div
           initial={
             reduced
@@ -131,7 +131,7 @@ export default function MagazinesPage() {
             lg:justify-between
           "
         >
-          <p
+          {/* <p
             className="
               max-w-[650px]
               text-[clamp(19px,2.4vw,30px)]
@@ -142,7 +142,7 @@ export default function MagazinesPage() {
           >
             Printed issues for people paying attention, collecting essays,
             portraits, and field notes.
-          </p>
+          </p> */}
 
           <div
             className="
@@ -249,5 +249,6 @@ export default function MagazinesPage() {
 
       <SiteFooter />
     </main>
+    </>
   );
 }

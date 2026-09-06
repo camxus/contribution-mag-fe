@@ -82,14 +82,20 @@ export function useMagazines() {
           issue: item.issue_number
             ? `Issue ${item.issue_number}`
             : "Contribution Magazine",
-          price: item.price_print
-            ? `$${Number(item.price_print).toFixed(2)} USD`
-            : "Available soon",
+          priceDigital: item.price_digital
+            ? Number(item.price_digital)
+            : 40,
+          pricePrint: item.price_print
+            ? Number(item.price_print)
+            : 40,
           image: media(item),
-          description: text(item.content),
+          videoUrl: item.video_url,
           stripeBuyLinkDigital: item.stripe_buy_link_digital,
           stripeBuyLinkPrint: item.stripe_buy_link_print,
           soldOut: item.sold_out,
+          releaseDate: item.release_date,
+          featuredArtists: item.featured_artists,
+          secondaryImages: item.secondary_images,
         })),
   });
 }

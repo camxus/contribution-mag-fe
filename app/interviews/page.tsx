@@ -17,10 +17,10 @@ export default function InterviewsPage() {
   const showNoInterviews = query.data?.length === 0;
 
   return (
-    <main className="min-h-screen overflow-hidden bg-background text-foreground">
+    <>
       <SiteHeader />
-
-      <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-20 pt-[100px] sm:pb-24 sm:pt-[130px] lg:pb-32 lg:pt-[160px]">
+      <main className="min-h-screen overflow-hidden bg-background text-foreground">
+        <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-20 pt-[100px] sm:pb-24 sm:pt-[130px] lg:pb-32 lg:pt-[160px]">
         {/* ---------------------------------------------------------------- */}
         {/* Header                                                             */}
         {/* ---------------------------------------------------------------- */}
@@ -140,7 +140,7 @@ export default function InterviewsPage() {
             lg:justify-between
           "
         >
-          <p className="
+          {/* <p className="
             max-w-[650px]
             text-[clamp(19px,2.4vw,30px)]
             leading-[1.12]
@@ -149,7 +149,7 @@ export default function InterviewsPage() {
           ">
             Long-form conversations with artists, makers, and people
             widening the room.
-          </p>
+          </p> */}
 
           <div className="
             flex
@@ -259,5 +259,6 @@ export default function InterviewsPage() {
 
       <SiteFooter />
     </main>
+    </>
   );
 }

@@ -50,27 +50,24 @@ export function SiteHeader() {
           reduced
             ? false
             : {
-              opacity: 0,
-              y: -10,
-            }
+                opacity: 0,
+                y: -10,
+              }
         }
         animate={
           reduced
             ? undefined
             : {
-              opacity: 1,
-              y: 0,
-            }
+                opacity: 1,
+                y: 0,
+              }
         }
         transition={{
           duration: 0.6,
           ease,
         }}
       >
-        {/* ---------------------------------------------------------------- */}
-        {/* Logo                                                              */}
-        {/* ---------------------------------------------------------------- */}
-
+        {/* Logo */}
         <Link
           href="/"
           aria-label={contributionTitle}
@@ -90,16 +87,15 @@ export function SiteHeader() {
           CONTRIBUTION MAGAZINE.
         </Link>
 
-        {/* ---------------------------------------------------------------- */}
-        {/* Desktop navigation                                                */}
-        {/* ---------------------------------------------------------------- */}
-
+        {/* Desktop navigation */}
         <nav
           className="
             absolute
             left-1/2
+            top-1/2
             hidden
             -translate-x-1/2
+            -translate-y-1/2
             items-center
             gap-6
             lg:flex
@@ -113,17 +109,17 @@ export function SiteHeader() {
                 reduced
                   ? false
                   : {
-                    opacity: 0,
-                    y: -8,
-                  }
+                      opacity: 0,
+                      y: -8,
+                    }
               }
               animate={
                 reduced
                   ? undefined
                   : {
-                    opacity: 1,
-                    y: 0,
-                  }
+                      opacity: 1,
+                      y: 0,
+                    }
               }
               transition={{
                 duration: 0.45,
@@ -167,10 +163,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        {/* ---------------------------------------------------------------- */}
-        {/* Actions                                                           */}
-        {/* ---------------------------------------------------------------- */}
-
+        {/* Actions */}
         <div className="relative z-10 flex items-center gap-4">
           <Link
             href="/magazine"
@@ -192,7 +185,11 @@ export function SiteHeader() {
             <ShoppingBag
               size={16}
               strokeWidth={1.5}
-              className="transition-transform duration-300 group-hover:-translate-y-0.5"
+              className="
+                transition-transform
+                duration-300
+                group-hover:-translate-y-0.5
+              "
             />
           </Link>
 
@@ -219,10 +216,7 @@ export function SiteHeader() {
         </div>
       </motion.header>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Navigation overlay                                                  */}
-      {/* ------------------------------------------------------------------ */}
-
+      {/* Navigation overlay */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -248,25 +242,25 @@ export function SiteHeader() {
               reduced
                 ? { opacity: 0 }
                 : {
-                  opacity: 0,
-                  x: "100%",
-                }
+                    opacity: 0,
+                    x: "100%",
+                  }
             }
             animate={
               reduced
                 ? { opacity: 1 }
                 : {
-                  opacity: 1,
-                  x: 0,
-                }
+                    opacity: 1,
+                    x: 0,
+                  }
             }
             exit={
               reduced
                 ? { opacity: 0 }
                 : {
-                  opacity: 0,
-                  x: "100%",
-                }
+                    opacity: 0,
+                    x: "100%",
+                  }
             }
             transition={{
               duration: reduced ? 0.2 : 0.55,
@@ -280,15 +274,15 @@ export function SiteHeader() {
                   reduced
                     ? false
                     : {
-                      opacity: 0,
-                    }
+                        opacity: 0,
+                      }
                 }
                 animate={
                   reduced
                     ? undefined
                     : {
-                      opacity: 1,
-                    }
+                        opacity: 1,
+                      }
                 }
                 transition={{
                   delay: 0.2,
@@ -319,17 +313,17 @@ export function SiteHeader() {
                   reduced
                     ? false
                     : {
-                      opacity: 0,
-                      rotate: -20,
-                    }
+                        opacity: 0,
+                        rotate: -20,
+                      }
                 }
                 animate={
                   reduced
                     ? undefined
                     : {
-                      opacity: 1,
-                      rotate: 0,
-                    }
+                        opacity: 1,
+                        rotate: 0,
+                      }
                 }
                 transition={{
                   delay: 0.12,
@@ -340,15 +334,15 @@ export function SiteHeader() {
                   reduced
                     ? undefined
                     : {
-                      rotate: 90,
-                    }
+                        rotate: 90,
+                      }
                 }
                 whileTap={
                   reduced
                     ? undefined
                     : {
-                      scale: 0.9,
-                    }
+                        scale: 0.9,
+                      }
                 }
                 className="
                   border-0
@@ -381,17 +375,17 @@ export function SiteHeader() {
                     reduced
                       ? false
                       : {
-                        opacity: 0,
-                        x: 45,
-                      }
+                          opacity: 0,
+                          x: 45,
+                        }
                   }
                   animate={
                     reduced
                       ? undefined
                       : {
-                        opacity: 1,
-                        x: 0,
-                      }
+                          opacity: 1,
+                          x: 0,
+                        }
                   }
                   transition={{
                     delay: 0.18 + index * 0.06,
@@ -447,17 +441,17 @@ export function SiteHeader() {
                 reduced
                   ? false
                   : {
-                    opacity: 0,
-                    y: 15,
-                  }
+                      opacity: 0,
+                      y: 15,
+                    }
               }
               animate={
                 reduced
                   ? undefined
                   : {
-                    opacity: 1,
-                    y: 0,
-                  }
+                      opacity: 1,
+                      y: 0,
+                    }
               }
               transition={{
                 delay: 0.5,
@@ -914,15 +908,6 @@ export function SiteFooter() {
         ">
           © 2026, Contribution Magazine
         </small>
-
-        {/* <small className="
-          text-[10px]
-          uppercase
-          tracking-[0.08em]
-          text-muted-foreground
-        ">
-          London · Lagos · New York
-        </small> */}
       </div>
     </footer>
   );

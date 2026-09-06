@@ -13,13 +13,16 @@ export type Magazine = {
   slug: string;
   title: string;
   issue: string;
-  price: string;
+  priceDigital: number;
+  pricePrint: number;
   image: string;
-  description: string;
-  video_url?: string;
+  videoUrl?: string;
   stripeBuyLinkDigital?: string;
   stripeBuyLinkPrint?: string;
   soldOut?: boolean;
+  releaseDate?: string;
+  featuredArtists?: string[];
+  secondaryImages?: string[];
 };
 export type Interview = {
   slug: string;
@@ -82,35 +85,55 @@ export const stories: Story[] = [
 
 export const magazines: Magazine[] = [
   {
+    slug: "issue-000",
+    title: "Issue 000",
+    issue: "Issue 000",
+    priceDigital: 40,
+    pricePrint: 40,
+    image: "https://example.com/wp-content/uploads/2026/08/issue-000.jpg",
+    videoUrl: "https://example.com/wp-content/uploads/2026/08/issue-000.mp4",
+    stripeBuyLinkDigital: "https://example.com/buy/digital",
+    stripeBuyLinkPrint: "https://example.com/buy/print",
+    soldOut: false,
+    releaseDate: "2026-08-28",
+    featuredArtists: ["Artist One", "Artist Two"],
+    secondaryImages: [
+      "https://example.com/wp-content/uploads/2026/08/issue-000-spread-1.jpg",
+      "https://example.com/wp-content/uploads/2026/08/issue-000-spread-2.jpg",
+    ],
+  },
+  {
     slug: "issue-001-culture-unwrapped",
     title: "Culture Unwrapped",
     issue: "Issue 001",
-    price: "$40.00 USD",
-    image:
-      "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=900&q=85",
-    video_url: "https://example.com/wp-content/uploads/2026/08/issue-001.mp4",
-    description:
-      "Our first print issue looks at the people unwrapping culture and rebuilding it in public.",
+    priceDigital: 40,
+    pricePrint: 40,
+    image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=900&q=85",
+    stripeBuyLinkDigital: "https://example.com/buy/digital",
+    stripeBuyLinkPrint: "https://example.com/buy/print",
+    soldOut: false,
   },
   {
     slug: "issue-002-new-rituals",
     title: "New Rituals",
     issue: "Issue 002",
-    price: "$40.00 USD",
-    image:
-      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=900&q=85",
-    description:
-      "A collection of essays, portraits, and field notes about the rituals we choose.",
+    priceDigital: 40,
+    pricePrint: 40,
+    image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=900&q=85",
+    stripeBuyLinkDigital: "https://example.com/buy/digital",
+    stripeBuyLinkPrint: "https://example.com/buy/print",
+    soldOut: false,
   },
   {
     slug: "issue-003-soft-power",
     title: "Soft Power",
     issue: "Issue 003",
-    price: "$40.00 USD",
-    image:
-      "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=900&q=85",
-    description:
-      "The third issue explores influence that moves quietly but changes everything.",
+    priceDigital: 40,
+    pricePrint: 40,
+    image: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=900&q=85",
+    stripeBuyLinkDigital: "https://example.com/buy/digital",
+    stripeBuyLinkPrint: "https://example.com/buy/print",
+    soldOut: false,
   },
 ];
 

@@ -171,6 +171,23 @@ export default function MagazinePage() {
                   object-cover
                 "
               />
+              {magazine.releaseDate && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Released: {magazine.releaseDate}
+                </p>
+              )}
+              {magazine.featuredArtists && magazine.featuredArtists.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                    Featured Artists
+                  </p>
+                  <ul className="mt-1 text-sm">
+                    {magazine.featuredArtists.map((artist, index) => (
+                      <li key={index}>{artist}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </motion.div>
           </div>
 
@@ -214,10 +231,10 @@ export default function MagazinePage() {
                 tracking-[-0.04em]
               "
             >
-              {magazine.price}
+              ${magazine.pricePrint}.00 USD (Print) · ${magazine.priceDigital}.00 USD (Digital)
             </motion.p>
 
-            {/* Description */}
+            {/* Description placeholder */}
             <motion.p
               variants={variants}
               className="
@@ -230,8 +247,29 @@ export default function MagazinePage() {
                 text-muted-foreground
               "
             >
-              {magazine.description}
+              A print edition of Contribution Magazine.
             </motion.p>
+
+            {magazine.secondaryImages && magazine.secondaryImages.length > 0 && (
+              <motion.div
+                variants={variants}
+                className="mt-8"
+              >
+                <p className="mb-4 text-xs uppercase tracking-wider text-muted-foreground">
+                  Additional Images
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  {magazine.secondaryImages.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image}
+                      alt={`${magazine.title} - Additional view ${index + 1}`}
+                      className="h-auto w-full object-cover"
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
 
             {/* Buy button */}
             <motion.div

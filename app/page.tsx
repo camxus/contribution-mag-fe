@@ -321,9 +321,9 @@ function HeroContent({ src }: { src: string }) {
           lg:mt-8
         "
         >
-          <p className="max-w-[360px] text-[15px] leading-[1.35] sm:text-[17px] lg:text-[18px]">
+          {/* <p className="max-w-[360px] text-[15px] leading-[1.35] sm:text-[17px] lg:text-[18px]">
             Culture, community, and creative practice.
-          </p>
+          </p> */}
         </motion.div>
       </ContrastText>
 
@@ -407,7 +407,7 @@ function VideoHeroSection({
     },
   };
 
-  if (!magazine.video_url) { return null }
+  if (!magazine.videoUrl) { return null }
 
   return (
     <section
@@ -448,9 +448,9 @@ function VideoHeroSection({
         "
       >
         <source
-          src={
-            magazine.video_url
-          }
+src={
+              magazine.videoUrl
+            }
           type="video/mp4"
         />
       </motion.video>
@@ -611,7 +611,7 @@ function VideoHeroSection({
                 text-white/60
               "
             >
-              {magazine.price}
+              {`$${magazine.pricePrint}.00 USD`}
             </span>
           </motion.div>
         </div>
@@ -1097,10 +1097,6 @@ export default function Page() {
           <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-[10vw]">
             <FadeUp delay={0.05}>
               <div>
-                <p className="eyebrow mb-5">
-                  London · Lagos · New York
-                </p>
-
                 <h2 className="max-w-[850px] text-[clamp(48px,7vw,100px)] font-normal leading-[0.86] tracking-[-0.085em]">
                   {newsletterLabel}
                 </h2>
@@ -1217,7 +1213,7 @@ export default function Page() {
           </FadeUp>
         ) : (
           <FadeUp delay={0.08}>
-            <StoryList items={pageStories || []} />
+            <StoryList items={pageStories?.reverse().slice(0, 4) || []} />
           </FadeUp>
         )}
       </section>
@@ -1323,7 +1319,7 @@ export default function Page() {
                     {pageMagazine.title}
                   </h2>
                   <p className="mt-2 text-[11px] text-white/80">
-                    {pageMagazine.price}
+                    {`$${pageMagazine.pricePrint}.00 USD`}
                   </p>
                 </div>
               </div>
@@ -1440,7 +1436,7 @@ export default function Page() {
                           </h2>
 
                           <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-white/65">
-                            {pageMagazine.price}
+{`$${pageMagazine.pricePrint}.00 USD`}
                           </p>
                         </motion.div>
 

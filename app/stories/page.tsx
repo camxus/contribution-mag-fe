@@ -17,11 +17,11 @@ export default function StoriesPage() {
   const showNoStories = query.data?.length === 0;
 
   return (
-    <main className="min-h-screen overflow-hidden bg-background text-foreground">
+    <>
       <SiteHeader />
-
-      <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-20 pt-[100px] sm:pb-24 sm:pt-[130px] lg:pb-32 lg:pt-[160px]">
-        {/* Header */}
+      <main className="min-h-screen overflow-hidden bg-background text-foreground">
+        <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-20 pt-[100px] sm:pb-24 sm:pt-[130px] lg:pb-32 lg:pt-[160px]">
+          {/* Header */}
         <motion.div
           initial={
             reduced
@@ -110,10 +110,10 @@ export default function StoriesPage() {
           }}
           className="mb-16 flex flex-col gap-8 border-b border-border pb-10 sm:mb-20 sm:pb-12 lg:flex-row lg:items-end lg:justify-between"
         >
-          <p className="max-w-[650px] text-[clamp(19px,2.4vw,30px)] leading-[1.12] tracking-[-0.025em] text-muted-foreground">
+          {/* <p className="max-w-[650px] text-[clamp(19px,2.4vw,30px)] leading-[1.12] tracking-[-0.025em] text-muted-foreground">
             Dispatches on culture, community, and the creative
             practices shaping what comes next.
-          </p>
+          </p> */}
 
           <div className="flex shrink-0 items-center gap-3 text-[9px] uppercase tracking-[0.13em] text-muted-foreground">
             <span className="h-px w-8 bg-border" />
@@ -181,5 +181,6 @@ export default function StoriesPage() {
 
       <SiteFooter />
     </main>
+    </>
   );
 }
