@@ -170,28 +170,10 @@ export default function TermsConditionsPage() {
               text-foreground/75
               sm:text-[17px]
             "
-          >
-            {query.isLoading ? (
-              <p className="text-sm text-muted-foreground">
-                Loading terms & conditions...
-              </p>
-            ) : query.error ? (
-              <p className="text-sm text-destructive">
-                Unable to load terms & conditions.
-              </p>
-            ) : query.data?.content_html ? (
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: query.data.content_html,
-                }}
-              />
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                Terms & conditions are not currently
-                available.
-              </p>
-            )}
-          </motion.div>
+            dangerouslySetInnerHTML={{
+              __html: query.data?.content_html || "",
+            }}
+          />
         </div>
 
         {/* ---------------------------------------------------------------- */}

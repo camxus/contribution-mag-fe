@@ -1,6 +1,7 @@
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "./gutenberg.css";
 import { QueryProvider } from "@/components/query-provider";
 
 export const metadata: Metadata = {

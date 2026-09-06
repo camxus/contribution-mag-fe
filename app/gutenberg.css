@@ -1,0 +1,412 @@
+/* ==========================================================================
+   Gutenberg Block CSS — for rendering wp content.rendered via
+   dangerouslySetInnerHTML without loading WordPress's own stylesheets.
+
+   Scope everything under .wp-content (or whatever wrapper class you use)
+   so it doesn't leak into the rest of your app.
+   ========================================================================== */
+
+.wp-content {
+  --wp--style--gallery-gap-default: 16px;
+  --wp--style--block-gap: 24px;
+}
+
+/* --------------------------------------------------------------------------
+   Paragraphs / basic typography
+   -------------------------------------------------------------------------- */
+.wp-content .wp-block-paragraph {
+  margin: 0 0 1.5em;
+}
+.wp-content .wp-block-paragraph:last-child {
+  margin-bottom: 0;
+}
+.wp-content .has-drop-cap:not(:focus)::first-letter {
+  float: left;
+  font-size: 8.4em;
+  line-height: 0.68;
+  font-weight: 100;
+  margin: 0.05em 0.1em 0 0;
+}
+
+/* Headings */
+.wp-content .wp-block-heading {
+  margin: 1.5em 0 0.75em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.wp-content h1.wp-block-heading { font-size: 2em; }
+.wp-content h2.wp-block-heading { font-size: 1.6em; }
+.wp-content h3.wp-block-heading { font-size: 1.3em; }
+.wp-content h4.wp-block-heading,
+.wp-content h5.wp-block-heading,
+.wp-content h6.wp-block-heading { font-size: 1.1em; }
+
+/* Lists */
+.wp-content .wp-block-list {
+  margin: 0 0 1.5em;
+  padding-left: 1.5em;
+}
+.wp-content ul.wp-block-list { list-style: disc; }
+.wp-content ol.wp-block-list { list-style: decimal; }
+.wp-content .wp-block-list li { margin-bottom: 0.5em; }
+
+/* Quotes */
+.wp-content .wp-block-quote {
+  margin: 0 0 1.5em;
+  padding-left: 1em;
+  border-left: 4px solid currentColor;
+  opacity: 0.9;
+  font-style: italic;
+}
+.wp-content .wp-block-quote cite {
+  display: block;
+  margin-top: 0.5em;
+  font-style: normal;
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+.wp-content .wp-block-pullquote {
+  margin: 2em 0;
+  padding: 2em 0;
+  border-top: 3px solid currentColor;
+  border-bottom: 3px solid currentColor;
+  text-align: center;
+}
+.wp-content .wp-block-pullquote blockquote {
+  margin: 0;
+  font-size: 1.4em;
+  font-style: italic;
+}
+
+/* Separator / spacer */
+.wp-content .wp-block-separator {
+  margin: 2em 0;
+  border: none;
+  border-top: 1px solid currentColor;
+  opacity: 0.2;
+}
+.wp-content .wp-block-spacer {
+  display: block;
+  width: 100%;
+}
+
+/* Code / preformatted */
+.wp-content .wp-block-code,
+.wp-content .wp-block-preformatted {
+  margin: 0 0 1.5em;
+  padding: 1em;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: ui-monospace, monospace;
+  white-space: pre-wrap;
+}
+
+/* Tables */
+.wp-content .wp-block-table {
+  margin: 0 0 1.5em;
+  width: 100%;
+  overflow-x: auto;
+}
+.wp-content .wp-block-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.wp-content .wp-block-table th,
+.wp-content .wp-block-table td {
+  padding: 0.5em 0.75em;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  text-align: left;
+}
+.wp-content .wp-block-table.is-style-stripes tbody tr:nth-child(odd) {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* Embeds / iframes */
+.wp-content .wp-block-embed {
+  margin: 0 0 1.5em;
+}
+.wp-content .wp-block-embed iframe,
+.wp-content .wp-block-embed__wrapper {
+  width: 100%;
+}
+.wp-content .wp-block-embed.wp-embed-aspect-16-9 .wp-block-embed__wrapper {
+  position: relative;
+  padding-top: 56.25%;
+}
+.wp-content .wp-block-embed.wp-embed-aspect-16-9 .wp-block-embed__wrapper iframe {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+/* Buttons */
+.wp-content .wp-block-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75em;
+  margin: 0 0 1.5em;
+}
+.wp-content .wp-block-button__link {
+  display: inline-block;
+  padding: 0.7em 1.4em;
+  border-radius: 4px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+}
+.wp-content .wp-block-button.is-style-outline .wp-block-button__link {
+  background: transparent;
+  border: 2px solid currentColor;
+  color: inherit;
+}
+
+/* Columns block */
+.wp-content .wp-block-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  margin: 0 0 1.5em;
+}
+.wp-content .wp-block-column {
+  flex: 1 1 0;
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .wp-content .wp-block-columns {
+    flex-direction: column;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Single image block
+   -------------------------------------------------------------------------- */
+.wp-content .wp-block-image {
+  margin: 0 0 1.5em;
+}
+.wp-content .wp-block-image img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.wp-content .wp-block-image.aligncenter {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.wp-content .wp-block-image.alignleft {
+  float: left;
+  margin: 0 1.5em 1em 0;
+}
+.wp-content .wp-block-image.alignright {
+  float: right;
+  margin: 0 0 1em 1.5em;
+}
+.wp-content .wp-block-image.alignfull img,
+.wp-content .wp-block-image.alignwide img {
+  width: 100%;
+}
+.wp-content .wp-block-image figcaption {
+  margin-top: 0.5em;
+  font-size: 0.85em;
+  opacity: 0.7;
+  text-align: center;
+}
+.wp-content .wp-block-image .is-style-rounded img {
+  border-radius: 9999px;
+}
+
+/* --------------------------------------------------------------------------
+   Gallery block — THE IMPORTANT PART
+   Modern Gutenberg gallery markup has NO inline layout styles; the grid
+   comes entirely from these classes. Covers both is-layout-flex (the
+   current default) and is-layout-grid (older/alternate) variants.
+   -------------------------------------------------------------------------- */
+
+.wp-content .wp-block-gallery {
+  margin: 0 0 1.5em;
+  padding: 0;
+}
+
+/* --- Flex layout (current Gutenberg default) --- */
+.wp-content .wp-block-gallery.is-layout-flex {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  gap: var(--wp--style--gallery-gap-default, 16px);
+}
+.wp-content .wp-block-gallery.is-layout-flex .wp-block-image,
+.wp-content .wp-block-gallery.is-layout-flex .wp-block-video {
+  margin: 0;
+  flex-grow: 1;
+}
+
+/* columns-default: WP computes an implicit column count based on the
+   number of images (roughly 3, capped at the number of items). We
+   approximate that per-count using nth-of-type selectors so galleries
+   with 2–8 images all land at a sane width without extra markup. */
+.wp-content .wp-block-gallery.columns-default.is-layout-flex .wp-block-image {
+  flex-basis: calc(33.3333% - var(--wp--style--gallery-gap-default, 16px));
+}
+/* Exactly 2 images total -> 2 columns */
+.wp-content .wp-block-gallery.columns-default.is-layout-flex .wp-block-image:first-child:nth-last-child(2),
+.wp-content .wp-block-gallery.columns-default.is-layout-flex .wp-block-image:first-child:nth-last-child(2) ~ .wp-block-image {
+  flex-basis: calc(50% - var(--wp--style--gallery-gap-default, 16px));
+}
+/* Exactly 1 image -> full width */
+.wp-content .wp-block-gallery.columns-default.is-layout-flex .wp-block-image:only-child {
+  flex-basis: 100%;
+}
+
+/* Explicit column counts (when an editor picks a specific count instead
+   of "default") */
+.wp-content .wp-block-gallery.columns-1.is-layout-flex .wp-block-image { flex-basis: 100%; }
+.wp-content .wp-block-gallery.columns-2.is-layout-flex .wp-block-image { flex-basis: calc(50% - var(--wp--style--gallery-gap-default, 16px)); }
+.wp-content .wp-block-gallery.columns-3.is-layout-flex .wp-block-image { flex-basis: calc(33.3333% - var(--wp--style--gallery-gap-default, 16px)); }
+.wp-content .wp-block-gallery.columns-4.is-layout-flex .wp-block-image { flex-basis: calc(25% - var(--wp--style--gallery-gap-default, 16px)); }
+.wp-content .wp-block-gallery.columns-5.is-layout-flex .wp-block-image { flex-basis: calc(20% - var(--wp--style--gallery-gap-default, 16px)); }
+.wp-content .wp-block-gallery.columns-6.is-layout-flex .wp-block-image { flex-basis: calc(16.6667% - var(--wp--style--gallery-gap-default, 16px)); }
+.wp-content .wp-block-gallery.columns-7.is-layout-flex .wp-block-image { flex-basis: calc(14.2857% - var(--wp--style--gallery-gap-default, 16px)); }
+.wp-content .wp-block-gallery.columns-8.is-layout-flex .wp-block-image { flex-basis: calc(12.5% - var(--wp--style--gallery-gap-default, 16px)); }
+
+/* --- Grid layout (older galleries / block themes using is-layout-grid) --- */
+.wp-content .wp-block-gallery.is-layout-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--wp--style--gallery-gap-default, 16px);
+  list-style: none;
+}
+.wp-content .wp-block-gallery.columns-1.is-layout-grid { grid-template-columns: repeat(1, 1fr); }
+.wp-content .wp-block-gallery.columns-2.is-layout-grid { grid-template-columns: repeat(2, 1fr); }
+.wp-content .wp-block-gallery.columns-3.is-layout-grid { grid-template-columns: repeat(3, 1fr); }
+.wp-content .wp-block-gallery.columns-4.is-layout-grid { grid-template-columns: repeat(4, 1fr); }
+.wp-content .wp-block-gallery.columns-5.is-layout-grid { grid-template-columns: repeat(5, 1fr); }
+.wp-content .wp-block-gallery.columns-6.is-layout-grid { grid-template-columns: repeat(6, 1fr); }
+.wp-content .wp-block-gallery.columns-7.is-layout-grid { grid-template-columns: repeat(7, 1fr); }
+.wp-content .wp-block-gallery.columns-8.is-layout-grid { grid-template-columns: repeat(8, 1fr); }
+.wp-content .wp-block-gallery.is-layout-grid .wp-block-image {
+  margin: 0;
+}
+
+/* Images nested inside a gallery item */
+.wp-content .wp-block-gallery .wp-block-image {
+  display: flex;
+  flex-direction: column;
+}
+.wp-content .wp-block-gallery .wp-block-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* is-cropped: gallery images fill a uniform aspect-ratio box via object-fit */
+.wp-content .wp-block-gallery.is-cropped .wp-block-image {
+  position: relative;
+}
+.wp-content .wp-block-gallery.is-cropped .wp-block-image a,
+.wp-content .wp-block-gallery.is-cropped .wp-block-image img {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  object-fit: cover;
+}
+/* Give cropped items a consistent square-ish box; adjust to taste */
+.wp-content .wp-block-gallery.is-cropped .wp-block-image {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+/* Gallery captions */
+.wp-content .wp-block-gallery figcaption {
+  margin-top: 0.5em;
+  font-size: 0.85em;
+  opacity: 0.7;
+  text-align: center;
+}
+.wp-content .wp-block-gallery .blocks-gallery-caption {
+  margin-top: 0.75em;
+  font-size: 0.85em;
+  opacity: 0.7;
+  text-align: center;
+  width: 100%;
+}
+
+/* Responsive: stack to fewer columns on small screens regardless of
+   the desktop column count */
+@media (max-width: 600px) {
+  .wp-content .wp-block-gallery.is-layout-flex .wp-block-image {
+    flex-basis: calc(50% - var(--wp--style--gallery-gap-default, 16px)) !important;
+  }
+  .wp-content .wp-block-gallery.is-layout-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 400px) {
+  .wp-content .wp-block-gallery.is-layout-flex .wp-block-image {
+    flex-basis: 100% !important;
+  }
+  .wp-content .wp-block-gallery.is-layout-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Media & text block
+   -------------------------------------------------------------------------- */
+.wp-content .wp-block-media-text {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2em;
+  align-items: center;
+  margin: 0 0 1.5em;
+}
+.wp-content .wp-block-media-text .wp-block-media-text__media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+@media (max-width: 600px) {
+  .wp-content .wp-block-media-text {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Cover block
+   -------------------------------------------------------------------------- */
+.wp-content .wp-block-cover {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  margin: 0 0 1.5em;
+  overflow: hidden;
+}
+.wp-content .wp-block-cover img,
+.wp-content .wp-block-cover video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.wp-content .wp-block-cover__inner-container {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  text-align: center;
+  padding: 1em;
+}
+
+/* --------------------------------------------------------------------------
+   Links (fallback in case theme link color isn't inherited)
+   -------------------------------------------------------------------------- */
+.wp-content a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

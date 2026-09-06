@@ -170,28 +170,10 @@ export default function PrivacyPolicyPage() {
               text-foreground/75
               sm:text-[17px]
             "
-          >
-            {query.isLoading ? (
-              <p className="text-sm text-muted-foreground">
-                Loading privacy policy...
-              </p>
-            ) : query.error ? (
-              <p className="text-sm text-destructive">
-                Unable to load privacy policy.
-              </p>
-            ) : query.data?.content_html ? (
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: query.data.content_html,
-                }}
-              />
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                Privacy policy information is not
-                currently available.
-              </p>
-            )}
-          </motion.div>
+            dangerouslySetInnerHTML={{
+              __html: query.data?.content_html || "",
+            }}
+          />
         </div>
 
         {/* ---------------------------------------------------------------- */}
