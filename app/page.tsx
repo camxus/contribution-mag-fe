@@ -11,7 +11,7 @@ import {
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { SiteFooter } from "@/components/site-chrome";
 import { StoryList, InterviewList, MagazineList } from "@/components/collection-list";
 import { ContrastText } from "@/components/contrast-text";
 
@@ -448,9 +448,9 @@ function VideoHeroSection({
         "
       >
         <source
-src={
-              magazine.videoUrl
-            }
+          src={
+            magazine.videoUrl
+          }
           type="video/mp4"
         />
       </motion.video>
@@ -921,8 +921,6 @@ export default function Page() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
-      <SiteHeader />
-
       {/* ------------------------------------------------------------------ */}
       {/* HERO                                                                */}
       {/* ------------------------------------------------------------------ */}
@@ -1436,7 +1434,7 @@ export default function Page() {
                           </h2>
 
                           <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-white/65">
-{`$${pageMagazine.pricePrint}.00 USD`}
+                            {`$${pageMagazine.pricePrint}.00 USD`}
                           </p>
                         </motion.div>
 

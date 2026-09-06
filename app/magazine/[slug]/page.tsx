@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 
-import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { SiteFooter } from "@/components/site-chrome";
 import { imageAlt, magazines, safeSlug } from "@/lib/content";
 import { useMagazine } from "@/hooks/use-content-query";
 
@@ -48,8 +48,6 @@ export default function MagazinePage() {
   if (query.isLoading && !magazine) {
     return (
       <main className="min-h-screen bg-background text-foreground">
-        <SiteHeader />
-
         <div className="mx-auto max-w-[1380px] px-[5vw] py-16">
           <p className="text-sm text-muted-foreground">
             Loading issue…
@@ -64,8 +62,6 @@ export default function MagazinePage() {
   if (!magazine) {
     return (
       <main className="min-h-screen bg-background text-foreground">
-        <SiteHeader />
-
         <div className="mx-auto max-w-[1380px] px-[5vw] py-16">
           <p className="text-sm text-muted-foreground">
             Issue not found.
@@ -99,8 +95,6 @@ export default function MagazinePage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <SiteHeader />
-
       <motion.article
         className="
           mx-auto

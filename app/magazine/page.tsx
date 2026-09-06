@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import { MagazineList } from "@/components/collection-list";
-import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { SiteFooter } from "@/components/site-chrome";
 import { magazines, noIssuesLabel } from "@/lib/content";
 import { useMagazines } from "@/hooks/use-content-query";
 
@@ -18,69 +18,68 @@ export default function MagazinesPage() {
 
   return (
     <>
-      <SiteHeader />
       <main className="min-h-screen overflow-hidden bg-background text-foreground">
         <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-20 pt-[100px] sm:pb-24 sm:pt-[130px] lg:pb-32 lg:pt-[160px]">
           {/* Header */}
-        <motion.div
-          initial={
-            reduced
-              ? false
-              : {
+          <motion.div
+            initial={
+              reduced
+                ? false
+                : {
                   opacity: 0,
                   y: 30,
                 }
-          }
-          animate={
-            reduced
-              ? undefined
-              : {
+            }
+            animate={
+              reduced
+                ? undefined
+                : {
                   opacity: 1,
                   y: 0,
                 }
-          }
-          transition={{
-            duration: 0.8,
-            ease,
-          }}
-        >
-          <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
-            <p className="eyebrow">
-              Contribution Magazine · Print editions
-            </p>
+            }
+            transition={{
+              duration: 0.8,
+              ease,
+            }}
+          >
+            <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
+              <p className="eyebrow">
+                Contribution Magazine · Print editions
+              </p>
 
-            <span className="hidden text-[9px] uppercase tracking-[0.14em] text-muted-foreground sm:block">
-              03 / Magazine
-            </span>
-          </div>
-        </motion.div>
+              <span className="hidden text-[9px] uppercase tracking-[0.14em] text-muted-foreground sm:block">
+                03 / Magazine
+              </span>
+            </div>
+          </motion.div>
 
-        {/* Title */}
-        <motion.h1
-          initial={
-            reduced
-              ? false
-              : {
+          {/* Title */}
+          <motion.h1
+            initial={
+              reduced
+                ? false
+                : {
                   opacity: 0,
                   y: 70,
                   filter: "blur(8px)",
                 }
-          }
-          animate={
-            reduced
-              ? undefined
-              : {
+            }
+            animate={
+              reduced
+                ? undefined
+                : {
                   opacity: 1,
                   y: 0,
                   filter: "blur(0px)",
                 }
-          }
-          transition={{
-            duration: 1,
-            delay: 0.12,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          className="
+            }
+            transition={{
+              duration: 1,
+              delay: 0.12,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="
             mb-6
             mt-0
             text-[clamp(64px,14vw,190px)]
@@ -89,34 +88,34 @@ export default function MagazinesPage() {
             leading-[0.78]
             tracking-[-0.12em]
           "
-        >
-          Magazine
-        </motion.h1>
+          >
+            Magazine
+          </motion.h1>
 
-        {/* Intro */}
-        <motion.div
-          initial={
-            reduced
-              ? false
-              : {
+          {/* Intro */}
+          <motion.div
+            initial={
+              reduced
+                ? false
+                : {
                   opacity: 0,
                   y: 25,
                 }
-          }
-          animate={
-            reduced
-              ? undefined
-              : {
+            }
+            animate={
+              reduced
+                ? undefined
+                : {
                   opacity: 1,
                   y: 0,
                 }
-          }
-          transition={{
-            duration: 0.75,
-            delay: 0.3,
-            ease,
-          }}
-          className="
+            }
+            transition={{
+              duration: 0.75,
+              delay: 0.3,
+              ease,
+            }}
+            className="
             mb-16
             flex
             flex-col
@@ -130,8 +129,8 @@ export default function MagazinesPage() {
             lg:items-end
             lg:justify-between
           "
-        >
-          {/* <p
+          >
+            {/* <p
             className="
               max-w-[650px]
               text-[clamp(19px,2.4vw,30px)]
@@ -144,8 +143,8 @@ export default function MagazinesPage() {
             portraits, and field notes.
           </p> */}
 
-          <div
-            className="
+            <div
+              className="
               flex
               shrink-0
               items-center
@@ -155,100 +154,100 @@ export default function MagazinesPage() {
               tracking-[0.13em]
               text-muted-foreground
             "
-          >
-            <span className="h-px w-8 bg-border" />
-            <span>{items.length} Issues</span>
-          </div>
-        </motion.div>
+            >
+              <span className="h-px w-8 bg-border" />
+              <span>{items.length} Issues</span>
+            </div>
+          </motion.div>
 
-        {/* Magazine collection */}
-        {query.isLoading ? (
-          <motion.div
-            initial={
-              reduced
-                ? false
-                : {
-                    opacity: 0,
-                  }
-            }
-            animate={
-              reduced
-                ? undefined
-                : {
-                    opacity: 1,
-                  }
-            }
-            transition={{
-              duration: 0.5,
-            }}
-            className="py-10 text-sm text-muted-foreground"
-          >
-            Loading issues…
-          </motion.div>
-        ) : showNoIssues ? (
-          <motion.div
-            initial={
-              reduced
-                ? false
-                : {
-                    opacity: 0,
-                  }
-            }
-            animate={
-              reduced
-                ? undefined
-                : {
-                    opacity: 1,
-                  }
-            }
-            transition={{
-              duration: 0.5,
-            }}
-            className="py-10 text-sm text-muted-foreground"
-          >
-            {noIssuesLabel}
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={reduced ? "visible" : "hidden"}
-            whileInView={reduced ? undefined : "visible"}
-            viewport={{
-              once: true,
-              amount: 0.05,
-            }}
-            variants={{
-              hidden: {},
-              visible: {
-                transition: {
-                  staggerChildren: reduced ? 0 : 0.08,
-                },
-              },
-            }}
-          >
+          {/* Magazine collection */}
+          {query.isLoading ? (
             <motion.div
+              initial={
+                reduced
+                  ? false
+                  : {
+                    opacity: 0,
+                  }
+              }
+              animate={
+                reduced
+                  ? undefined
+                  : {
+                    opacity: 1,
+                  }
+              }
+              transition={{
+                duration: 0.5,
+              }}
+              className="py-10 text-sm text-muted-foreground"
+            >
+              Loading issues…
+            </motion.div>
+          ) : showNoIssues ? (
+            <motion.div
+              initial={
+                reduced
+                  ? false
+                  : {
+                    opacity: 0,
+                  }
+              }
+              animate={
+                reduced
+                  ? undefined
+                  : {
+                    opacity: 1,
+                  }
+              }
+              transition={{
+                duration: 0.5,
+              }}
+              className="py-10 text-sm text-muted-foreground"
+            >
+              {noIssuesLabel}
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={reduced ? "visible" : "hidden"}
+              whileInView={reduced ? undefined : "visible"}
+              viewport={{
+                once: true,
+                amount: 0.05,
+              }}
               variants={{
-                hidden: {
-                  opacity: 0,
-                  y: 30,
-                },
+                hidden: {},
                 visible: {
-                  opacity: 1,
-                  y: 0,
                   transition: {
-                    duration: reduced ? 0 : 0.75,
-                    ease,
+                    staggerChildren: reduced ? 0 : 0.08,
                   },
                 },
               }}
             >
-              <MagazineList items={items} />
+              <motion.div
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    y: 30,
+                  },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: reduced ? 0 : 0.75,
+                      ease,
+                    },
+                  },
+                }}
+              >
+                <MagazineList items={items} />
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </section>
+          )}
+        </section>
 
-      <SiteFooter />
-    </main>
+        <SiteFooter />
+      </main>
     </>
   );
 }

@@ -12,7 +12,6 @@ import { useRef } from "react";
 import {
   BackLink,
   SiteFooter,
-  SiteHeader,
 } from "@/components/site-chrome";
 
 import {
@@ -72,19 +71,19 @@ function InterviewHeroImage({
           reduced
             ? false
             : {
-                opacity: 0,
-                scale: 1.08,
-                filter: "blur(10px)",
-              }
+              opacity: 0,
+              scale: 1.08,
+              filter: "blur(10px)",
+            }
         }
         animate={
           reduced
             ? undefined
             : {
-                opacity: 1,
-                scale: 1.02,
-                filter: "blur(0px)",
-              }
+              opacity: 1,
+              scale: 1.02,
+              filter: "blur(0px)",
+            }
         }
         transition={{
           duration: 1.2,
@@ -122,27 +121,25 @@ export default function InterviewPage() {
   if (query.isLoading && !interview) {
     return (
       <main className="min-h-screen bg-background text-foreground">
-        <SiteHeader />
-
         <div className="mx-auto flex min-h-[50vh] max-w-[1380px] items-center px-[5vw]">
           <motion.p
             initial={
               reduced
                 ? false
                 : {
-                    opacity: 0,
-                    y: 15,
-                    filter: "blur(6px)",
-                  }
+                  opacity: 0,
+                  y: 15,
+                  filter: "blur(6px)",
+                }
             }
             animate={
               reduced
                 ? undefined
                 : {
-                    opacity: 1,
-                    y: 0,
-                    filter: "blur(0px)",
-                  }
+                  opacity: 1,
+                  y: 0,
+                  filter: "blur(0px)",
+                }
             }
             transition={{
               duration: 0.5,
@@ -166,8 +163,6 @@ export default function InterviewPage() {
   if (!interview) {
     return (
       <main className="min-h-screen bg-background text-foreground">
-        <SiteHeader />
-
         <div className="mx-auto flex min-h-[60vh] max-w-[1380px] flex-col justify-center px-[5vw]">
           <p className="eyebrow mb-5">
             Contribution Magazine · 404
@@ -194,8 +189,6 @@ export default function InterviewPage() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
-      <SiteHeader />
-
       <article
         className="
           mx-auto
@@ -538,17 +531,17 @@ export default function InterviewPage() {
             reduced
               ? false
               : {
-                  opacity: 0,
-                  scaleX: 0,
-                }
+                opacity: 0,
+                scaleX: 0,
+              }
           }
           whileInView={
             reduced
               ? undefined
               : {
-                  opacity: 1,
-                  scaleX: 1,
-                }
+                opacity: 1,
+                scaleX: 1,
+              }
           }
           viewport={{
             once: true,

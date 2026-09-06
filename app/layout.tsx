@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./gutenberg.css";
 import { QueryProvider } from "@/components/query-provider";
+import { SiteHeader } from "@/components/site-chrome";
 
 export const metadata: Metadata = {
   title: "Contribution Magazine — Culture, community, and creative practice",
@@ -27,7 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <SiteHeader />
+          {children}
+        </QueryProvider>
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
     </html>

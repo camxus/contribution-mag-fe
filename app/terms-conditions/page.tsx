@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 
-import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { SiteFooter } from "@/components/site-chrome";
 import { useTermsConditions } from "@/hooks/use-content-query";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -13,7 +13,6 @@ export default function TermsConditionsPage() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
-      <SiteHeader />
 
       <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-24 pt-[100px] sm:pb-28 sm:pt-[130px] lg:pb-36 lg:pt-[160px]">
         {/* ---------------------------------------------------------------- */}

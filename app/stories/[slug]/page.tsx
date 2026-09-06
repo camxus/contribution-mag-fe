@@ -12,7 +12,6 @@ import { useRef } from "react";
 import {
   BackLink,
   SiteFooter,
-  SiteHeader,
 } from "@/components/site-chrome";
 
 import { imageAlt, safeSlug, stories } from "@/lib/content";
@@ -114,8 +113,6 @@ export default function StoryPage() {
   if (query.isLoading && !story) {
     return (
       <main className="min-h-screen bg-background text-foreground">
-        <SiteHeader />
-
         <div className="mx-auto flex min-h-[50vh] max-w-[1380px] items-center px-[5vw] py-20">
           <motion.p
             initial={
@@ -158,8 +155,6 @@ export default function StoryPage() {
   if (!story) {
     return (
       <main className="min-h-screen bg-background text-foreground">
-        <SiteHeader />
-
         <div className="mx-auto flex min-h-[60vh] max-w-[1380px] flex-col justify-center px-[5vw]">
           <p className="eyebrow mb-5">
             Contribution Magazine · 404
@@ -179,8 +174,6 @@ export default function StoryPage() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
-      <SiteHeader />
-
       <article className="mx-auto w-full max-w-[1380px] px-[5vw] pb-24 sm:pb-28 lg:pb-36 lg:pt-[20px]">
 
         {/* ---------------------------------------------------------------- */}

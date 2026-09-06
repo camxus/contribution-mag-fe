@@ -7,7 +7,6 @@ import {
 
 import {
   SiteFooter,
-  SiteHeader,
 } from "@/components/site-chrome";
 
 import { useAbout } from "@/hooks/use-content-query";
@@ -19,10 +18,8 @@ export default function AboutPage() {
   const reduced = useReducedMotion();
 
   return (
-    <>
-      <SiteHeader />
-      <main className="min-h-screen overflow-hidden bg-background text-foreground">
-        <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-24 pt-[100px] sm:pb-28 sm:pt-[130px] lg:pb-36 lg:pt-[160px]">
+    <main className="min-h-screen overflow-hidden bg-background text-foreground">
+      <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-24 pt-[100px] sm:pb-28 sm:pt-[130px] lg:pb-36 lg:pt-[160px]">
         {/* ---------------------------------------------------------------- */}
         {/* Header                                                             */}
         {/* ---------------------------------------------------------------- */}
@@ -32,17 +29,17 @@ export default function AboutPage() {
             reduced
               ? false
               : {
-                  opacity: 0,
-                  y: 30,
-                }
+                opacity: 0,
+                y: 30,
+              }
           }
           animate={
             reduced
               ? undefined
               : {
-                  opacity: 1,
-                  y: 0,
-                }
+                opacity: 1,
+                y: 0,
+              }
           }
           transition={{
             duration: 0.8,
@@ -69,19 +66,19 @@ export default function AboutPage() {
             reduced
               ? false
               : {
-                  opacity: 0,
-                  y: 70,
-                  filter: "blur(8px)",
-                }
+                opacity: 0,
+                y: 70,
+                filter: "blur(8px)",
+              }
           }
           animate={
             reduced
               ? undefined
               : {
-                  opacity: 1,
-                  y: 0,
-                  filter: "blur(0px)",
-                }
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+              }
           }
           transition={{
             duration: 1,
@@ -112,17 +109,17 @@ export default function AboutPage() {
               reduced
                 ? false
                 : {
-                    opacity: 0,
-                    x: -15,
-                  }
+                  opacity: 0,
+                  x: -15,
+                }
             }
             animate={
               reduced
                 ? undefined
                 : {
-                    opacity: 1,
-                    x: 0,
-                  }
+                  opacity: 1,
+                  x: 0,
+                }
             }
             transition={{
               duration: 0.65,
@@ -170,17 +167,17 @@ export default function AboutPage() {
                 reduced
                   ? false
                   : {
-                      opacity: 0,
-                      y: 35,
-                    }
+                    opacity: 0,
+                    y: 35,
+                  }
               }
               animate={
                 reduced
                   ? undefined
                   : {
-                      opacity: 1,
-                      y: 0,
-                    }
+                    opacity: 1,
+                    y: 0,
+                  }
               }
               transition={{
                 duration: 0.8,
@@ -448,19 +445,19 @@ export default function AboutPage() {
             reduced
               ? false
               : {
-                  opacity: 0,
-                  y: 30,
-                  scaleX: 0.96,
-                }
+                opacity: 0,
+                y: 30,
+                scaleX: 0.96,
+              }
           }
           whileInView={
             reduced
               ? undefined
               : {
-                  opacity: 1,
-                  y: 0,
-                  scaleX: 1,
-                }
+                opacity: 1,
+                y: 0,
+                scaleX: 1,
+              }
           }
           viewport={{
             once: true,

@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import { InterviewList } from "@/components/collection-list";
-import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { SiteFooter } from "@/components/site-chrome";
 import { interviews, noInterviewsLabel } from "@/lib/content";
 import { useInterviews } from "@/hooks/use-content-query";
 
@@ -18,7 +18,6 @@ export default function InterviewsPage() {
 
   return (
     <>
-      <SiteHeader />
       <main className="min-h-screen overflow-hidden bg-background text-foreground">
         <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-20 pt-[100px] sm:pb-24 sm:pt-[130px] lg:pb-32 lg:pt-[160px]">
         {/* ---------------------------------------------------------------- */}
