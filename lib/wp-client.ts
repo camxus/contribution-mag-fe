@@ -8,7 +8,13 @@ export const wpClient = axios.create({
   timeout: 10_000,
 });
 
-export async function getWp<T>(path: string) {
-  const response = await wpClient.get<T>(path);
+export async function getWp<T>(path: string): Promise<T> {
+  const separator = path.includes("?") ? "&" : "?";
+  const cacheBuster = `_cb=${Date.now()}`;
+
+  const response = await wpClient.get<T>(
+    `${path}${separator}${cacheBuster}`
+  );
+
   return response.data;
 }
