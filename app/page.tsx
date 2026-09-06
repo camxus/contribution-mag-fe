@@ -11,7 +11,7 @@ import {
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-import { SiteFooter } from "@/components/site-chrome";
+import { SiteFooter} from "@/components/site-chrome";
 import { StoryList, InterviewList, MagazineList } from "@/components/collection-list";
 import { ContrastText } from "@/components/contrast-text";
 
