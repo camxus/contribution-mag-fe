@@ -163,6 +163,7 @@ export default function TermsConditionsPage() {
             }}
             className="
               legal-content
+              wp-content
               max-w-[760px]
               text-[16px]
               leading-[1.7]

@@ -186,8 +186,9 @@ export default function AboutPage() {
               }}
               className="
                 about-content
+                wp-content
                 max-w-[760px]
-                text-[clamp(20px,2.6vw,34px)]
+                text-lg
                 leading-[1.12]
                 tracking-[-0.025em]
                 text-foreground/85
