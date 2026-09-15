@@ -178,8 +178,6 @@ export default function InterviewPage() {
           >
             Interview not found.
           </h1>
-
-          <BackLink />
         </div>
 
         <SiteFooter />

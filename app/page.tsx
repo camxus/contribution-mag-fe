@@ -611,7 +611,7 @@ function VideoHeroSection({
                 text-white/60
               "
             >
-              {`$${magazine.pricePrint}.00 USD`}
+              {`$${magazine.pricePrint}.00 EUR`}
             </span>
           </motion.div>
         </div>
@@ -1317,7 +1317,7 @@ export default function Page() {
                     {pageMagazine.title}
                   </h2>
                   <p className="mt-2 text-[11px] text-white/80">
-                    {`$${pageMagazine.pricePrint}.00 USD`}
+                    {`$${pageMagazine.pricePrint}.00 EUR`}
                   </p>
                 </div>
               </div>
@@ -1434,7 +1434,7 @@ export default function Page() {
                           </h2>
 
                           <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-white/65">
-                            {`$${pageMagazine.pricePrint}.00 USD`}
+                            {`$${pageMagazine.pricePrint}.00 EUR`}
                           </p>
                         </motion.div>
 

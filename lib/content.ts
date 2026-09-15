@@ -298,8 +298,8 @@ export const editorialTagline = "Culture, community, and creative practice.";
 export const issueBlurb = "A print object for people paying attention.";
 
 export const productBlurb = "Issue 001 · Culture Unwrapped";
-
-export const priceBlurb = "From $40.00 USD";
+  
+export const priceBlurb = "From €40.00 EUR";
 
 export const emailPlaceholder = "your@email.address";
 

@@ -213,8 +213,34 @@ export default function MagazinePage() {
             >
               {magazine.title}
             </motion.h1>
-            
-            {/* Price */} <motion.div variants={variants} className=" mt-10 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-y border-border py-5 " > <div className="flex items-baseline gap-2"> <span className=" text-[clamp(28px,3vw,48px)] font-normal leading-none tracking-[-0.05em] " > ${Number(magazine.pricePrint).toFixed(2)} </span> <span className=" text-[9px] font-medium uppercase tracking-[0.14em] text-muted-foreground " > Print </span> </div> <span aria-hidden="true" className="text-xs text-muted-foreground" > / </span> <div className="flex items-baseline gap-2"> <span className=" text-[clamp(28px,3vw,48px)] font-normal leading-none tracking-[-0.05em] " > ${Number(magazine.priceDigital).toFixed(2)} </span> <span className=" text-[9px] font-medium uppercase tracking-[0.14em] text-muted-foreground " > Digital </span> </div> </motion.div>
+
+            {
+              /* Price */
+            }
+            <motion.div
+              variants={variants}
+              className=" mt-10 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-y border-border py-5 "
+            >
+              <div className="flex items-baseline gap-2">
+                <span className=" text-[clamp(28px,3vw,48px)] font-normal leading-none tracking-[-0.05em] ">
+                  ${Number(magazine.pricePrint).toFixed(2)}
+                </span>
+                <span className=" text-[9px] font-medium uppercase tracking-[0.14em] text-muted-foreground ">
+                  Print
+                </span>
+              </div>
+              {/* <span aria-hidden="true" className="text-xs text-muted-foreground">
+                /
+              </span>
+              <div className="flex items-baseline gap-2">
+                <span className=" text-[clamp(28px,3vw,48px)] font-normal leading-none tracking-[-0.05em] ">
+                  ${Number(magazine.priceDigital).toFixed(2)}
+                </span>
+                <span className=" text-[9px] font-medium uppercase tracking-[0.14em] text-muted-foreground ">
+                  Digital
+                </span>
+              </div> */}
+            </motion.div>;
 
             {/* Description placeholder */}
             <motion.p

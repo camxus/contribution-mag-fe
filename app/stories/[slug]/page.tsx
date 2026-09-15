@@ -163,8 +163,6 @@ export default function StoryPage() {
           <h1 className="text-[clamp(56px,9vw,120px)] leading-[0.8] tracking-[-0.09em]">
             Story not found.
           </h1>
-
-          <BackLink />
         </div>
 
         <SiteFooter />
