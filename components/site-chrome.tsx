@@ -50,17 +50,17 @@ export function SiteHeader() {
           reduced
             ? false
             : {
-                opacity: 0,
-                y: -10,
-              }
+              opacity: 0,
+              y: -10,
+            }
         }
         animate={
           reduced
             ? undefined
             : {
-                opacity: 1,
-                y: 0,
-              }
+              opacity: 1,
+              y: 0,
+            }
         }
         transition={{
           duration: 0.6,
@@ -109,17 +109,17 @@ export function SiteHeader() {
                 reduced
                   ? false
                   : {
-                      opacity: 0,
-                      y: -8,
-                    }
+                    opacity: 0,
+                    y: -8,
+                  }
               }
               animate={
                 reduced
                   ? undefined
                   : {
-                      opacity: 1,
-                      y: 0,
-                    }
+                    opacity: 1,
+                    y: 0,
+                  }
               }
               transition={{
                 duration: 0.45,
@@ -242,25 +242,25 @@ export function SiteHeader() {
               reduced
                 ? { opacity: 0 }
                 : {
-                    opacity: 0,
-                    x: "100%",
-                  }
+                  opacity: 0,
+                  x: "100%",
+                }
             }
             animate={
               reduced
                 ? { opacity: 1 }
                 : {
-                    opacity: 1,
-                    x: 0,
-                  }
+                  opacity: 1,
+                  x: 0,
+                }
             }
             exit={
               reduced
                 ? { opacity: 0 }
                 : {
-                    opacity: 0,
-                    x: "100%",
-                  }
+                  opacity: 0,
+                  x: "100%",
+                }
             }
             transition={{
               duration: reduced ? 0.2 : 0.55,
@@ -274,15 +274,15 @@ export function SiteHeader() {
                   reduced
                     ? false
                     : {
-                        opacity: 0,
-                      }
+                      opacity: 0,
+                    }
                 }
                 animate={
                   reduced
                     ? undefined
                     : {
-                        opacity: 1,
-                      }
+                      opacity: 1,
+                    }
                 }
                 transition={{
                   delay: 0.2,
@@ -313,17 +313,17 @@ export function SiteHeader() {
                   reduced
                     ? false
                     : {
-                        opacity: 0,
-                        rotate: -20,
-                      }
+                      opacity: 0,
+                      rotate: -20,
+                    }
                 }
                 animate={
                   reduced
                     ? undefined
                     : {
-                        opacity: 1,
-                        rotate: 0,
-                      }
+                      opacity: 1,
+                      rotate: 0,
+                    }
                 }
                 transition={{
                   delay: 0.12,
@@ -334,15 +334,15 @@ export function SiteHeader() {
                   reduced
                     ? undefined
                     : {
-                        rotate: 90,
-                      }
+                      rotate: 90,
+                    }
                 }
                 whileTap={
                   reduced
                     ? undefined
                     : {
-                        scale: 0.9,
-                      }
+                      scale: 0.9,
+                    }
                 }
                 className="
                   border-0
@@ -375,17 +375,17 @@ export function SiteHeader() {
                     reduced
                       ? false
                       : {
-                          opacity: 0,
-                          x: 45,
-                        }
+                        opacity: 0,
+                        x: 45,
+                      }
                   }
                   animate={
                     reduced
                       ? undefined
                       : {
-                          opacity: 1,
-                          x: 0,
-                        }
+                        opacity: 1,
+                        x: 0,
+                      }
                   }
                   transition={{
                     delay: 0.18 + index * 0.06,
@@ -441,17 +441,17 @@ export function SiteHeader() {
                 reduced
                   ? false
                   : {
-                      opacity: 0,
-                      y: 15,
-                    }
+                    opacity: 0,
+                    y: 15,
+                  }
               }
               animate={
                 reduced
                   ? undefined
                   : {
-                      opacity: 1,
-                      y: 0,
-                    }
+                    opacity: 1,
+                    y: 0,
+                  }
               }
               transition={{
                 delay: 0.5,
@@ -558,9 +558,9 @@ export function SiteFooter() {
       >
         <div className="grid w-full grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left */}
-          <div className="grid grid-cols-2 gap-8">
+          <div className="flex flex-wrap gap-x-8 gap-y-12">
             {/* Social */}
-            <div>
+            <div className="shrink-0">
               <p className="eyebrow mb-6">
                 Connect
               </p>
@@ -597,16 +597,16 @@ export function SiteFooter() {
                   };
 
                   const className = `
-    group
-    flex
-    w-fit
-    items-center
-    gap-2
-    leading-none
-    transition-opacity
-    duration-300
-    hover:opacity-50
-  `;
+          group
+          flex
+          w-fit
+          items-center
+          gap-2
+          leading-none
+          transition-opacity
+          duration-300
+          hover:opacity-50
+        `;
 
                   const content = (
                     <>
@@ -617,16 +617,16 @@ export function SiteFooter() {
                         size={12}
                         strokeWidth={1.4}
                         className="
-          shrink-0
-          translate-x-[-2px]
-          translate-y-[2px]
-          opacity-0
-          transition-all
-          duration-300
-          group-hover:translate-x-0
-          group-hover:translate-y-0
-          group-hover:opacity-100
-        "
+                shrink-0
+                translate-x-[-2px]
+                translate-y-[2px]
+                opacity-0
+                transition-all
+                duration-300
+                group-hover:translate-x-0
+                group-hover:translate-y-0
+                group-hover:opacity-100
+              "
                       />
                     </>
                   );
@@ -643,7 +643,10 @@ export function SiteFooter() {
                       {content}
                     </motion.a>
                   ) : (
-                    <motion.div key={`${label}-${href}`} {...motionProps}>
+                    <motion.div
+                      key={`${label}-${href}`}
+                      {...motionProps}
+                    >
                       <Link href={href} className={className}>
                         {content}
                       </Link>
@@ -654,7 +657,7 @@ export function SiteFooter() {
             </div>
 
             {/* Information */}
-            <div>
+            <div className="min-w-0 flex-1">
               <p className="eyebrow mb-6">
                 Information
               </p>
@@ -664,16 +667,17 @@ export function SiteFooter() {
                   <a
                     href={`mailto:${contactQuery.data.email}`}
                     className="
-                      flex
-                      items-center
-                      gap-2
-                      w-fit
-                      transition-opacity
-                      duration-300
-                      hover:opacity-50
-                    "
+            flex
+            w-fit
+            items-center
+            gap-2
+            transition-opacity
+            duration-300
+            hover:opacity-50
+          "
                   >
                     {contactQuery.data.email}
+
                     <Mail
                       size={16}
                       strokeWidth={1.5}
@@ -686,11 +690,11 @@ export function SiteFooter() {
                     key={link.href}
                     href={link.href}
                     className="
-                      w-fit
-                      transition-opacity
-                      duration-300
-                      hover:opacity-50
-                    "
+            w-fit
+            transition-opacity
+            duration-300
+            hover:opacity-50
+          "
                   >
                     {link.label}
                   </Link>
@@ -698,6 +702,7 @@ export function SiteFooter() {
               </div>
             </div>
           </div>
+
 
           {/* Newsletter */}
           {showNewsletter && (
