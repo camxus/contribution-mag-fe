@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  motion,
-  useReducedMotion,
-} from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 
-import {
-  SiteFooter,
-} from "@/components/site-chrome";
-
+import { SiteFooter } from "@/components/site-chrome";
 import { useAbout } from "@/hooks/use-content-query";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -21,7 +16,7 @@ export default function AboutPage() {
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
       <section className="mx-auto w-full max-w-[1380px] px-[5vw] pb-24 pt-[100px] sm:pb-28 sm:pt-[130px] lg:pb-36 lg:pt-[160px]">
         {/* ---------------------------------------------------------------- */}
-        {/* Header                                                             */}
+        {/* Header                                                           */}
         {/* ---------------------------------------------------------------- */}
 
         <motion.div
@@ -47,9 +42,7 @@ export default function AboutPage() {
           }}
         >
           <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
-            <p className="eyebrow">
-              Contribution Magazine · About Us
-            </p>
+            <p className="eyebrow">Contribution Magazine · About Us</p>
 
             <span className="hidden text-[9px] uppercase tracking-[0.14em] text-muted-foreground sm:block">
               04 / About
@@ -58,7 +51,7 @@ export default function AboutPage() {
         </motion.div>
 
         {/* ---------------------------------------------------------------- */}
-        {/* Title                                                              */}
+        {/* Title                                                            */}
         {/* ---------------------------------------------------------------- */}
 
         <motion.h1
@@ -99,7 +92,7 @@ export default function AboutPage() {
         </motion.h1>
 
         {/* ---------------------------------------------------------------- */}
-        {/* Intro / manifesto                                                  */}
+        {/* Intro / manifesto                                                */}
         {/* ---------------------------------------------------------------- */}
 
         <div className="grid grid-cols-1 gap-12 border-b border-border pb-16 lg:grid-cols-[0.3fr_0.7fr] lg:gap-[8vw] lg:pb-24">
@@ -127,9 +120,7 @@ export default function AboutPage() {
               ease,
             }}
           >
-            <p className="eyebrow">
-              Our Story
-            </p>
+            <p className="eyebrow">Our Story</p>
 
             <div className="mt-5 hidden h-px w-10 bg-border lg:block" />
           </motion.div>
@@ -138,11 +129,7 @@ export default function AboutPage() {
           {aboutQuery.isLoading ? (
             <motion.p
               initial={reduced ? false : { opacity: 0 }}
-              animate={
-                reduced
-                  ? undefined
-                  : { opacity: 1 }
-              }
+              animate={reduced ? undefined : { opacity: 1 }}
               transition={{ duration: 0.5 }}
               className="text-sm text-muted-foreground"
             >
@@ -151,11 +138,7 @@ export default function AboutPage() {
           ) : aboutQuery.error ? (
             <motion.p
               initial={reduced ? false : { opacity: 0 }}
-              animate={
-                reduced
-                  ? undefined
-                  : { opacity: 1 }
-              }
+              animate={reduced ? undefined : { opacity: 1 }}
               transition={{ duration: 0.5 }}
               className="text-destructive"
             >
@@ -194,16 +177,14 @@ export default function AboutPage() {
                 text-foreground/85
               "
               dangerouslySetInnerHTML={{
-                __html:
-                  aboutQuery.data?.content_html ||
-                  "",
+                __html: aboutQuery.data?.content_html || "",
               }}
             />
           )}
         </div>
 
         {/* ---------------------------------------------------------------- */}
-        {/* Contact                                                            */}
+        {/* Contact                                                          */}
         {/* ---------------------------------------------------------------- */}
 
         <motion.section
@@ -241,9 +222,7 @@ export default function AboutPage() {
                 },
               }}
             >
-              <p className="eyebrow">
-                Get In Touch
-              </p>
+              <p className="eyebrow">Get In Touch</p>
 
               <div className="mt-5 hidden h-px w-10 bg-border lg:block" />
             </motion.div>
@@ -351,22 +330,18 @@ export default function AboutPage() {
                       hover:opacity-50
                     "
                   >
-                    <span>
-                      {aboutQuery.data.email}
-                    </span>
+                    <span>{aboutQuery.data.email}</span>
 
-                    <span
+                    <ArrowUpRight
                       aria-hidden="true"
                       className="
-                        text-sm
+                        size-4
                         transition-transform
                         duration-300
                         group-hover:-translate-y-1
                         group-hover:translate-x-1
                       "
-                    >
-                      ↗
-                    </span>
+                    />
                   </a>
 
                   {/* Instagram */}
@@ -394,24 +369,19 @@ export default function AboutPage() {
                     >
                       <span>
                         Instagram: @
-                        {aboutQuery.data.instagram.replace(
-                          /^@/,
-                          "",
-                        )}
+                        {aboutQuery.data.instagram.replace(/^@/, "")}
                       </span>
 
-                      <span
+                      <ArrowUpRight
                         aria-hidden="true"
                         className="
-                          text-sm
+                          size-4
                           transition-transform
                           duration-300
                           group-hover:-translate-y-1
                           group-hover:translate-x-1
                         "
-                      >
-                        ↗
-                      </span>
+                      />
                     </a>
                   )}
                 </motion.div>
@@ -438,7 +408,7 @@ export default function AboutPage() {
         </motion.section>
 
         {/* ---------------------------------------------------------------- */}
-        {/* Closing statement                                                  */}
+        {/* Closing statement                                                */}
         {/* ---------------------------------------------------------------- */}
 
         <motion.div
@@ -477,15 +447,17 @@ export default function AboutPage() {
             sm:mt-32
           "
         >
-          <div className="
-            flex
-            items-center
-            justify-between
-            text-[9px]
-            uppercase
-            tracking-[0.12em]
-            text-muted-foreground
-          ">
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+              text-[9px]
+              uppercase
+              tracking-[0.12em]
+              text-muted-foreground
+            "
+          >
             <span>Contribution Magazine</span>
           </div>
         </motion.div>
