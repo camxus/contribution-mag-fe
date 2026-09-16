@@ -494,14 +494,14 @@ export function SiteFooter() {
     ...Object.entries(
       contactQuery.data?.social_links || {},
     ),
-    ...(contactQuery.data?.instagram
-      ? [
-        [
-          "Instagram",
-          contactQuery.data.instagram,
-        ] as [string, string],
-      ]
-      : []),
+   ...(contactQuery.data?.instagram
+  ? [
+      [
+        "Instagram",
+        `https://instagram.com/${contactQuery.data.instagram.replace(/^@/, "")}`,
+      ] as [string, string],
+    ]
+  : []),
   ];
 
   const displayedSocialLinks =
