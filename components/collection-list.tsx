@@ -38,6 +38,8 @@ function ListRow({
 }) {
   return (
     <motion.li
+      whileInView="visible"
+      initial="hidden"
       className="
         group
         relative
