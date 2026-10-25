@@ -1,9 +1,10 @@
+
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
 import {
@@ -35,8 +36,6 @@ function ListRow({
   image: string;
   backgroundImage?: boolean;
 }) {
-  const reduced = useReducedMotion();
-
   return (
     <motion.li
       className="
@@ -56,7 +55,7 @@ function ListRow({
           opacity: 1,
           y: 0,
           transition: {
-            duration: reduced ? 0 : 0.7,
+            duration: 0.7,
             ease,
           },
         },
@@ -252,8 +251,6 @@ function ListRow({
 }
 
 function AnimatedList({ children }: { children: ReactNode }) {
-  const reduced = useReducedMotion();
-
   return (
     <motion.ul
       className="
@@ -265,8 +262,8 @@ function AnimatedList({ children }: { children: ReactNode }) {
         border-black/15
         p-0
       "
-      initial={reduced ? "visible" : "hidden"}
-      whileInView={reduced ? "visible" : "visible"}
+      initial="hidden"
+      whileInView="visible"
       viewport={{
         once: true,
         amount: 0.18,
@@ -274,12 +271,12 @@ function AnimatedList({ children }: { children: ReactNode }) {
       }}
       variants={{
         hidden: {
-          opacity: 0,
+          opacity: 1,
         },
         visible: {
           opacity: 1,
           transition: {
-            staggerChildren: reduced ? 0 : 0.1,
+            staggerChildren: 0.1,
           },
         },
       }}
@@ -334,7 +331,11 @@ export function MagazineList({ items }: { items: Magazine[] }) {
           href={magazinePath(item.slug)}
           eyebrow={item.issue}
           title={item.title}
-          description={`${item.pricePrint ? `${item.pricePrint}.00 EUR` : "Available soon"} · Print edition`}
+          description={`${
+            item.pricePrint
+              ? `${item.pricePrint}.00 EUR`
+              : "Available soon"
+          } · Print edition`}
           image={item.image}
           backgroundImage
         />
