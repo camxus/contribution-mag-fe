@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 import { getWp } from "@/lib/wp-client";
 import {
   interviews,
@@ -34,23 +33,70 @@ const media = (item: any) =>
   item?.header_image_url ||
   "";
 
+/* -------------------------------------------------------------------------- */
+/* Mappers                                                                     */
+/*                                                                             */
+/* List endpoints (/wp/v2/{stories,interviews,magazines}) return ALL items but */
+/* WITHOUT body content. `content` / `content_html` are only present on the    */
+/* single-item endpoints (/{id} or /{slug}), so `body` is empty and            */
+/* `content_html` is "" for items that come from a list response.              */
+/* -------------------------------------------------------------------------- */
+
+const mapStory = (item: any): Story => ({
+  slug: item.slug,
+  title: text(item.title),
+  dek: item.description || text(item.excerpt),
+  category: item.category || "Culture",
+  author: item.author || "Contribution Magazine",
+  date: item.date || "",
+  image: media(item),
+  body: item.content ? [text(item.content)] : [],
+  content_html: item.content_html || "",
+});
+
+const mapInterview = (item: any): Interview => ({
+  slug: item.slug,
+  name: item.subject_name || text(item.title),
+  role: item.kicker || "Interview",
+  image: media(item),
+  quote: item.pull_quote || "",
+  body: item.content ? [text(item.content)] : [],
+  content_html: item.content_html || "",
+});
+
+const mapMagazine = (item: any): Magazine => ({
+  slug: item.slug,
+  title: text(item.title),
+  issue: item.issue_number
+    ? `Issue ${item.issue_number}`
+    : "Contribution Magazine",
+  priceDigital: item.price_digital ? Number(item.price_digital) : 40,
+  pricePrint: item.price_print ? Number(item.price_print) : 40,
+  image: media(item),
+  videoUrl: item.video_url,
+  stripeBuyLinkDigital: item.stripe_buy_link_digital,
+  stripeBuyLinkPrint: item.stripe_buy_link_print,
+  soldOut: item.sold_out,
+  releaseDate: item.release_date,
+  featuredArtists: item.featured_artists,
+  secondaryImages: item.secondary_images,
+});
+
+// Don't retry a missing slug (404); retry other failures up to twice.
+const retryUnlessNotFound = (failureCount: number, error: any) =>
+  error?.response?.status !== 404 && failureCount < 2;
+
+/* -------------------------------------------------------------------------- */
+/* Collections (all items, no body content)                                    */
+/* -------------------------------------------------------------------------- */
+
 export function useStories() {
   return useQuery<Story[]>({
     queryKey: ["stories"],
     queryFn: async () =>
       useMocks
         ? stories
-        : (await getWp<any[]>("/wp/v2/stories?_embed=1")).map((item) => ({
-          slug: item.slug,
-          title: text(item.title),
-          dek: item.description || text(item.excerpt),
-          category: item.category || "Culture",
-          author: item.author || "Contribution Magazine",
-          date: item.date || "",
-          image: media(item),
-          body: [text(item.content)],
-          content_html: item.content_html || "",
-        })),
+        : (await getWp<any[]>("/wp/v2/stories?_embed=1")).map(mapStory),
   });
 }
 export function useInterviews() {
@@ -59,15 +105,7 @@ export function useInterviews() {
     queryFn: async () =>
       useMocks
         ? interviews
-        : (await getWp<any[]>("/wp/v2/interviews?_embed=1")).map((item) => ({
-          slug: item.slug,
-          name: item.subject_name || text(item.title),
-          role: item.kicker || "Interview",
-          image: media(item),
-          quote: item.pull_quote || "",
-          body: [text(item.content)],
-          content_html: item.content_html || "",
-        })),
+        : (await getWp<any[]>("/wp/v2/interviews?_embed=1")).map(mapInterview),
   });
 }
 export function useMagazines() {
@@ -76,27 +114,7 @@ export function useMagazines() {
     queryFn: async () =>
       useMocks
         ? magazines
-        : (await getWp<any[]>("/wp/v2/magazines?_embed=1")).map((item) => ({
-          slug: item.slug,
-          title: text(item.title),
-          issue: item.issue_number
-            ? `Issue ${item.issue_number}`
-            : "Contribution Magazine",
-          priceDigital: item.price_digital
-            ? Number(item.price_digital)
-            : 40,
-          pricePrint: item.price_print
-            ? Number(item.price_print)
-            : 40,
-          image: media(item),
-          videoUrl: item.video_url,
-          stripeBuyLinkDigital: item.stripe_buy_link_digital,
-          stripeBuyLinkPrint: item.stripe_buy_link_print,
-          soldOut: item.sold_out,
-          releaseDate: item.release_date,
-          featuredArtists: item.featured_artists,
-          secondaryImages: item.secondary_images,
-        })),
+        : (await getWp<any[]>("/wp/v2/magazines?_embed=1")).map(mapMagazine),
   });
 }
 export type Hero = {
@@ -153,33 +171,52 @@ export function useSiteContact() {
       : undefined,
   };
 }
+/* -------------------------------------------------------------------------- */
+/* Single items (full content) — fetched by slug                               */
+/* -------------------------------------------------------------------------- */
+
 export function useStory(slug: string) {
-  const query = useStories();
-  return {
-    ...query,
-    data: useMemo(
-      () => query.data?.find((item) => item.slug === slug),
-      [query.data, slug],
-    ),
-  };
+  return useQuery<Story | undefined>({
+    queryKey: ["stories", slug],
+    enabled: !!slug,
+    retry: retryUnlessNotFound,
+    queryFn: async () =>
+      useMocks
+        ? stories.find((item) => item.slug === slug)
+        : mapStory(
+            await getWp<any>(
+              `/wp/v2/stories/${encodeURIComponent(slug)}?_embed=1`,
+            ),
+          ),
+  });
 }
 export function useInterview(slug: string) {
-  const query = useInterviews();
-  return {
-    ...query,
-    data: useMemo(
-      () => query.data?.find((item) => item.slug === slug),
-      [query.data, slug],
-    ),
-  };
+  return useQuery<Interview | undefined>({
+    queryKey: ["interviews", slug],
+    enabled: !!slug,
+    retry: retryUnlessNotFound,
+    queryFn: async () =>
+      useMocks
+        ? interviews.find((item) => item.slug === slug)
+        : mapInterview(
+            await getWp<any>(
+              `/wp/v2/interviews/${encodeURIComponent(slug)}?_embed=1`,
+            ),
+          ),
+  });
 }
 export function useMagazine(slug: string) {
-  const query = useMagazines();
-  return {
-    ...query,
-    data: useMemo(
-      () => query.data?.find((item) => item.slug === slug),
-      [query.data, slug],
-    ),
-  };
+  return useQuery<Magazine | undefined>({
+    queryKey: ["magazines", slug],
+    enabled: !!slug,
+    retry: retryUnlessNotFound,
+    queryFn: async () =>
+      useMocks
+        ? magazines.find((item) => item.slug === slug)
+        : mapMagazine(
+            await getWp<any>(
+              `/wp/v2/magazines/${encodeURIComponent(slug)}?_embed=1`,
+            ),
+          ),
+  });
 }

@@ -13,7 +13,8 @@ export interface WPBase {
   date_gmt: string;
   link: string;
   title: WPTitle;
-  content: WPContent;
+  /** Only present on single-item endpoints (/{id}, /{slug}); omitted from lists. */
+  content?: WPContent;
   status: string;
 }
 export interface Credit {
@@ -29,7 +30,8 @@ export interface Story extends WPBase {
   featured: boolean;
   credits: Credit[];
   category: string | null;
-  content_html: string;
+  /** Only present on single-item endpoints. */
+  content_html?: string;
 }
 export interface Interview extends WPBase {
   header_image_url: string;
@@ -39,7 +41,8 @@ export interface Interview extends WPBase {
   description: string;
   credits: Credit[];
   featured: boolean;
-  content_html: string;
+  /** Only present on single-item endpoints. */
+  content_html?: string;
 }
 export interface MagazineIssue extends WPBase {
   cover_image_url: string;
@@ -52,6 +55,8 @@ export interface MagazineIssue extends WPBase {
   sold_out: boolean;
   release_date: string;
   featured_artists: string[];
+  secondary_images: string[];
+  is_draft: boolean;
 }
 
 export interface FeaturedStory {
