@@ -266,7 +266,7 @@ function AnimatedList({ children }: { children: ReactNode }) {
         p-0
       "
       initial={reduced ? "visible" : "hidden"}
-      whileInView={reduced ? undefined : "visible"}
+      whileInView={reduced ? "visible" : "visible"}
       viewport={{
         once: true,
         amount: 0.18,
