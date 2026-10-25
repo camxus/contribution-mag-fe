@@ -1211,7 +1211,7 @@ export default function Page() {
           </FadeUp>
         ) : (
           <FadeUp delay={0.08}>
-            <StoryList items={pageStories?.reverse().slice(0, 4) || []} />
+            <StoryList items={pageStories?.slice(0, 4) || []} />
           </FadeUp>
         )}
       </section>
